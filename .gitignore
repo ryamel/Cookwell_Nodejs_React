@@ -1,15 +1,15 @@
 
 # dependencies
-/node_modules
+node_modules
 
 # testing
-/coverage
+coverage
 
 #images
-/media
+media
 
 # production
-/build
+build 
 
 # misc
 .DS_Store
