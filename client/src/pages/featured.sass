@@ -1,0 +1,90 @@
+@import '../_App.sass'
+
+
+
+
+$indexGrid-titleHeight: 40px
+
+.index-grid
+	width: 100%
+	display: grid
+	height: $card-height + 50px
+	grid-template-columns: repeat(auto-fill, $card-width)
+	grid-auto-rows: min-content
+	grid-gap: 20px
+	justify-content: center
+	padding: $indexGrid-titleHeight 10px 0 10px
+	overflow: hidden
+	@include indexSingleCardBreak
+		height: $card-height + 5px
+		width: 100vw
+		padding: 0 0 0 35px 
+		margin: 0 auto 
+		display: block
+		white-space: nowrap
+		overflow: scroll
+		&::-webkit-scrollbar /* Chrome Safari Opera */
+			display: none
+		&
+			-ms-overflow-style: none /* IE EDGE Firefox */
+			scrollbar-width: none /* Firefox */
+		.browse-card
+			margin-right: 20px
+
+
+
+.feature-titles
+	position: absolute
+	width: 400px
+	top: -30px
+	left: -54px
+	margin: 0 0 0 55px
+	z-index: 10
+	font-weight: 700
+	font-size: 1.3em
+	color: black
+	font-family: 'Lato', sans-serif
+	@include indexSingleCardBreak
+		display: none
+
+
+.mediaTitle
+	display: none
+	font-weight: 700
+	height: 25px
+	font-size: 5vw
+	color: black
+	font-family: 'Lato', sans-serif
+	position: relative
+	top: 5px
+	left: 35px
+	@include indexSingleCardBreak
+		display: block
+		white-space: nowrap
+		margin-bottom: 3vw
+
+
+
+#browseMore-title
+	padding: 5px 65px
+	float: right
+	a
+		color: #737373
+		text-decoration: none
+		&:hover
+			color: rgb(2, 130, 200)
+		&:hover + #arrow-right
+			border-left: 7px solid rgb(2, 130, 200)
+	#arrow-right
+		display: inline-block
+		position: relative
+		left: 7px
+		top: 1px
+		width: 0
+		height: 0
+		border-top: 8px solid transparent
+		border-bottom: 8px solid transparent
+		border-left: 10px solid #737373
+		-webkit-transform: translate(-50%, 0)
+		-ms-transform: translate(-50%, 0)
+		transform: translate(-50%, 0)

@@ -1,0 +1,27 @@
+@import '../_App.sass'
+
+
+
+
+#browse-body
+	position: relative
+	background-color: $defaultcolor
+	margin: 0
+
+
+.recipe-grid-container
+	width: 100vw
+	display: grid
+	grid-template-columns: repeat(auto-fit, $card-width)
+	grid-auto-rows: $card-height + 5px
+	grid-gap: 20px
+	padding: 20px 0
+	justify-content: center
+	min-height: $std-pageMinHeight
+	@include recipesSingleCardBreak
+		display: block
+		overflow: hidden
+		padding: 0
+		.browse-card
+			margin: 10vw 0 0 10vw
+

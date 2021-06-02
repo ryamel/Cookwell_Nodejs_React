@@ -1,0 +1,47 @@
+@import '../_App.sass'
+
+
+.cookProfileContainer
+	display: inline-flex
+	height: 250px
+	width: 400px
+	position: relative
+	@include lowBreakHeader
+		display: flex
+		width: 90vw
+		margin: 5px auto
+	.leftCon
+		height: 100%
+		width: 45%
+		white-space: nowrap
+		.title
+			padding: 5px 0 0 1px
+			font-size: 1em
+			@include lowBreakHeader
+				font-size: 4vw
+		.web
+			padding: 0 0 0 1px
+			font-size: 0.75em
+			color: #0000EE
+			position: relative
+			top: -6px
+			@include lowBreakHeader
+				font-size: 3vw
+		img
+			width: 180px
+			height: 180px
+	.rightCon
+		height: 180px
+		width: 100%
+		font-size: 0.75em
+		line-height: 1.07em
+		padding: 0 10px 0 15px
+		overflow: hidden
+		@include lowBreakHeader
+			font-size: 2.45vw
+	a
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0

@@ -1,0 +1,388 @@
+@import '../_App.sass'
+
+
+
+
+$moreWidth: 149px
+$rec-container-box-shadow: 2px 2px 4px rgb(35,35,35)
+$rec-container-spacing: 20px
+$rec-container-padding: 20px
+$rec-container-font-size: 1.2em
+$rec-container-width: 500px
+$left-ban-padding: 20px
+$std-moreCard-fontSize: 0.9em
+$rec-li-spacing: 30px
+$rec-li-ingrSpacing: 5px
+
+
+.recipe-page-container
+	position: relative
+	width: $rec-container-width
+	margin: $rec-container-spacing auto
+	font-size: 0.85em
+	line-height: 1.2em
+	@include recipePageSecondBreak
+		width: 100vw
+		margin: 0
+		border: none
+
+#editRecipeBtn
+	position: fixed
+	bottom: 60px
+	right: 60px
+	background-color: white
+	padding: 10px 20px
+	border-radius: 5px
+	border: 1px solid $std-container-borderColour
+	z-index: 100
+	box-shadow: $std-container-box-shadow
+
+
+#right-banner
+	position: absolute
+	top: 0
+	bottom: 0
+	right: -190px
+	width: 170px
+	@include recipePageSecondBreak
+		display: none
+	#legend-container
+		position: absolute
+		top: 0
+		left: 0
+		border: 1px solid $std-container-borderColour
+		border-radius: 5px
+		background-color: white
+		padding: 20px
+		margin: 0 auto
+		margin-bottom: 40px
+		min-width: 140px
+		font-family: 'Lato', sans-serif
+		.symContainer:not(:last-of-type)
+			margin-bottom: 10px
+		.symContainer
+			img
+				height: 28px
+				margin-right: 5px
+			.dietName
+				position: relative
+				top: -8px
+	#share-this-container
+		display: none
+		#title
+			text-align: center
+			font-size: 1.2em
+			margin-bottom: 10px
+		#ad-flexbox-container
+			display: flex
+			margin: 0 auto
+			justify-content: space-between
+			.fa
+				height: 22px
+				width: 21px
+				padding-top: 6px
+				text-align: center
+				text-decoration: none
+				border-radius: 3px
+			.fa-envelope
+				background: black
+				color: white
+			.fa-facebook
+				background: #3B5998
+				color: white
+			.fa-twitter
+				background: #55ACEE
+				color: white
+			.fa-pinterest
+				background: #cb2027
+				color: white
+
+#left-banner
+	position: absolute
+	top: 0
+	bottom: 0
+	left: -210px
+	@include recipePageSecondBreak
+		display: none
+	#author-card
+		height: 150px
+		width: 150px
+		margin: $left-ban-padding
+		img
+			height: 100%
+			width: 100%
+			object-fit: cover
+			object-position: 50% 50%
+	#name
+		text-align: center
+		font-size: 1.1em
+		margin: 5px 0
+		display: none
+	#contents
+		background-color: white
+		width: $moreWidth + 2 * $left-ban-padding
+		border: 1px solid $std-container-borderColour
+		#otherBy
+			font-size: 1.1em
+			text-align: center
+			margin: 10px 0 3px
+		#moreBy-Title
+			font-size: 1.3em
+			text-align: center
+			width: $moreWidth
+			font-family: 'Lato', sans-serif
+			font-weight: 700
+			color: #737373
+			width: 100%
+			padding: 20px 0 5px 0
+		#arrow-down
+			position: relative
+			left: ( $moreWidth + 2 * $left-ban-padding ) / 2
+			top: 2px
+			width: 0
+			height: 0
+			border-left: 18px solid transparent
+			border-right: 18px solid transparent
+			border-top: 10px solid #737373
+			-webkit-transform: translate(-50%, 0)
+			-ms-transform: translate(-50%, 0)
+			transform: translate(-50%, 0)
+		#moreByAuthor-load-container
+			width: 100%
+			padding: 10px $left-ban-padding 5px $left-ban-padding
+			-ms-overflow-style: none  /* IE and Edge */
+			scrollbar-width: none  /* Firefox */
+			&::-webkit-scrollbar
+				display: none
+
+.overlay
+	color: white
+	position: absolute
+	bottom: 0
+	left: 0
+	right: 0
+	overflow: hidden
+	height: 0
+	background-color: rgb(40,40,40)
+	transition: .5s cubic-bezier(0, 1, 0.25, 1)
+
+.overlay-title
+	font-size: $std-moreCard-fontSize
+	position: absolute
+	top: 50%
+	left: 50%
+	white-space: nowrap
+	-webkit-transform: translate(-50%, -50%)
+	-ms-transform: translate(-50%, -50%)
+	transform: translate(-50%, -50%)
+	text-align: center
+	line-height: 0.9em
+
+
+#recipe-content-banner
+	width: 100%
+
+#recipePage-sym-container
+	position: absolute
+	display: none
+	padding-top: 4px
+	@include recipePageSecondBreak
+		display: block
+
+.symCon
+	display: inline-block
+	position: relative
+	.tooltip
+		visibility: hidden
+		position: absolute
+		top: -28px
+		left: 0
+		white-space: nowrap
+	.recipePage-sym
+		height: 25px
+		margin-right: 4px
+.symCon:hover .tooltip
+	visibility: visible
+	background-color: black
+	color: white
+	padding: 3px 6px
+	border-radius: 3px
+
+
+#revMenu
+	position: absolute
+	left: -180px
+	top: 0px
+	border: 1px solid $std-container-borderColour
+	background-color: white
+	border-radius: 5px
+	a 
+		display: block
+		height: 40px
+		padding: 13px 20px
+		&:not(:last-child)
+			border-bottom: 1px solid lightgrey
+
+
+.rec-container-headings
+	padding-bottom: 15px
+	font-size: 1.2em
+	font-weight: 900
+
+.rec-container-headings-5
+	padding-bottom: 5px
+	font-size: 1em
+	font-weight: 900
+
+#rec-container-1
+	@include recipePageSecondBreak
+		border-radius: none
+		border-left: unset
+		border-right: unset
+	#recipe-img-container
+		height: 500px
+		width: 100%		
+		@include recipePageSecondBreak
+			height: 400px
+		img
+			width: 100%
+			height: 100%
+			object-fit: cover
+	#rec-container-1-title
+		font-size: 1.8em
+		padding: 0
+		text-align: left
+		padding-top: 15px
+		line-height: 1.2em
+	#about-container
+		font-size: $rec-container-font-size
+		line-height: 1.2em
+		margin: 5px 0
+	#stat-container
+		width: 100%
+		padding-top: 10px
+		font-size: $rec-container-font-size - 0.1em
+		#float-container
+			display: flex
+			justify-content: flex-end
+			#stat-name-container
+				display: inline-block
+			#stat-number-container
+				display: inline-block
+				position: relative
+				padding-left: 15px
+			.stat-name
+				margin-bottom: 3px
+				font-family: 'Lato', sans-serif
+				font-weight: 400
+			#Diet-stat
+				color: white
+
+
+#rec-container-2
+	@include recipePageSecondBreak
+		border-radius: none
+		border-left: unset
+		border-right: unset
+	ul
+		font-size: $rec-container-font-size
+		line-height: 1.3em
+		list-style: square
+		padding: 0
+		margin: 0px
+		li
+			margin: 0 0 $rec-li-ingrSpacing 17px
+			padding: 0
+			list-style-type: disc
+			list-style: none
+	.ingr-quantity
+		font-family: 'Roboto', sans-serif
+		font-weight: 300
+
+
+#rec-container-3
+	@include recipePageSecondBreak
+		border-radius: none
+		border-left: unset
+		border-right: unset
+	ol
+		list-style: decimal
+		font-size: $rec-container-font-size
+		line-height: 1.3em
+		padding: 0 0 0 17px
+		margin: 0
+		li
+			margin-bottom: $rec-li-spacing
+			span
+				position: relative
+				top: -6px
+				left: 3px
+				font-size: 0.75em
+
+#rec-container-4
+	font-size: 1em
+	@include recipePageSecondBreak
+		border-radius: none
+		border-left: unset
+		border-right: unset
+	#note-title
+		margin-bottom: 3px
+	.note-container
+		position: relative
+		left: 0
+		top: 15px
+		margin-left: 10px
+		line-height: 1.3em
+		&:not(:first-of-type)
+			margin-bottom: $rec-li-spacing
+		.noteNum
+			display: inline-block
+			position: absolute
+			left: 7px
+			top: -18px
+			font-size: 1em
+			letter-spacing: 0.04em
+		.note
+			font-size: 1.2em
+			position: relative
+			right: 32px
+
+
+	// padding: 10px 20px 0 20px
+	// margin: 0px auto 130px
+
+#rec-container-5
+	display: none
+	width: $rec-container-width
+	@include recipePageSecondBreak
+		display: none
+	.more-recomended
+		display: inline-block
+		font-size: $std-moreCard-fontSize
+		&:nth-child(3n+2)
+			margin-left: 1px
+			margin-right: 1px
+
+#rec-container-1, #rec-container-2, #rec-container-3, #rec-container-4, #rec-container-5
+	border: 1px solid $std-container-borderColour
+	padding: $rec-container-padding
+	background-color: white
+	margin-bottom: $rec-container-spacing
+	border-radius: 6px
+	@include recipePageSecondBreak
+		margin: 0
+		border: none
+
+.more-banner-card
+	position: relative
+	overflow-y: hidden
+	height: 170px
+	width: $moreWidth
+	margin-bottom: 20px
+	img
+		height: 100%
+		width: 100%
+		object-fit: cover
+		object-position: 50% 50%
+	&:hover .overlay
+		height: 20%

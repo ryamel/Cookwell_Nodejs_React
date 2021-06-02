@@ -1,0 +1,71 @@
+@import '../_App.sass'
+
+// Used acress the site. The browse-card class will require a container div
+.browse-card
+	box-shadow: $std-card-box-shadow
+	border-radius: $browse-card-border-radius
+	position: relative
+	display: inline-block
+	margin: 0 5px 5px 0
+	@include recipesSingleCardBreak
+		margin: 0
+	.card-link
+		position: absolute
+		top: 0
+		right: 0
+		left: 0
+		bottom: 0
+		z-index: 1
+	.browse-imgContainer
+		position: relative
+		height: 72%
+		margin: 0
+		overflow: hidden
+		img
+			margin: 0
+			height: 100%
+			width: 100%
+			object-fit: cover
+			object-position: 50% 50%
+			border-radius: $browse-card-border-radius $browse-card-border-radius 0 0
+		.pending
+			font-size: 2em
+			color: white
+			position: absolute
+			bottom: -5px
+			text-align: center
+			width: 100%
+			letter-spacing: 0.3em
+	.browse-textContainer
+		height: 28%
+		padding: 1px 8px 0
+		background-color: rgb(255,255,255)
+		font-family: 'Roboto', sans-serif
+		border-radius: 0 0 $browse-card-border-radius $browse-card-border-radius
+		white-space: normal
+		overflow: hidden
+		.browse-recipe-title
+			text-align: left
+			font-size: 0.85em
+			font-family: 'Roboto', sans-serif
+			font-weight: 500
+			letter-spacing: 0.02em
+		.browse-recipe-descrip
+			font-size: 0.73em
+			letter-spacing: 0.03em
+			line-height: 120% // 1.20em
+			overflow: hidden
+			height: 59%
+			font-weight: 300
+		.browse-author
+			text-align: right
+			padding-top: 1px
+			font-size: 0.7em
+			color: rgb(2,120,200)
+
+.creator-link
+	position: relative
+	top: 4px
+	z-index: 2
+	&:hover
+		color: rgb(0,191,255)

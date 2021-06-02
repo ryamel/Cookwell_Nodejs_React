@@ -1,0 +1,252 @@
+
+
+// App sass // 
+
+$defaultcolor: rgb(243,245,247)
+$recipe-form-color: #555555
+$placeholder-color: #999999
+$std-btn-border-radius: 3px
+$std-btn-border-fontSize: 0.8em
+$footer-margin: 200px
+$std-pageHeight: 1000px
+$std-input-field-border-radius: 2px
+$logoGreen: rgb(141, 211, 95)
+$std-label-color: grey
+
+
+// STD CARD
+$std-card-box-shadow: 2px 2px 4px rgb(35,35,35)
+$browse-card-border-radius: 4px
+$card-height: 320px
+$card-width: 250px
+
+// STD CONTAINER
+$std-container-box-shadow: 3px 3px 2px 2px rgb(50,50,50)
+$std-container-border-radius: 15px
+$std-container-borderColour: rgb(226,230,233)
+$std-pageMinHeight: 650px
+
+// SEACH BAR
+$searchbar-border-radius: 2px
+$searchBarHeight: 35px
+$searchBarWidth: 300px
+
+
+$overlayBackground: rgb(255,255,255)
+
+// error message font font-family:
+$error-font: 'Lato', sans-serif
+
+/*--------------------Media Query--------------------*/
+
+
+
+@mixin firstBreakHeader
+	@media (max-width: 1000px)
+		@content
+
+@mixin midBreakHeader
+	@media (max-width: 672px)
+		@content
+
+@mixin lowBreakHeader
+	@media (max-width: 400px)
+		@content
+
+@mixin accountFirstBreak
+	@media (max-width: 1120px)
+		@content
+
+@mixin accountSecondBreak
+	@media (max-width: 720px)
+		@content
+
+
+@mixin recipesSingleCardBreak
+	@media (max-width: 520px)
+		@content
+
+@mixin resultsBodyBreak
+	@media (max-width: 475px)
+		@content
+
+@mixin recipePageFirstBreak
+	@media (max-width: 930px)
+		@content
+
+@mixin recipePageSecondBreak
+	@media (max-width: 500px)
+		@content
+
+@mixin uprofileSinglCardBreak
+	@media (max-width: 579px)
+		@content
+
+@mixin indexSingleCardBreak
+	@media (max-width: 539px)
+		@content
+
+@mixin filterSearchBox
+	@media (max-width: 650px)
+		@content
+
+
+*
+	box-sizing: border-box //avoids resizing issues with padding 
+
+body
+	margin: 0
+	padding: 0
+	font-family: 'Roboto', sans-serif
+	background-color: $defaultcolor 
+
+
+input
+	width: 400px
+	height: 30px
+	border: 1px solid lightgrey
+	padding: 0 0 0 5px
+	font-size: 13px
+	border-radius: $std-input-field-border-radius
+	&:focus
+		outline: none
+	&[type="text"]
+		font-size: 13px
+	&::-ms-input-placeholder
+		color: $placeholder-color
+		font-size: 0.8em
+	&:-ms-input-placeholder
+		color: $placeholder-color
+		font-size: 0.8em
+	&::placeholder
+		color: $placeholder-color
+		font-size: 0.8em
+
+button
+	height: 26px
+	padding: 3px 8px 4px 8px
+	background-color: rgb(239,239,239)
+	border: 1px solid lightgrey
+	border-radius: $std-btn-border-radius
+	font-size: 0.9em
+	&:focus
+		outline: none
+
+
+textarea
+	resize: none
+	border-radius: $std-input-field-border-radius
+	padding: 7px 5px
+	font-size: 13px
+	line-height: 1.2em
+	&:hover
+		cursor: pointer
+	&:focus
+		outline: none
+	&::-ms-input-placeholder
+		color: $recipe-form-color
+		font-size: 0.8em
+	&:-ms-input-placeholder
+		color: $recipe-form-color
+		font-size: 0.8em
+	&::placeholder
+		color: $recipe-form-color
+		font-size: 0.8em
+
+label
+	font-size: 0.9em
+	font-weight: normal
+	margin: 0
+	padding: 0
+	font-family: 'Roboto', sans-serif
+	
+
+select
+	height: 30px
+	border: 1px solid $recipe-form-color
+	border-radius: $std-input-field-border-radius
+	&:focus
+		outline: none
+	&::-ms-input-placeholder
+		color: $recipe-form-color
+		font-size: 0.8em
+	&:-ms-input-placeholder
+		color: $recipe-form-color
+		font-size: 0.8em
+	&::placeholder
+		color: $recipe-form-color
+		font-size: 0.8em
+
+
+ul
+	list-style: none
+
+li
+	margin-bottom: 5px
+
+a
+	text-decoration: none!important
+	&:link
+		text-decoration: none!important
+	&:visited
+		text-decoration: none!important
+	&:hover
+		text-decoration: none!important
+	&:active
+		text-decoration: none!important
+
+.AtagBtn
+	color: black
+	height: 26px
+	padding: 3px 8px 4px 8px
+	background-color: rgb(239,239,239)
+	border: 1px solid lightgrey
+	border-radius: $std-btn-border-radius
+	font-size: 0.9em
+	&:focus
+		outline: none
+	&:hover
+		background-color: rgb(246,246,246)
+
+
+.std-body-container
+	width: 1050px
+	height: $std-pageHeight
+	margin: 0 auto
+
+
+.std-field-label
+	font-size: 0.95em
+	color: $std-label-color
+	display: block
+
+
+
+.browse-card
+	height: $card-height
+	width: $card-width
+	display: inline-block
+
+.footer-marginTop
+	margin-top: $footer-margin
+
+
+
+.bannerMsgBar
+	position: absolute
+	left: 0
+	right: 0
+	background-color: #36454f
+	height: 18px
+	text-align: center
+	color: white
+	letter-spacing: 0.1em
+	display: none
+	z-index: 100
+	font-size: 0.85em
+	font-weight: 400
+	font-family: 'Lato', sans-serif
+
+
+.header-blank
+	padding-top: 15px
