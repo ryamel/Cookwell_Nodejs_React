@@ -39,14 +39,28 @@ const Recipe = require('./models/recipes');
 
 
 
-app.get('/api/recipes/', async (req, res) => {
-    try {
-        const recipe = await Recipe.find({});
-        res.json(recipe);
+app.get('/api/recipes/:option', async (req, res) => {
+
+    if (option == 'featured') {
+        try {
+            const recipe = await Recipe.find({}).limit(8);
+            res.json(recipe);
+        }
+        catch (err) {
+            res.status(500).json( {message: err.message} ); // server fucks up, send 500
+        }
     }
-    catch (err) {
-        res.status(500).json( {message: err.message} ); // server fucks up, send 500
+
+    if (option == 'latest') {
+        try {
+            const recipe = await Recipe.find({}).limit(8).;
+            res.json(recipe);
+        }
+        catch (err) {
+            res.status(500).json( {message: err.message} ); // server fucks up, send 500
+        }
     }
+
 });
 
 

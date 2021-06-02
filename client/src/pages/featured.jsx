@@ -10,7 +10,8 @@ class Featured extends Component {
 	constructor() {
 		super();
 		this.state = {
-			cardData: []
+			featCardData: [],
+			latestCardData: []
 		}
 	}
 
@@ -18,8 +19,14 @@ class Featured extends Component {
 		// no need to use relative file path for '/api/recipes' with fetch. Fetch will auto find server.js in root dir
 		fetch('/api/recipes/')
 			.then(res => res.json())
-			.then(data => this.setState({cardData: data}, () => console.log('got recipies', data)))
+			.then(data => this.setState({featCardData: data}, () => console.log('got recipies', data)))
 			.catch(err => console.log(err));
+
+		fetch('/api/recipes/')
+			.then(res => res.json())
+			.then(data => this.setState({latestCardData: data}, () => console.log('got recipies', data)))
+			.catch(err => console.log(err));
+
 
 
 
@@ -143,23 +150,20 @@ class Featured extends Component {
 
 		return (
 			<div>
-				<div className='mediaTitle'>Featured</div>
-				<div className='feature-titles'>Featured</div>
 
 				<div className='index-grid'> {/*does cardData.id show in html? (security risk)*/}
-					{this.state.cardData.map(cardData =>
-						<BrowseCard key={cardData._id} img={cardData.img} description={cardData.description} author='MealSpace' title={cardData.title} />
+					{this.state.featCardData.map((cardData, index) =>
+						<BrowseCard key={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authid} title={cardData.title} index={index} firstCardHeader='Featured' />
 					)}
-		
 				</div>
 
-				<div className='mediaTitle'>Latest</div>
-				<div className='feature-titles'>Latest</div>
 
 				<div className='index-grid'>
-					<BrowseCard imgSrc='test' description='dsf' author='tst' title='dsfdfs' link='./' />
-
+					{this.state.latestCardData.map((cardData, index) =>
+						<BrowseCard key={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authid} title={cardData.title} index={index} firstCardHeader='Latest' />
+					)}
 				</div>
+				
 			</div>
 		);
 	}

@@ -130,6 +130,10 @@ const recipesSchema = new mongoose.Schema({
 	notes: {
 		type: [noteSchema],
 		required: false
+	},
+	uploaded: {
+		type: Date,
+		default: Date.now
 	}
 });
 

@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom';
 //process.env.PUBLIC_URL works for folders in the public directory
 
 class BrowseCard extends Component {
+
 	render() {
 
 		return (
 			<div className='browse-card'>
+				{renderHeader(this.props.index, this.props.firstCardHeader)}
 				<Link to={{pathname: '/recipe-page/60ad5b660aa5f2f55b8cc9c1'}}>
 					<span className='card-link'></span>
 				</Link>
@@ -30,3 +32,16 @@ class BrowseCard extends Component {
 }
 
 export default BrowseCard;
+
+
+
+function renderHeader(prop, header) {
+	if (prop === 0) {
+		return (
+			<React.Fragment>
+					<div className='feature-titles'>{header}</div>
+					<div className='mediaTitle'>{header}</div>
+			</React.Fragment>
+		);
+	}
+}

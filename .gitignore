@@ -2,7 +2,8 @@
 # dependencies
 node_modules/
 client/node_modules/
-client/public/
+client/public/diet
+client/public/user_recipes_img
 client/src/media
 
 # misc
