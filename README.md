@@ -1,4 +1,4 @@
-# React Express MongoDB
+#Cookwell App
 
 > Full stack app using React, Express, MongoDB. Run client and server with a single command. 
 
