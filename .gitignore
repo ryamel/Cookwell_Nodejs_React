@@ -1,15 +1,12 @@
-.env
-package.json
-package-lock.json
-README.md
-server_TUT.js
-.gitignore
 
 # dependencies
 /node_modules
 
 # testing
 /coverage
+
+#images
+/media
 
 # production
 /build
@@ -20,7 +17,11 @@ server_TUT.js
 .env.development.local
 .env.test.local
 .env.production.local
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.env
+package.json
+package-lock.json
+README.md
+server_TUT.js
