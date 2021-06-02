@@ -1,15 +1,9 @@
 
 # dependencies
-node_modules
-
-# testing
-coverage
-
-#images
-media
-
-# production
-build 
+node_modules/
+client/node_modules/
+client/public/
+client/src/media
 
 # misc
 .DS_Store
