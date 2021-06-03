@@ -37,32 +37,49 @@ const Recipe = require('./models/recipes');
 
 
 
+// may improve load time by documentatin authName on recipes docs. Then updating recipes when user changes displayName
+// avoids calling for authorName for each recipe
 
+app.get('/api/featured-recipes/', async (req, res) => {
 
-app.get('/api/recipes/:option', async (req, res) => {
+    try {
+        var recipes = await Recipe.find().limit(8);
+        let i = 0;
 
-    if (option == 'featured') {
-        try {
-            const recipe = await Recipe.find({}).limit(8);
-            res.json(recipe);
+        for (const recipe of recipes) {
+            var auth = await User.findOne({_id: recipe.authid}).select('displayName -_id'); 
+            recipes[i].authorName = auth.displayName; // keys added to object must be included in mongoose schema!
+            i++;
         }
-        catch (err) {
-            res.status(500).json( {message: err.message} ); // server fucks up, send 500
-        }
+        
+        res.json(recipes);
     }
-
-    if (option == 'latest') {
-        try {
-            const recipe = await Recipe.find({}).limit(8).;
-            res.json(recipe);
-        }
-        catch (err) {
-            res.status(500).json( {message: err.message} ); // server fucks up, send 500
-        }
+    catch (err) {
+        res.status(500).json( {message: err.message} ); // server fucks up, send 500
     }
-
+    
 });
 
+
+
+app.get('/api/latest-recipes/', async (req, res) => {
+
+    try {
+        var recipes = await Recipe.find().limit(8).sort({uploadDate: -1}); //.sort({uploadDate: -1});
+        let i = 0;
+
+        for (const recipe of recipes) {
+            var auth = await User.findOne({_id: recipe.authid}).select('displayName -_id'); 
+            recipes[i].authorName = auth.displayName; // keys added to object must be included in mongoose schema!
+            i++;
+        }
+        res.json(recipes);
+    }
+    catch (err) {
+        res.status(500).json( {message: err.message} ); // server fucks up, send 500
+    }
+    
+});
 
 
 

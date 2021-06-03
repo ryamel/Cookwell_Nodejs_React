@@ -24,7 +24,7 @@ const recipesSchema = new mongoose.Schema({
 		maxLength: 60
 	},
 	authid: {
-		type: 'string',
+		type: 'ObjectId',
 		required: true,
 		min: 0
 	},
@@ -131,9 +131,12 @@ const recipesSchema = new mongoose.Schema({
 		type: [noteSchema],
 		required: false
 	},
-	uploaded: {
+	uploadDate: {
 		type: Date,
 		default: Date.now
+	},
+	authorName: {
+		type: 'string'
 	}
 });
 
