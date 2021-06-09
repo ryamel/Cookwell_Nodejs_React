@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import queryString from 'query-string';
 
 
-//c hanges her
+
 
 function Recipepage() {
 
@@ -17,7 +17,8 @@ function Recipepage() {
 
 
 	useEffect(() => {
-		fetch('/api/getrecipebyid/' + id)
+
+		fetch('/api/recipes/getbyid/' + id)
 			.then(res => res.json())
 			.then(
 				(result) => {
@@ -29,7 +30,8 @@ function Recipepage() {
 					setError(error);
 					setIsLoaded(true);
 				} // handle errors without the try catch block. Avoids react bugs in components
-			);		
+			);
+
 	}, []);
 
 
@@ -114,7 +116,7 @@ function Recipepage() {
 				<div id="right-banner">
 					{displayDietBanner(state.result.diet)}
 
-					<div id="share-this-container">
+{/*					<div id="share-this-container">
 
 						<div id="title">Share this recipe</div>
 
@@ -125,10 +127,10 @@ function Recipepage() {
 							<div><a href="#" className="fa fa-envelope"></a></div>
 						</div>
 
-					</div>
+					</div>*/}
 				</div>
 
-				<div id='rec-container-5'>
+{/*				<div id='rec-container-5'>
 
 					<div className='rec-container-headings-5'>
 						RECOMENDED
@@ -137,14 +139,14 @@ function Recipepage() {
 					<div>
 						<div className='more-banner-card more-recomended'>
 							<Link to='/'>
-								<img src='Media/user_recipe_images/".$img_thumb."' />
+								<img src='Media/user_recipe_images/' />
 								<div className='overlay'>
 									<div className='overlay-title'></div>
 								</div>
 							</Link>
 						</div>
 					</div>
-				</div> 
+				</div> */}
 
 			</div>
 		);
@@ -157,6 +159,11 @@ function displayDietBanner(diet) {
 
 	if (diet.length < 1) {
 		return null;
+	}
+
+	if (diet.includes('Vegan') && diet.includes('Vegetarian')) {
+		const ind = diet.indexOf('Vegetarian');
+		diet.splice(ind, 1);
 	}
 
 	return (

@@ -5,15 +5,19 @@ const mongoose = require('mongoose');
 
 
 
-const ingrSchema = new mongoose.Schema({
-	text: 'string',
-	qty: 'string'
-});
+const ingrSchema = new mongoose.Schema(
+	{
+		text: 'string',
+		qty: 'string'
+	}
+);
 
-const noteSchema = new mongoose.Schema({
-	step: 'number',
-	text: 'string'
-});
+const noteSchema = new mongoose.Schema(
+	{
+		step: 'number',
+		text: 'string'
+	}
+);
 
 
 const recipesSchema = new mongoose.Schema({ 
@@ -140,22 +144,11 @@ const recipesSchema = new mongoose.Schema({
 	}
 });
 
+// recipesSchema.index( { title: "text", description: "text" } );
 
 module.exports = mongoose.model('Recipes', recipesSchema);;
 
 
-
-
-// module.exports.recipesSchema = recipesSchema;
-// module.exports.uploadRecipe = uploadRecipe;
-// module.exports.getRecipeById = getRecipeById;
-// module.exports.deleteRecipe = deleteRecipe;
-
-
-// module.exports.userSchema = userSchema;
-// module.exports.User = User;
-// module.exports.createUser = createUser;
-// module.exports.deleteUser = deleteUser;
 
 
 

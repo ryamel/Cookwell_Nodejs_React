@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import BrowseCard from '../components/browseCard';
 import './featured.sass';
-// import { Link } from 'react-router-dom';
 
 
 // featured titles need to be added inside the browseCard on the first of the line
@@ -21,7 +20,7 @@ class Featured extends Component {
 	componentDidMount() {
 
 		// no need to use relative file path for '/api/recipes' with fetch. Fetch will auto find server.js in root dir
-		fetch("/api/featured-recipes/")
+		fetch("/api/recipes/get-featured/")
 			.then(res => res.json())
 			.then(
 				(data) => {
@@ -39,12 +38,7 @@ class Featured extends Component {
 			)
 				
 
-		// fetch('/api/latest-recipes/')
-		// 	.then(res => res.json())
-		// 	.then(data => this.setState({latestCardData: data}, () => console.log('got recipies', data)))
-		// 	.catch(err => console.log(err));
-
-		fetch("/api/latest-recipes/")
+		fetch("/api/recipes/get-latest/")
 			.then(res => res.json())
 			.then(
 				(data) => {
@@ -56,28 +50,24 @@ class Featured extends Component {
 				(error) => {
 					this.setState({
 						isLatestLoaded: true,
-						error: true
+						error: error
 					});
 				}
 			)
-
-
-
-
 	}
 
 
 
 	render() {
-		const { error, isFeatLoaded, isLatestLoaded, featCardData, latestCardData } = this.state;
+		const { error, isFeatLoaded, isLatestLoaded } = this.state;
 
 		if (error) {
 			return <div>Error: {error.message}</div>;
-		} else if (!isFeatLoaded) {
+		} else if ( !isFeatLoaded || !isLatestLoaded ) {
 			return <div>Loading...</div>;
 		} else {
-			// console.log(latestCardData);
 
+			const { featCardData, latestCardData } = this.state;
 
 			return (
 				// index and firstCardHeader props are used to conditionally render the featured and latest headers inside the first BrowseCard component. 
@@ -86,14 +76,14 @@ class Featured extends Component {
 
 					<div className='index-grid'>
 						{featCardData.map((cardData, index) => 
-							<BrowseCard key={index} _id={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authorName} title={cardData.title} index={index} firstCardHeader='Featured' />	
+							<BrowseCard key={index} rid={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authorName} title={cardData.title} index={index} firstCardHeader='Featured' />	
 						)}
 					</div>
 
 
 					<div className='index-grid'>
 						{latestCardData.map((cardData, index) => 
-							<BrowseCard key={index} _id={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authorName} title={cardData.title} index={index} firstCardHeader='Most Recent' />
+							<BrowseCard key={index} rid={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authorName} title={cardData.title} index={index} firstCardHeader='Most Recent' />
 						)}
 					</div>
 

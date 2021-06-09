@@ -5,9 +5,13 @@ import { Link } from 'react-router-dom';
 //process.env.PUBLIC_URL works for folders in the public directory
 
 class BrowseCard extends Component {
+	constructor() {
+		super();
+		this.state = {};
+	}
 
 	render() {
-		const path = '/recipe-page/' + this.props._id;
+		const path = process.env.PUBLIC_URL + '/recipe-page/' + this.props.rid;
 
 		return (
 			<div className='browse-card'>
@@ -42,6 +46,10 @@ export default BrowseCard;
 
 
 function renderHeader(prop, header) {
+	if (header === undefined || prop === undefined) {
+		return;
+	}
+
 	if (prop === 0) {
 		return (
 			<React.Fragment>

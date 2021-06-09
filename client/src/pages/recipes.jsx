@@ -1,21 +1,70 @@
-import React from "react";
+import React, { Component } from "react";
 import BrowseCard from '../components/browseCard';
 import './recipes.sass';
 
-const Featured = () => (
-	<div className='recipe-grid-container'>
 
-		<BrowseCard imgSrc='test' description='dsf' authorName='tst' title='dsfdfs' recipeLink='./' />
-		<BrowseCard imgSrc='test' description='dsf' authorName='tst' title='dsfdfs' recipeLink='./' />
-		<BrowseCard imgSrc='test' description='dsf' authorName='tst' title='dsfdfs' recipeLink='./' />
-		<BrowseCard imgSrc='test' description='dsf' authorName='tst' title='dsfdfs' recipeLink='./' />
-		<BrowseCard imgSrc='test' description='dsf' authorName='tst' title='dsfdfs' recipeLink='./' />
-		<BrowseCard imgSrc='test' description='dsf' authorName='tst' title='dsfdfs' recipeLink='./' />
-
-	</div>
-);
+// added task. Pagination using random recipes.
 
 
-export default Featured;
+class Recipes extends Component {
+	constructor() {
+		super();
+		this.state = {
+			cardData: [],
+			isLoaded: false,
+			error: null
+		}
+	}
+
+	componentDidMount() {
+		fetch("/api/recipes/")
+			.then(res => res.json())
+			.then(
+				(data) => {
+					this.setState({
+						cardData: data,
+						isLoaded: true,
+						error: false
+					});
+				},
+				(error) => {
+					this.setState({
+						isLoaded: true,
+						error: error
+					});
+				}
+			)
+	}
 
 
+
+	render() {
+		const { error, isLoaded } = this.state;
+
+		if (error) {
+			return <div>Error: {error.message}</div>;
+		} else if (!isLoaded) {
+			return <div>Loading...</div>;
+		} else {
+
+			const { cardData } = this.state;
+
+			return (
+				<div className='browse-body'>
+					<div className='recipe-grid-container'>
+						{cardData.map((cardData, index) => 
+							<BrowseCard key={index} rid={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authorName} title={cardData.title} />	
+						)}
+					</div>
+				</div>
+			);
+		}
+	}
+}
+
+
+
+
+
+
+export default Recipes;

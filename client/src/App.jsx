@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, NavLink, Switch, Route, Link } from "react-router-dom";
 
+
 import Featured from './pages/featured';
 import Recipes from './pages/recipes';
 import Cooks from './pages/cooks';
 import Recipepage from './pages/recipe-page';
+import Searchpage from './pages/search-page';
 
 import './App.sass';
 import mastHead from './media/brand/cookwell.png';
@@ -17,6 +19,8 @@ class App extends Component {
 		logIn: 0
 	}
 	render() {
+
+
 		return (
 			<Router>
 
@@ -37,11 +41,11 @@ class App extends Component {
 					</nav>
 
 					<div className="headerSearchBar">
-						<form action="search" method="GET">
+						<form action="/search-page" method="GET">
 							<input placeholder="Search" type="text" name="input" />
-							<button className='searchBtn' type="submit">
-								<img id="searchIcon" src={search_icon} alt='no-img' />
-							</button>
+								<button className='searchBtn' type="submit">
+									<img id="searchIcon" src={search_icon} alt='no-img' />
+								</button>
 						</form>
 				 	</div>
 
@@ -64,6 +68,7 @@ class App extends Component {
 					<Route path="/recipes" children={<Recipes />} />
 					<Route path="/cooks" children={<Cooks />} />
 					<Route path="/recipe-page/:id" children={<Recipepage />} />
+					<Route path="/search-page" children={<Searchpage />} />
 				</Switch>
 
 			</Router>
