@@ -1,5 +1,5 @@
 
-
+const cookieParser = require('cookie-parser');
 const express = require('express');
 const app = express();
 const Joi = require('joi'); // upper case named because module returns a Class
@@ -9,10 +9,20 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 
+
+if (!process.env.private_key) {
+    console.log('FATAL ERROR: jwtPrivateKey is not defined');
+    process.exit(1);
+}
+
+
+
 const db = mongoose.connect(process.env.DB_connection, {
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 }, () => console.log('connected to DB'));
+
+
 
 
 
@@ -23,6 +33,7 @@ const db = mongoose.connect(process.env.DB_connection, {
 const users = require('./routes/users');
 const recipes = require('./routes/recipes');
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/users', users);
 app.use('/api/recipes', recipes);
@@ -33,11 +44,7 @@ app.use('/api/recipes', recipes);
 
 
 
-
-
-
 const port = process.env.PORT || 5000; // 3000
-
 app.listen(port, () => `Server running on port ${port}`);
 
 

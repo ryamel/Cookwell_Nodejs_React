@@ -8,8 +8,8 @@ import ShowResults from './show-results'
 
 class Searchpage extends React.Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
 			show: false,
 			results: [],
@@ -28,6 +28,9 @@ class Searchpage extends React.Component {
 
 
 	componentDidMount() {
+
+		this.setState({searchText: this.props.searchText});
+
 		// on load search for random results
 		const postOptions = {
 	        method: 'POST',
@@ -56,22 +59,23 @@ class Searchpage extends React.Component {
 	}
 
 
-	handleInput(event) {
+	handleInput(stateName, value) {
 
-		var stateName = event.target.name;
+		// console.log(this.state.searchText);
+
+		// var stateName = event.target.name;
 
 
 		// if time selection
 		if (stateName == 'time') {
-			var input = event.target.value;
-			if (this.state.time === event.target.value) {
+			if (this.state.time === value) {
 				this.setState({
 					[stateName]: null
-				});
+				},console.log(this.state.time));
 			} else {
 				this.setState({
-					[stateName]: input
-				});
+					[stateName]: value
+				},console.log(this.state.time));
 			}
 			return;
 		}
@@ -89,11 +93,11 @@ class Searchpage extends React.Component {
 			var cont = 1;
 		}
 		if (cont) {
-			if (newState.includes(event.target.value)) {
-				const index = newState.indexOf(event.target.value);
+			if (newState.includes(value)) {
+				const index = newState.indexOf(value);
 				newState.splice(index, 1);
 			} else {
-				newState.push(event.target.value);
+				newState.push(value);
 			}
 
 			this.setState({
@@ -105,8 +109,8 @@ class Searchpage extends React.Component {
 		// if searchText
 		if (stateName == 'searchText') {
 			this.setState({
-				[stateName]: event.target.value
-			});
+				[stateName]: value
+			}, console.log(this.state.searchText));
 		}
 		
 
@@ -164,7 +168,7 @@ class Searchpage extends React.Component {
 								type="text" 
 								name="searchText" 
 								value={this.state.searchText}
-								onChange={this.handleInput} 
+								onChange={(e) => this.handleInput(e.target.name, e.target.value)} 
 							/>
 							<button onClick={this.searchFunction} className="searchBtn" type="submit">Search</button>
 						</div>
@@ -176,7 +180,7 @@ class Searchpage extends React.Component {
 							<div className="filterDivs">
 								<DietMenu 
 									dietOptions={dietOptions}
-									handleInput={this.handleInput}
+									handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
 									state={this.state.diet}
 								/>
 							</div>
@@ -192,7 +196,7 @@ class Searchpage extends React.Component {
 										value='30' 
 										type="checkbox"
 										checked={this.state.time === "30"} 
-										onChange={this.handleInput}
+										onChange={(e) => this.handleInput(e.target.name, e.target.value)}
 									/>
 									<span className="checkmark"></span>
 								</label>
@@ -203,7 +207,7 @@ class Searchpage extends React.Component {
 										value="45" 
 										type="checkbox"
 										checked={this.state.time === "45"}
-										onChange={this.handleInput} 
+										onChange={(e) => this.handleInput(e.target.name, e.target.value)} 
 									/>
 									<span className="checkmark"></span>
 								</label>
@@ -214,7 +218,7 @@ class Searchpage extends React.Component {
 										value="60" 
 										type="checkbox"
 										checked={this.state.time === "60"} 
-										onChange={this.handleInput}
+										onChange={(e) => this.handleInput(e.target.name, e.target.value)}
 									/>
 									<span className="checkmark"></span>
 								</label> 
@@ -227,7 +231,7 @@ class Searchpage extends React.Component {
 								<DropMenu 
 									stateName='cuisine'
 									options={cuisine} 
-									handleInput = {this.handleInput}
+									handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
 									state={this.state.cuisine}
 								/>
 							</div>
@@ -238,7 +242,7 @@ class Searchpage extends React.Component {
 								<DropMenu 
 									stateName='mealType'
 									options={mealTypes} 
-									handleInput = {this.handleInput}
+									handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
 									state={this.state.mealType}
 								/>
 							</div>
@@ -259,23 +263,6 @@ class Searchpage extends React.Component {
 
 
 
-
-// function renderResults(searchTerm) {
-
-// 	const { error, isLoaded } = this.state;
-
-// 	if (error) {
-// 		return <div>Error: {error.message}</div>;
-// 	} else if (!isLoaded) {
-// 		return <div>Loading...</div>;
-// 	} else {
-
-
-// 	const { results } = this.state;
-// 	return;
-
-// 	}
-// }
 
 
 

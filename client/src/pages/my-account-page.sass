@@ -1,0 +1,137 @@
+@import '../_App.sass'
+$sideMenu-width: 200px
+$accountForm-width: 700px
+
+.accountBody
+	display: table
+	margin: 10px auto
+	position: relative
+	min-height: $std-pageMinHeight
+	#newUserAccountMsg
+		width: 700px
+		white-space: normal
+		padding: 20px 50px
+		background-color: white
+		margin: 0 0 10px 0
+		border: 1px solid $std-container-borderColour
+		border-radius: 5px
+		font-size: 0.9em
+		text-align: center
+	@include accountSecondBreak
+		width: 100vw
+		border-left: none
+		border-right: none
+	.accountContent
+		display: inline-block
+		vertical-align: top
+		width: $accountForm-width
+		white-space: normal
+		@include accountSecondBreak
+			width: 100%
+		#cardContainer
+			width: 700px
+			display: grid
+			margin-top: 10px 0 0 0
+			grid-template-columns: repeat(auto-fit, 229px)
+			grid-auto-rows: 290px
+			justify-content: left
+			grid-gap: 5px
+			@include accountSecondBreak
+				justify-content: center
+			.browse-card
+				height: 290px
+				width: 230px
+				box-shadow: 1px 1px 2px rgb(35,35,35)
+				font-size: 0.92em
+				margin: 0
+				display: block
+				margin: 0 auto
+
+
+
+.sideMenu
+	width: 300px
+	background-color: white
+	width: $sideMenu-width
+	border: 1px solid rgb(226, 230, 233)
+	border-radius: 5px
+	margin: 0 10px 0 0
+	background-color: white
+	position: absolute
+	left: -210px
+	top: 0
+	font-family: 'Lato', sans-serif
+	@include accountFirstBreak
+		display: none
+	.sideMenuOption
+		height: 55px
+		padding: 17px 0 0 20px
+		display: block
+		font-size: 0.95em
+		font-family: 'Lato', sans-serif
+		color: black
+		&:last-child
+			border-radius: 0 0 5px 5px
+		&:first-child
+			border-radius: 5px 0 0 0
+		i
+			float: right
+			margin: 7px 25px 0 0
+	.selectedTab
+		border-left: 4px solid rgb(55,69,79)
+
+
+// #sideMenu-Media
+// 	display: none
+// 	width: 100%
+// 	border: 1px solid rgb(226, 230, 233)
+// 	border-bottom: none
+// 	border-radius: 5px
+// 	margin: 10px auto
+// 	width: $accountForm-width
+// 	font-family: 'Lato', sans-serif
+// 	@include accountFirstBreak
+// 		display: block
+// 	@include accountSecondBreak
+// 		border-radius: 0
+// 		border: none
+// 		width: 100vw
+// 		margin: 0
+// 		position: relative
+// 		top: -1px
+// 	a
+// 		display: block
+// 		height: $searchBarHeight
+// 		background-color: white
+// 		border-bottom: 1px solid rgb(226, 230, 233)
+// 		padding-right: 15px
+// 		@include accountSecondBreak
+// 			border-bottom: 1px solid lightgrey
+// 			border-radius: 0
+// 		&:first-child
+// 			border-radius: 5px 5px 0 0
+// 		&:last-child
+// 			border-radius: 0 0 5px 5px
+// 			@include accountSecondBreak
+// 				border-radius: 0
+// 		div
+// 			width: 80px
+// 			margin: 0 auto
+// 			padding-top: 7px
+// 		i 
+// 			float: right
+// 			position: relative
+// 			top: -16px
+// 			right: 20px
+
+
+
+.arrow
+	border: solid grey
+	border-width: 0 2px 2px 0
+	display: inline-block
+	padding: 3px
+
+.right 
+	transform: rotate(-45deg)
+	-webkit-transform: rotate(-45deg)

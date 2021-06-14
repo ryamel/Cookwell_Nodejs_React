@@ -1,0 +1,71 @@
+@import '../_App.sass'
+
+
+.signupForm-container
+	width: 280px
+	margin: 150px auto 0
+	padding: 30px 30px 15px 30px
+	background-color: white
+	border: 1px solid $std-container-borderColour
+	position: relative
+	@include recipesSingleCardBreak
+		width: 80vw
+		position: static
+	#forgotpwd
+		color: #0000EE
+		font-size: 0.7em
+		text-align: right
+		display: block
+		margin-bottom: 25px
+		margin-top: 2px
+	.error-container-signup
+		color: red
+		text-align: center
+		font-size: 13px
+		padding: 10px
+	input
+		height: 35px
+		width: 100%
+		margin-bottom: 8px
+		border: 1px solid $std-container-borderColour
+	button
+		color: white
+		background-color: rgb(0, 149, 246)
+		border: none
+		width: 100%
+		&:hover
+			color: white
+			background-color: rgb(0,125,207)
+	#policyMsg
+		width: 100%
+		font-size: 0.65em
+		text-align: center
+		line-height: 1.2em
+		padding-top: 15px
+		position: relative
+		#border
+			border-top: 1px solid lightgrey
+			position: absolute
+			left: 5%
+			right: 5%
+			top: 0px
+		a
+			font-weight: bold
+			font-size: 1em
+	#accountLogin
+		font-size: 0.8em
+		margin: 30px 0 20px 0
+		text-align: center
+		a
+			font-weight: bold
+			color: rgb(0, 149, 246)
+	#signupMsgContainer
+		width: 100%
+		text-align: center
+		font-size: 0.7em
+		color: rgb(0, 149, 246) 
+		line-height: 1.2em
+		margin-bottom: 10px
+
+.requiredStar
+	color: #cc0000

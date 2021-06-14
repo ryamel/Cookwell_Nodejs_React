@@ -146,7 +146,7 @@ const recipesSchema = new mongoose.Schema({
 
 // recipesSchema.index( { title: "text", description: "text" } );
 
-module.exports = mongoose.model('Recipes', recipesSchema);;
+module.exports = mongoose.model('Recipes', recipesSchema);
 
 
 

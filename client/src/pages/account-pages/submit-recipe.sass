@@ -1,0 +1,355 @@
+@import '../../_App.sass'
+
+#submit-container
+	position: relative
+	margin: 0 auto
+	width: 100%
+	right: 0
+	padding: 30px 50px 50px 50px
+	border: 1px solid $std-container-borderColour
+	background-color: white
+	border-radius: 5px
+	@include accountSecondBreak
+		width: 100vw
+		padding-left: 6%
+	#req-note
+		position: absolute
+		top: 30px
+		right: 50px
+		font-size: 0.95em
+
+
+
+.subRec-field-container
+	margin: 0 0 15px 0
+	input
+		width: 200px
+		border: 1px solid lightgrey
+	select
+		display: block
+		width: 200px
+		margin: 0
+		padding: 0
+		font-size: 0.8em
+		border: 1px solid lightgrey
+		&:invalid
+			color: gray
+		&::-ms-input-placeholder
+			color: $placeholder-color
+		&:-ms-input-placeholder
+			color: $placeholder-color
+		&::placeholder
+			color: $placeholder-color
+	textarea
+		display: block
+		width: 380px
+		border: 1px solid lightgrey
+		@include accountSecondBreak
+			width: 87vw
+	#titleInput
+		width: 380px
+		@include accountSecondBreak
+			width: 87vw
+	.diet-checkbox
+		position: relative
+		left: 10px
+		height: 12px
+		width: 12px
+	.cookingtime-text
+		font-size: 0.85em
+		color: $std-label-color
+	.cookTime-input
+		width: 40px
+	#charCount
+		font-size: 0.7em
+		color: $std-label-color
+		position: absolute
+		top: 225px
+		right: 272px
+
+.uploadPhoto
+	display: inline-block
+	padding: 4px 0
+	cursor: pointer
+	margin: 0 0 5px 2px
+	font-size: 0.95em
+	color: grey
+	&:hover #infotext
+		display: block
+	.fileUploadInput
+		display: none
+		border: none
+	#infotext
+		position: absolute
+		width: 400px
+		right: 40px
+		top: 30px
+		font-size: 0.78em
+		padding: 1px 4px
+		border-radius: 1px
+		line-height: 1.2em
+		display: none
+	
+
+
+#profileImg-Profile
+	height: 200px
+	width: 200px
+	object-fit: cover
+	border: 1px solid lightgrey
+	display: block
+	margin-bottom: 5px
+
+#profileImg-Rec
+	height: 200px
+	width: 200px
+	object-fit: cover
+	margin-bottom: 5px
+	display: block
+
+
+.phIcon
+		display: inline-block
+		height: 25px
+		margin: 0
+
+.cusineList
+	width: 380px
+	position: relative
+	input
+		width: unset
+		height: unset
+
+
+.field-container-add
+	margin-bottom: 4px
+	input
+		border: 1px solid lightgrey
+		&::-ms-input-placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+		&:-ms-input-placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+		&::placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+	.ingr
+		width: 380px
+		@include accountSecondBreak
+			width: calc(87vw - 220px)
+	.quantity
+		width: 70px
+	.typeSelectUnit
+		width: 140px
+		position: relative
+		top: -1px
+		margin: 0 4px
+		border: 1px solid lightgrey
+	textarea
+		width: 598px
+		border: 1px solid lightgrey
+		@include accountSecondBreak
+			width: 87vw
+		&::-ms-input-placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+		&:-ms-input-placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+		&::placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+
+
+
+$ingr-method-note-leftPadding: 30px
+
+
+
+
+
+
+.noteNum
+	padding-left: 5px
+	width: 50px
+.noteInput
+	padding-left: 5px
+	margin-bottom: 3px
+	width: 544px
+	@include accountSecondBreak
+		width: calc(87vw - 55px)
+
+.inline-field
+	display: inline-block
+
+#remove_ingrField, #remove_noteField, #remove_methodField, #add_ingrField, #add_methodField, #add_noteField, #submitr-btn, #submitr-btn-top
+	border-radius: 3px
+	border: 1px solid lightgrey
+	font-size: 0.8em
+	padding: 0px 3px
+	height: 18px
+
+
+
+.ingrMethNoteTitle
+	position: relative
+	bottom: -10px
+
+#note_title
+	display: none
+	font-size: 0.8em
+	color: grey
+	font-weight: normal
+	position: relative
+	right: -36px
+	bottom: -12px
+
+#diet-select-container
+	margin: 5px 0 0 0
+	position: relative
+	left: -10px
+	.check-container
+		width: fit-content
+		color: $std-label-color
+
+#accoutBodyTag
+	white-space: nowrap /* solves inline div problems */
+
+// #msg-container 
+// 	position: absolute
+// 	right: 0
+// 	top: 5px
+// 	width: -moz-fit-content
+// 	width: fit-content
+// 	z-index: 10
+// 	border-radius: 0 0 0 5px 
+// 	.error-container
+// 		color: rgb(251,80,84)
+// 		padding: 10px 20px
+// 		text-align: center
+// 		font-size: 0.8em
+// 		border-radius: 0 0 0 5px 
+// 	.success-container
+// 		color: #29c81e
+// 		text-align: center
+// 		font-size: 0.9em
+// 		padding: 10px 20px
+		
+
+
+#deleteRecipe
+	position: absolute
+	right: 51px
+	bottom: 50px
+	background-color: red
+	padding: 5px 15px
+	font-family: Roboto
+	height: 30px
+	font-size: 1em
+	letter-spacing: 0.03em
+	border: none
+	color: white
+
+
+
+#overlayDelete
+	display: none
+	position: fixed
+	height: 100%
+	width: 100%
+	top: 0
+	bottom: 0
+	right: 0
+	left: 0
+	z-index: 20
+	background-color: $overlayBackground
+
+#DeleteForm
+	display: none
+	position: fixed
+	padding: 25px 30px 15px 30px
+	top: 50%
+	left: 50%
+	z-index: 21
+	background-color: white
+	border: 1px solid lightgrey
+	-webkit-transform: translate(-50%, -50%)
+	-ms-transform: translate(-50%, -50%)
+	transform: translate(-50%, -50%)
+	text-align: center
+	line-height: 0.9em
+	z-index: 21
+	div
+		margin: 10px auto
+	p 
+		line-height: 1.3em
+		text-align: center
+
+
+.submitr-btn
+	margin: 30px 0 0 0
+	padding: 5px 15px
+	font-family: Roboto
+	height: 30px
+	font-size: 1em
+	letter-spacing: 0.03em
+	border: none
+	color: white
+	background-color: rgb(141,211,95)
+	&:hover
+		color: none
+		background-color: rgb(141,211,95)
+
+
+
+#submitr-btn-top
+	position: relative
+	right: -610px
+	top: -60px
+	padding: 5px 10px
+	height: 30px
+	&:hover
+		color: red
+
+#addRemoveBtn-container
+	height: 10px
+	margin-bottom: 12px
+	margin-right: 2px
+	@include accountSecondBreak
+		width: 87vw
+	#add_ingrField, #add_methodField, #add_noteField, #remove_ingrField, #remove_methodField, #remove_noteField
+		float: right
+		color: $std-label-color
+	#remove_ingrField, #remove_methodField, #remove_noteField
+		margin-right: 5px
+		color: $std-label-color
+
+
+.thumb-image
+	margin-top: 8px
+	height: 200px
+	width: auto
+
+.construction
+	text-align: center
+	height: 500px
+	padding-top: 250px
+
+#upload-title
+	margin-bottom: 20px
+
+
+#mealType-select
+	width: 200px
+
+.form-title-inline
+	display: inline-block
+
+#submit-note
+	text-align: center
+	font-size: 0.9em
+	margin-top: 30px
+	@include accountSecondBreak
+		margin-bottom: 40px
+

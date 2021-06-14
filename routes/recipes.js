@@ -1,11 +1,12 @@
 
 const { User, validateUser } = require('../models/users');
+const Recipe = require('../models/recipes'); // these constructors allow interaction with the DB tables
+
 const mogoose = require('mongoose');
 const express = require('express');
 
 const router = express.Router();
 
-const Recipe = require('../models/recipes'); // these constructors allow interaction with the DB tables
 
 
 
@@ -74,7 +75,7 @@ router.post('/search/:random', async (req, res) => {
         res.status(400).json({message: err.message}); 
     }
 
-})
+});
 
 
 
@@ -88,22 +89,21 @@ router.get('/search/auto', async (req, res) => {
     catch (error) {
         res.status(400).json({message: err.message});
     }
-})
+});
 
 
 
 
 
 
-router.get('/getbyid/:id', async (req, res) => {
-    
-    const query = await Recipe.findOne({_id: req.params.id});
-    //console.log(query);
+router.get('/getbyuserid/:id', async (req, res) => {
+
+    const query = await Recipe.find({authid: req.params.id});
 
     if (!query) {
-        res.status(404).send('The course with given id was not found');
+        res.status(404).json({msg: 'The course with given id was not found'});
     } else {
-        res.json(query);
+        res.status(200).json(query);
     }
 
 });
@@ -188,6 +188,10 @@ router.post('/add-new', async (req, res) => {
     }
 
 });
+
+
+
+
 
 
 

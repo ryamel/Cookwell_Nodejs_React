@@ -70,8 +70,8 @@ class Featured extends Component {
 			const { featCardData, latestCardData } = this.state;
 
 			return (
-				// index and firstCardHeader props are used to conditionally render the featured and latest headers inside the first BrowseCard component. 
-				// the headers must be renders inside the first BrowseCard components in order for the headers to have the same behaviour as the grid cards.
+				// index and firstCardHeader propeties are used to conditionally render the featured and latest headers inside the first BrowseCard component. 
+				// this is because the headers must be rendered inside the first BrowseCard components in order for the headers to have the same behaviour as the grid cards. Oulined by the css grid attributes.
 				<React.Fragment>
 
 					<div className='index-grid'>
