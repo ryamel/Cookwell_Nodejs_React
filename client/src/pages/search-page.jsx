@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import './search-page.sass';
 import DropMenu from '../components/dropMenu';
-import DietMenu from '../components/dietMenu';
-import { mealTypes, dietOptions, cuisine } from './searchOptions';
+import MultiSelectMenu from '../components/multiSelectMenu';
+import { mealTypes, dietOptions, cuisine } from '../searchOptions';
 import ShowResults from './show-results'
 
 
@@ -61,7 +61,7 @@ class Searchpage extends React.Component {
 
 	handleInput(stateName, value) {
 
-		// console.log(this.state.searchText);
+		// console.log(stateName, value);
 
 		// var stateName = event.target.name;
 
@@ -178,10 +178,11 @@ class Searchpage extends React.Component {
 						<div id="restrictions-body">
 
 							<div className="filterDivs">
-								<DietMenu 
-									dietOptions={dietOptions}
+								<span className='restriction-label'>Dietary</span>
+								<MultiSelectMenu 
+									name='diet'
+									options={dietOptions}
 									handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
-									state={this.state.diet}
 								/>
 							</div>
 
@@ -229,7 +230,7 @@ class Searchpage extends React.Component {
 							<div className="filterDivs">
 								<span className='restriction-label dropMenu-label'>Culinary</span>
 								<DropMenu 
-									stateName='cuisine'
+									name='cuisine'
 									options={cuisine} 
 									handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
 									state={this.state.cuisine}
@@ -240,7 +241,7 @@ class Searchpage extends React.Component {
 							<div className="filterDivs">
 								<span className='restriction-label dropMenu-label'>Meal Type</span>
 								<DropMenu 
-									stateName='mealType'
+									name='mealType'
 									options={mealTypes} 
 									handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
 									state={this.state.mealType}

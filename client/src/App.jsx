@@ -38,7 +38,7 @@ class App extends React.Component {
 	}
 
 	handleInput(text) {
-		this.setState({searchText: text}, console.log(this.state));
+		this.setState({searchText: text}, () => console.log(this.state));
 	}
 
 	componentDidMount() {
@@ -58,7 +58,7 @@ class App extends React.Component {
 
 	removeHeaderText() {
 		console.log('test');
-		this.setState({searchText: 'test'}, console.log(this.state));
+		this.setState({searchText: 'test'}, () => console.log(this.state.state));
 		// this.textInput.current.innerHTML('test');
 	}
 
@@ -130,11 +130,11 @@ class App extends React.Component {
 							value={this.searchText}
 							onChange={(e) => this.handleInput(e.target.value)}
 						/>
-						{/*<Link to="/search-page" >*/}
-						<button className='searchBtn' type="submit" onClick={() => this.removeHeaderText()} >
-							<img id="searchIcon" src={search_icon} alt='no-img' />
-						</button>
-						{/*</Link>*/}
+						<Link to="/search-page" >
+							<button className='searchBtn' type="submit" onClick={() => this.removeHeaderText()} >
+								<img id="searchIcon" src={search_icon} alt='no-img' />
+							</button>
+						</Link>
 				 	</div>
 
 {/*				 	<div className="mediaSearchBar">

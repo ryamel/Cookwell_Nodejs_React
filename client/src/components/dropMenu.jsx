@@ -1,6 +1,21 @@
+
+// how to use. Because of the format you need to be using class component to use DropMenu
+// name props is the same of the name attribute for any input field
+// options is an array of selections that will appear in the menu
+// handleinput should be a function which passes to your input handler (assuming you are using controlled components/fields)
+// state should be the state
+
+
+//<DropMenu 
+// 	name='cuisine'
+// 	options={cuisine} 
+// 	handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
+// 	state={this.state.cuisine}
+// />
+
+
 import React, { useState, useEffect, useRef } from "react";
 import './dropMenu.sass';
-
 
 
 
@@ -28,7 +43,7 @@ function DropMenu(props) {
     		</div> 
 
 		    { 
-		    	isOpen && renderMenuOptions(props.options, menuRef, props.handleInput, props.stateName, props.state) 
+		    	isOpen && renderMenuOptions(props.options, menuRef, props.handleInput, props.name, props.state) 
 		    }
 
 	    </React.Fragment>
@@ -39,8 +54,8 @@ function DropMenu(props) {
 
 
 
-function renderMenuOptions(optionNames, menuRef, handleInput, stateName, state) {
-	//console.log(state);
+function renderMenuOptions(optionNames, menuRef, handleInput, name, state) {
+
 	return(
 		<div ref={menuRef} className='dropMenu' >
 		{
@@ -48,7 +63,7 @@ function renderMenuOptions(optionNames, menuRef, handleInput, stateName, state) 
 				<label key={index} className="check-container"> 
 					{optionName}
 					<input 
-						name={stateName} 
+						name={name} 
 						checked={state.includes(optionName)}
 						type="checkbox"
 						value={optionName}

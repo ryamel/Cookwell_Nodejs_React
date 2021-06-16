@@ -42,4 +42,36 @@ const dietOptions = [
 
 
 
-export { mealTypes, dietOptions, cuisine };
+
+const units = [
+				'none',
+				'teaspoon (tsp)',
+				'tablespoon (Tbsp)',
+				'cup(s)',
+				'fluid ounce (floz)',
+				'ounce (oz)',
+				'pound (lb)',
+				'small',
+				'medium',
+				'large',
+				'millilitre (ml)',
+				'litre (L)',
+				'milligram (mg)',
+				'gram (g)',
+				'killogram (kg)',
+				'centimeter (cm)',
+				'inch (in)',
+				'dash',
+				'pinch',
+				'gal',
+				'fluid pint (fl pt)',
+				'fluid quart (fl qt)',
+				'gill'
+			];
+
+
+
+
+
+
+export { mealTypes, dietOptions, cuisine, units };

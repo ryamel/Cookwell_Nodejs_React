@@ -52,12 +52,15 @@ class myAccountPage extends React.Component {
 
 					</div>
 
-					<Switch>
-						<Route path="/account-recipes" children={<Accountrecipes />} />
-						<Route path="/change-password" children={<Changepassword />} />
-						<Route path="/my-profile" children={<Myprofile />} />
-						<Route path="/submit-recipe" children={<Submitrecipe />} />
-					</Switch>
+					<div className='spacer'>
+						<Switch>
+							<Route path="/my-account" children={<Accountrecipes />} />
+							<Route path="/account-recipes" children={<Accountrecipes />} />
+							<Route path="/change-password" children={<Changepassword />} />
+							<Route path="/my-profile" children={<Myprofile />} />
+							<Route path="/submit-recipe" children={<Submitrecipe />} />
+						</Switch>
+					</div>
 
 
 				</div>
