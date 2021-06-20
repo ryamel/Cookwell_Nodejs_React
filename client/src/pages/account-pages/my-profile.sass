@@ -1,0 +1,86 @@
+@import '../../_App.sass'
+
+
+
+#edit-container
+	margin: 0
+	padding: 30px 50px
+	background-color: white
+	border: 1px solid $std-container-borderColour
+	border-radius: 5px
+	position: relative
+	@include accountSecondBreak
+		width: 100vw
+	button
+		margin: 15px 0 20px 0
+	textarea
+		width: 90%
+	input
+		width: 90%
+	.fa-user-circle
+		font-size: 20px
+		position: relative
+		top: 2px
+	#flexContainer
+		display: flex
+		width: 598px
+		@include accountSecondBreak
+			width: calc(100vw - 70px)
+		@include accountSecondBreak
+			display: block
+	.inlineContainer
+		width: 50%
+		vertical-align: top
+		color: grey
+		&:first-child
+			padding-right: 30px
+		@include accountSecondBreak
+			width: 100%
+		input
+			font-size: 12px
+			width: 100%
+			margin-bottom: 10px
+			border: 1px solid lightgrey
+		textarea
+			font-size: 12px
+			resize: none
+			width: 100%
+			height: 213px
+			border: 1px solid lightgrey
+			&:focus
+				outline: none
+	.uploadPhoto
+		display: inline-block
+		padding: 4px 0
+		cursor: pointer
+		margin: 0 0 15px 2px
+		font-size: 0.95em
+		.fileUploadInput
+			display: none
+			border: none
+	#emailChangeNotice
+		width: 100%
+		font-size: 0.78em
+		border-radius: 1px
+		line-height: 1.2em
+		color: grey
+		margin: 5px 0 25px 0
+	#emailInput
+		width: 270px
+		display: block
+		margin-bottom: 10px
+
+
+
+.std-form-heading
+	margin: 0 0 25px 0
+	font-size: 1.5em
+	font-family: 'Lato', sans-serif
+
+
+
+#Password-email:hover
+	color: red
+
+
+	

@@ -30,7 +30,7 @@ const accountMenu = () => {
 				</Link>
 
 				<Link to="/my-profile" className='sideMenuOption'>
-					Profile
+					Account
 					<i className="arrow right"></i>
 				</Link>
 

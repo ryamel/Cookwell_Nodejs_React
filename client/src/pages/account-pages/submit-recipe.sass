@@ -52,7 +52,13 @@
 
 
 
-
+#fileUploadName
+	display: inline-block
+	width: fit-content
+	position: relative
+	left: 175px 
+	top: 3px
+	font-size: 0.8em
 
 
 .subRec-field-container
@@ -104,7 +110,8 @@
 		width: fit-content
 		vertical-align: top
 		padding-right: 25px
-		margin-top: 10px
+		margin-top: 40px
+		margin-bottom: 10px
 		.subRec-title
 			display: inline-block
 			margin-bottom: 10px
@@ -129,15 +136,15 @@
 		right: 380px
 
 
-.uploadPhoto
-	display: inline-block
-	cursor: pointer
-	&:hover #infotext
-		display: block
+// .uploadPhoto
+// 	display: inline-block
+// 	&:hover #infotext
+// 		display: block
 
 .fileUploadInput
 	display: none
 	border: none
+
 #infotext
 	position: absolute
 	width: 400px
@@ -167,9 +174,12 @@
 
 
 .phIcon
-		display: inline-block
-		height: 25px
-		margin: 0
+	display: inline-block
+	position: relative
+	right: -168px
+	top: 10px
+	height: 25px
+	margin: 0
 
 .cusineList
 	width: 380px
@@ -179,11 +189,10 @@
 	// 	width: unset
 	// 	height: unset
 
-
 .field-container-add
-	margin-bottom: 4px
 	input
 		border: 1px solid lightgrey
+		margin-bottom: 4px
 		&::-ms-input-placeholder
 			color: $placeholder-color
 			font-size: 0.8em
@@ -202,12 +211,12 @@
 	.typeSelectUnit
 		width: 140px
 		position: relative
-		top: -1px
 		margin: 0 4px
 		border: 1px solid lightgrey
 	textarea
 		width: 598px
 		border: 1px solid lightgrey
+		margin-bottom: 4px
 		@include accountSecondBreak
 			width: 87vw
 		&::-ms-input-placeholder
@@ -228,10 +237,10 @@ $ingr-method-note-leftPadding: 30px
 
 
 
-
 .noteNum
 	padding-left: 5px
 	width: 50px
+	margin-right: 4px
 .noteInput
 	padding-left: 5px
 	margin-bottom: 3px
@@ -248,6 +257,7 @@ $ingr-method-note-leftPadding: 30px
 	font-size: 0.8em
 	padding: 0px 3px
 	height: 18px
+	width: fit-content
 
 
 
@@ -372,8 +382,7 @@ $ingr-method-note-leftPadding: 30px
 		color: red
 
 #addRemoveBtn-container
-	height: 10px
-	margin-bottom: 12px
+	height: 25px
 	margin-right: 2px
 	@include accountSecondBreak
 		width: 87vw

@@ -1,66 +1,191 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
+import { mealTypes, dietOptions, cuisine } from '../../searchOptions';
 import './submit-recipe.sass';
+import axios from 'axios';
+
+import photoIcon from '../../media/icons/photo45.png';
 import DropMenu from '../../components/dropMenu';
 import MultiSelectMenu from '../../components/multiSelectMenu';
-import { mealTypes, dietOptions, cuisine } from '../../searchOptions';
-import photoIcon from '../../media/icons/photo45.png';
 import Ingredients from '../../components/ingredients';
+import Methods from '../../components/method';
+import Notes from '../../components/notes';
 
-
-class submitRecipe extends Component {
+class submitRecipe extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			title: [],
+			title: '',
+			authid: '60ac3fd7520326cbcf375237',
 			description: '',
-			cuisine: [],
-			servings: '',
 			mealType: '',
 			diet: [],
+			cuisine: [],	
+			servings: '',			
 			cookTime: null,
+			ingredients: [{gtext: ' ', qty: ' ', unit: ' '}],
+			method: [''],
+			notes: [{note: '', stepNum: ''}],
 			edit: false,
-			ingredients: [{text: '', qty: '', unit: ''}]
+			selectedFile: null,
+			fileName: null,
+			error: null,
 		};
 
+		this.fileInput = React.createRef();
 		this.handleInput = this.handleInput.bind(this);
-		this.addIngrField = this.addIngrField.bind(this);
-		this.removeIngrField = this.removeIngrField.bind(this);
+		this.removeField = this.removeField.bind(this);
+		this.addField = this.addField.bind(this);
+		this.fileHandler = this.fileHandler.bind(this);
+		this.uploadRecipe = this.uploadRecipe.bind(this);
+	}
+
+	// put file into state variable
+	fileHandler(e) {
+		if (this.fileInput.current.files[0]) {
+	   		this.setState({
+	   			fileName: this.fileInput.current.files[0].name,
+				selectedFile: event.target.files[0]
+			}, () => console.log(this.state.selectedFile))
+	   	}
+	}
+
+	uploadRecipe() {
+
+
+		// formData does not suport nested objects, only key/value pairs. 
+		// So any nested data was turned into json strings. And then converted into objects on the server side
+
+		var data = new FormData();
+   		data.append('file', this.state.selectedFile);
+   		// data.append('title', this.state.title);
+   		// data.append('authid', this.state.authid);
+   		// data.append('description', this.state.description);
+   		// data.append('mealType', this.state.mealType);
+   		// data.append('diet', JSON.stringify(this.state.diet));
+   		// data.append('cuisine', JSON.stringify(this.state.cuisine));
+   		// data.append('servings', this.state.servings);
+   		// data.append('cookTime', this.state.cookTime);
+   		// data.append('ingredients', JSON.stringify(this.state.ingredients));
+   		// data.append('method', JSON.stringify(this.state.method));
+   		// data.append('notes', JSON.stringify(this.state.notes));
+
+
+
+		// const data = new FormData();
+		// data.append('file', this.state.selectedFile);
+		// data.append('title', this.state.title);
+
+		fetch('/api/recipes/upload', {
+			method: 'POST',
+			headers: { 'Content-Type': 'multipart/form-data' },
+			body: data,
+		})
+		.then(res => res.json())
+		.then(body => console.log(body))
+		.catch(err => console.log(err));
+	
+
+  //  		console.log(this.state);
+		// const postOptions = {
+	 //        method: 'POST',
+	 //        body: data
+	 //    };
+
+
+	  //   axios.post("/recipes/upload", data, { })
+			// .then(res => { // then print response status
+			// 	console.log(res.statusText)
+			// })
+
+		// axios({
+		// 	method: 'post',
+		// 	url: "/api/recipes/upload",
+		// 	data: data
+		// })
+		// .then((data) => console.log(data))
+		// .catch((error) => console.log(error));
+
+
+
+		// fetch("/api/recipes/upload", postOptions)
+		// 	.then(res => res.json())
+		// 	.then(
+		// 		(data) => {
+		// 			console.log(data);
+		// 		},
+		// 		(error) => {
+		// 			console.log('error');
+		// 			this.setState({
+		// 				error: error
+		// 			})
+		// 		}
+		// 	)
+
+
+
+
 	}
 
 
-	addIngrField() {
-		var newState = this.state.ingredients;
-		newState.push( {text: '', qty: '', unit: ''} );
-		this.setState({ingredients: newState}, () => console.log(this.state.ingredients));
+
+	addField(stateName) {
+		var newState = this.state[stateName];
+		stateName == 'ingredients' && newState.push( {gtext: '', qty: '', unit: ''} )
+		stateName == 'method' && newState.push('')
+		stateName == 'notes' && newState.push({note: '', stepNum: ''})
+		this.setState({[stateName]: newState}, () => console.log(this.state[stateName]));
 	}
 
-	removeIngrField() {
-		var newState = this.state.ingredients;
+	removeField(stateName) {
+		console.log(stateName);
+		var newState = this.state[stateName];
 		if (newState.length > 1) {
 			newState.pop();
-			this.setState({ingredients: newState}, () => console.log(this.state.ingredients));
+			this.setState({[stateName]: newState});
 		}
 	}
 
 
-
-
-
 	handleInput(fieldName, value, number = null) {
-		// console.log(fieldName);
-		// console.log(value);
-		// console.log(number);
 
-			// description
+		// ingredients
+		if (fieldName === 'qty' || fieldName === 'unit' || fieldName === 'gtext') {
+			var newState = this.state.ingredients;
+			newState[parseInt(number)][fieldName] = value;
+			this.setState({ingredients: newState}, () => console.log(this.state.ingredients));	
+			return null;
+		}
 
-			// title
+		// method
+		if (fieldName === 'method') {
+			var newState = this.state.method;
+			newState[number] = value;
+			this.setState({method: newState}, () => console.log(this.state.method));	
+			return null;
+		}
 
-			// photo??
+		// notes
+		if (fieldName === 'stepNum') {
+			var newState = this.state.notes;
+			newState[parseInt(number)][fieldName] = parseInt(value);
+			this.setState({notes: newState}, () => console.log(this.state.notes));	
+			return null;
+		} else if (fieldName === 'note') {
+			var newState = this.state.notes;
+			newState[parseInt(number)][fieldName] = value;
+			this.setState({notes: newState}, () => console.log(this.state.notes));	
+			return null;
+		}
 
-			// servings
 
-		if (fieldName == 'diet') {
+		// title, description, servings, cookTime, mealType
+		if (fieldName === 'title' || fieldName === 'description' || fieldName === 'servings' || fieldName === 'cookTime' || fieldName === 'mealType') {
+			var newState = value;
+		}
+
+		// diet
+		if (fieldName === 'diet') {
 			var dietArr = this.state.diet;
 			var ind = dietArr.indexOf(value);
 			if (!dietArr.includes(value)) {
@@ -72,11 +197,9 @@ class submitRecipe extends Component {
 			}
 		}
 
-		if (fieldName == 'mealType') {
-			var newState = value;
-		}
 
-		if (fieldName == 'cuisine') {
+		// cuisine
+		if (fieldName === 'cuisine') {
 			var cuisineArr = this.state.cuisine;
 			var ind = cuisineArr.indexOf(value);
 			if (!cuisineArr.includes(value)) {
@@ -88,18 +211,13 @@ class submitRecipe extends Component {
 			}
 		}
 
-		if (number) {
-			var newState = this.state.ingredients;
-			newState[parseInt(number)][fieldName] = value;
-			this.setState({ingredients: newState}, () => console.log(this.state.ingredients));	
-			return null;
-		}
 
-
-		// update state
+		//update state
 		this.setState({
 			[fieldName]: newState
-		}, () => console.log(this.state.cuisine));
+		}, () => console.log(this.state[fieldName]));
+
+
 	}
 
 
@@ -134,27 +252,49 @@ class submitRecipe extends Component {
 		            {
 		            	this.state.edit
 		            	? <div className='submit-form-heading'>EDIT RECIPE</div>
-		            	: <div className='submit-form-heading'>SUBMIT RECIPE</div>		            	
+		            	: <div className='my-account-titles'>Submit Recipe</div>		            	
 		            }
 
+		            <div id="req-note">
+						<span className="requiredStar">*</span> 
+						Required
+					</div>
+
 		          
-					<div className='subRec-field-container'>
+{/*					<div className='subRec-field-container'>
 						<label className='uploadPhoto'>
 							Recipe Photo
 							<span className='requiredStar'> *</span> 
 						</label>
-						{/*<input className='fileUploadInput' type='file' name='file' />*/}
-						{/*<img id='profileImg-Rec' style='display: none;' src='#' />*/}
-						{/*<img className='phIcon' src={photoIcon} />*/}
+						<input className='fileUploadInput' type='file' name='file' />
+						<img id='profileImg-Rec' style='display: none;' src='#' />
+						<img className='phIcon' src={photoIcon} />
 						<div id='image-holder'>
 						</div>
 					</div>
-		               
-		            
-					<div id="req-note">
-						<span className="requiredStar">*</span> 
-						Required
+*/}
+					
+					
+
+
+					<div className='subRec-field-container'>
+						<label>
+							Photo
+							<span className='requiredStar'> *</span> 
+						</label>
+						<label style={{cursor: 'pointer'}}>
+							<input className='fileUploadInput' ref={this.fileInput} onChange={this.fileHandler} type='file' name='file' />
+							<img className='phIcon' src={photoIcon} />
+							<div id='fileUploadName'>
+								{ this.state.fileName ? this.state.fileName : 'Upload .png or .jpg file type'  }
+							</div> 
+						</label>
 					</div>
+		               
+
+
+		          
+					
 
 					<div className="subRec-field-container title clearfix">
 						<label>
@@ -168,7 +308,7 @@ class submitRecipe extends Component {
 							maxLength="80" 
 							value={this.state.title}
 							onChange={(e) => this.handleInput(e.target.name, e.target.value)}
-						/>
+							/>
 					</div>
 
 					<div className="subRec-field-container description clearfix">
@@ -185,11 +325,11 @@ class submitRecipe extends Component {
 							// onkeyup="countChar(this)"
 							value={this.state.description}
 							onChange={(e) => this.handleInput(e.target.name, e.target.value)}
-						>
+							>
 						</textarea>
-{/*						<div id="charCount">
+						<div id="charCount">
 							100 to 500 characters (0)
-						</div>*/}
+						</div>
 					</div>
 
 
@@ -208,7 +348,7 @@ class submitRecipe extends Component {
 							maxLength="25" 
 							value={this.state.servings}
 							onChange={(e) => this.handleInput(e.target.name, e.target.value)}
-						/>
+							/>
 					</div>
 
 
@@ -225,14 +365,14 @@ class submitRecipe extends Component {
 		            		maxLength="3" 
 		            		value={this.state.time}
 							onChange={(e) => this.handleInput(e.target.name, e.target.value)}
-		            	/>
+		            		/>
 		            </div>
 
 
 
 					<div className="subRec-field-container">
-
 						<div className="sub-subRec-field-container">
+
 				 			<label className='subRec-title'>
 								Meal Type
 								<span className="requiredStar"> *</span>
@@ -247,12 +387,13 @@ class submitRecipe extends Component {
 											type="checkbox"
 											checked={this.state.mealType === mealType} 
 											onChange={(e) => this.handleInput(e.target.name, e.target.value)}
-										/>
+											/>
 										<span className="checkmark"></span>
 									</label>
 								)
 							}
 						</div>
+
 
 						<div className="sub-subRec-field-container">
 							<label className='subRec-title'>
@@ -262,9 +403,8 @@ class submitRecipe extends Component {
 								name='cuisine'
 								options={cuisine}
 								handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
-							/>
+								/>
 						</div>
-
 
 
 						<div className="sub-subRec-field-container">
@@ -275,90 +415,49 @@ class submitRecipe extends Component {
 								name='diet'
 								options={dietOptions}
 								handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
-							/>
-						</div>
+								/>
 
+						</div>
 					</div>
+
 
 
 					<Ingredients 
-						addIngrField={this.addIngrField} 
+						addField={this.addField} 
 						ingredients={this.state.ingredients} 
 						handleInput={this.handleInput} 
-						removeIngrField={this.removeIngrField}
-					/>
+						removeField={this.removeField}
+						/>
 
 
-{/*					<div id="dynamic_ingredients">
 
-						<div className="std-field-label form-title-inline ingrMethNoteTitle">
-							Ingredients
-							<span className="requiredStar"> *</span>
-						</div>
+					<Methods
+						addField={this.addField}
+						removeField={this.removeField}
+						handleInput={this.handleInput}
+						methods={this.state.method}
+						/>
 
-						<div id="addRemoveBtn-container">
-							<button id="add_ingrField" onClick={this.addIngrField} type="button">Add Entry</button>
-							<button id="remove_ingrField" onClick={this.removeIngrField} type="button">Remove Last</button>
-						</div>
-	
-						<AddIngredientFields ingredients={this.state.ingredients} handleInput={this.handleInput}/>
-
-					</div>
-*/}
-	
-{/*					<div id="dynamic_method">
-						<div className="std-field-label form-title-inline ingrMethNoteTitle">
-							Steps / Method
-							<span className="requiredStar"> *</span>
-						</div>
-						<div id="addRemoveBtn-container">
-							<button id="add_methodField" type="button">Add Entry</button>
-							<button id="remove_methodField" type="button">Remove Last</button>
-						</div>
-					    <div className='field-container-add'>
-					    	<textarea 
-						    	name='method' 
-						    	rows='4' 
-						    	cols='98' 
-						    	placeholder='Step ".$i."...'
-					    	>	
-					    	</textarea>
-					    </div>
-					</div>
-
-
-		            <div id='dynamic_notes'>
-						<div className='std-field-label form-title-inline ingrMethNoteTitle'>
-							Notes
-						</div>
-						<div id="addRemoveBtn-container">
-							<button id="add_noteField" type="button" >Add Entry</button>
-							<button id="remove_noteField" type="button">Remove Last</button>
-						</div>
-		                <div className='field-container-add'>
-		                	<input 
-		                		className='noteNum' 
-		                		name='noteNum[]' 
-		                		placeholder='Step #' 
-		                		value=''
-		                	/>
-		                	<input 
-		                		className='noteInput' 
-		                		name='note[]' 
-		                		placeholder='Note to be attached to Step' 
-		                		value=''
-		                	/>
-		                </div>
-		            </div>*/}
+					<Notes 
+						addField={this.addField}
+						removeField={this.removeField}
+						handleInput={this.handleInput}
+						notes={this.state.notes}
+						/>
 
 
 
 
-	{/*	            <button className="submitr-btn" type="submit" name="submit_edit" formaction="includes\uploadRecipeEdit?rls='.encrypt_decrypt('encrypt', $rID).'">Save Changes</button>
-		            <button className="submitr-btn" type="submit" name="submit" formaction="includes\uploadRecipe">Submit Recipe</button>
+
+		           {/* <button className="submitr-btn" type="submit" name="submit_edit">Save Changes</button>*/}
+
+		            <button className="submitr-btn" type="submit" name="submit" onClick={this.uploadRecipe}>Submit Recipe</button>
+
+
+
 					<div id="submit-note">
-						<div>Once submitted, recipes are reviewed for grammar and clarity.<br>Please be patient while recipies upload.</div>
-					</div>*/}
+						<div>Once submitted, recipes are reviewed for grammar and clarity.<br/>Please be patient while recipies upload.</div>
+					</div>
 
 				</div>
 			</div>

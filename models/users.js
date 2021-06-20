@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema({
 // this gives a method to the resulting object from calling the constructor. I.e 'new User'
 userSchema.methods.generateAuthToken = function() {
 	// sign argument is what is in the payload of the jwt. Second argument is the private key
-	const token = jwt.sign({ _id: this._id, admin: false }, process.env.private_key);
+	const token = jwt.sign({ _id: this._id, email: this.email, admin: false }, process.env.private_key);
 	return token;
 }
 

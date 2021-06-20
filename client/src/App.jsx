@@ -34,6 +34,7 @@ class App extends React.Component {
 		this.login = this.login.bind(this);
 		this.logBtn = this.logBtn.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+		this.logout = this.logout.bind(this);
 		this.removeHeaderText = this.removeHeaderText.bind(this);
 	}
 
@@ -42,11 +43,16 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
+		// check for jwt. then render appropriate log status
 		localStorage['logged_in'] ? this.setState({logged_in: true}) : this.setState({logged_in: false})
 	}
 
 	login() { 
 		this.setState({logged_in: true}); 
+	}
+
+	logout() {
+		this.setState({logged_in: false}); 
 	}
 
 	// logout() {
@@ -94,6 +100,9 @@ class App extends React.Component {
 	}
 
 
+	componentWillUnmount() {
+		this.abortController.abort();
+	}
 
 
 	render() {
@@ -158,16 +167,16 @@ class App extends React.Component {
 				{/*All pages to be used need to be listed under <Switch> as seen here. 
 				Import each page as a component and place under a <Route> tag */}
 				<Switch>
-					<Route exact path="/" children={<Featured />} />
-					<Route path="/recipes" children={<Recipes />} />
-					<Route path="/cooks" children={<Cooks />} />
-					<Route path="/recipe-page/:id" children={<Recipepage />} />
-					<Route path="/search-page" children={<Searchpage searchText={' '} />} />
-					<Route path="/login-page" children={<Loginpage login={this.login} />} />
-					<Route path="/signup-page" children={<Signuppage />} />
-					<Route path="/privacy-policy" children={<Privacypolicypage />} />
-					<Route path="/forgot-password" children={<Forgotpassword />} />
-					<Route path="/my-account" children={<Myaccountpage />} />
+					<Route exact path="/"> 				<Featured /> 							</Route>
+					<Route path="/recipes"> 			<Recipes /> 							</Route>
+					<Route path="/cooks"> 				<Cooks /> 								</Route>
+					<Route path="/recipe-page/:id"> 	<Recipepage /> 							</Route>
+					<Route path="/search-page"> 		<Searchpage /> 							</Route>
+					<Route path="/login-page"> 			<Loginpage login={this.login} /> 		</Route>
+					<Route path="/signup-page"> 		<Signuppage /> 							</Route>
+					<Route path="/privacy-policy"> 		<Privacypolicypage /> 					</Route>
+					<Route path="/forgot-password"> 	<Forgotpassword /> 						</Route>
+					<Route path="/my-account"> 			<Myaccountpage logout={this.logout} /> 	</Route>
 				</Switch>
 
 			</Router>

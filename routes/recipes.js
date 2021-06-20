@@ -2,8 +2,12 @@
 const { User, validateUser } = require('../models/users');
 const Recipe = require('../models/recipes'); // these constructors allow interaction with the DB tables
 
+
 const mogoose = require('mongoose');
 const express = require('express');
+
+
+
 
 const router = express.Router();
 
@@ -184,7 +188,7 @@ router.post('/add-new', async (req, res) => {
         res.status(201).json(saveRec);
     }
     catch (err) {
-        res.status(400).json({message: err.message}); // client fucks up, send 400
+        res.status(400).json({message: err.message}); 
     }
 
 });
@@ -196,7 +200,38 @@ router.post('/add-new', async (req, res) => {
 
 
 
+const { upload, validate_img } = require('../middleware/upload');
+const validate_RecipeData = require('../middleware/validate_RecipeData');
+
+
+// 4
+router.post('/upload', (req, res) => {
+    console.log(req.body);
+    
+    console.log('sup');
+    res.status(200).json('success');
+
+});
+
+
+
+// middleware validate recipe data using .validate in mongoose
+
+// if no issues with .validate run multer middlware, saving img
+
+// finally .save recipe data
+
+
+
+
 module.exports = router;
+
+
+
+
+
+
+
 
 
 

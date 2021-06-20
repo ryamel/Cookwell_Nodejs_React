@@ -6,6 +6,9 @@ const Joi = require('joi'); // upper case named because module returns a Class
 const mongo = require('mongodb');
 const assert = require('assert');
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true)
+const cors = require('cors');
 require('dotenv').config();
 
 
@@ -24,8 +27,6 @@ const db = mongoose.connect(process.env.DB_connection, {
 
 
 
-
-
 // app.use installs a middleware function
 // when a request is send to the server, middlware is used to perform actions on the request and response object
 // middlware always takes the form of... function name(req, res, next) { }
@@ -33,7 +34,9 @@ const db = mongoose.connect(process.env.DB_connection, {
 const users = require('./routes/users');
 const recipes = require('./routes/recipes');
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 
 app.use('/api/users', users);
 app.use('/api/recipes', recipes);

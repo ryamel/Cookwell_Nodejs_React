@@ -5,19 +5,17 @@ const mongoose = require('mongoose');
 
 
 
-const ingrSchema = new mongoose.Schema(
-	{
-		text: 'string',
-		qty: 'string'
-	}
-);
+const ingrSchema = new mongoose.Schema({
+	gtext: 'string',
+	qty: 'string',
+	unit: 'string'
+	
+});
 
-const noteSchema = new mongoose.Schema(
-	{
-		step: 'number',
-		text: 'string'
-	}
-);
+const noteSchema = new mongoose.Schema({
+	step: 'string',
+	text: 'string'
+});
 
 
 const recipesSchema = new mongoose.Schema({ 
@@ -118,8 +116,8 @@ const recipesSchema = new mongoose.Schema({
 		min: 0
 	},
 	ingredients: {
-		type: [ingrSchema], // embedded document
-		required: true
+		required: true,
+		type: [ingrSchema]
 	},
 	method: {
 		required: true,

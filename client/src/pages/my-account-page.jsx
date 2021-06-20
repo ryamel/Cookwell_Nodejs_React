@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, NavLink, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, NavLink, useRouteMatch, Switch, Route, Link } from "react-router-dom";
 import './my-account-page.sass';
 
 
@@ -9,64 +9,59 @@ import Myprofile from './account-pages/my-profile';
 import Submitrecipe from './account-pages/submit-recipe';
 
 
-class myAccountPage extends React.Component {
-	constructor() {
-		super();
-		this.state = {};
-	}
+function myAccountPage(props) {
+
+	let { path, url } = useRouteMatch();
+	
+
+	return(
+		<div className='accountBody'>
 
 
+			<div className="sideMenu">
 
-	render() {
-		return(
-			<Router>
-				<div className='accountBody'>
+				<Link to="/my-account" className='sideMenuOption'>
+					Recipes 
+					<i className="arrow right"></i>
+				</Link>
 
+				<Link to="/my-account/submit-recipe" className='sideMenuOption'>
+					Submit Recipe 
+					<i className="arrow right"></i>
+				</Link>
 
-					<div className="sideMenu">
+				<Link to="/my-account/my-profile" className='sideMenuOption'>
+					Account
+					<i className="arrow right"></i>
+				</Link>
 
-						<Link to="/account-recipes" className='sideMenuOption'>
-							Recipes 
-							<i className="arrow right"></i>
-						</Link>
+				<Link to="/my-account/change-password" className='sideMenuOption'>
+					Change Password
+					<i className="arrow right"></i>
+				</Link>
 
-						<Link to="/submit-recipe" className='sideMenuOption'>
-							Submit Recipe 
-							<i className="arrow right"></i>
-						</Link>
+				<Link to="/" className='sideMenuOption' onClick={props.logout}>
+					Log Out 
+					<i className="arrow right"></i>
+				</Link>
 
-						<Link to="/my-profile" className='sideMenuOption'>
-							Profile
-							<i className="arrow right"></i>
-						</Link>
+			</div>
 
-						<Link to="/change-password" className='sideMenuOption'>
-							Change Password
-							<i className="arrow right"></i>
-						</Link>
+			<div className='spacer'>
 
-						<Link to="/" className='sideMenuOption'>
-							Log Out 
-							<i className="arrow right"></i>
-						</Link>
+				<Switch>
+					<Route exact path="/my-account"> 				<Accountrecipes /> 		</Route>
+					<Route path="/my-account/submit-recipe"> 		<Submitrecipe /> 		</Route> 
+					<Route path="/my-account/my-profile"> 			<Myprofile /> 			</Route> 
+					<Route path="/my-account/change-password"> 		<Changepassword /> 		</Route>
+				</Switch>
 
-					</div>
+			</div>
 
-					<div className='spacer'>
-						<Switch>
-							<Route path="/my-account" children={<Accountrecipes />} />
-							<Route path="/account-recipes" children={<Accountrecipes />} />
-							<Route path="/change-password" children={<Changepassword />} />
-							<Route path="/my-profile" children={<Myprofile />} />
-							<Route path="/submit-recipe" children={<Submitrecipe />} />
-						</Switch>
-					</div>
+		</div>
 
-
-				</div>
-			</Router>
-		);
-	}
+	);
+	
 }
 
 
