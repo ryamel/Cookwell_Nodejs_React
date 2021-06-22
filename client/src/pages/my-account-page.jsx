@@ -31,7 +31,7 @@ function myAccountPage(props) {
 				</Link>
 
 				<Link to="/my-account/my-profile" className='sideMenuOption'>
-					Account
+					Profile
 					<i className="arrow right"></i>
 				</Link>
 

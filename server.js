@@ -18,7 +18,10 @@ if (!process.env.private_key) {
     process.exit(1);
 }
 
+// const os = require("os");
+// const tempDir = os.tmpdir(); // /tmp
 
+// console.log(tempDir);
 
 const db = mongoose.connect(process.env.DB_connection, {
     useNewUrlParser: true, 

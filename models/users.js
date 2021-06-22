@@ -3,6 +3,15 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
+
+const socialSchema = new mongoose.Schema({ 
+	insta: 'string',
+	yt: 'string',
+	fb: 'string',
+	web: 'string',
+	tw: 'string'
+});
+
 const userSchema = new mongoose.Schema({ 
 	name: {
 		type: 'string', 
@@ -23,29 +32,17 @@ const userSchema = new mongoose.Schema({
 		type: 'boolean',
 		required: true,
 		default: false
+	},
+	about: {
+		type: 'string', 
+		max: 500
+	},
+	proileImg: {
+		type: 'string'
+	},
+	socialLinks: {
+		type: {socialSchema}
 	}
-	// about: {
-	// 	type: 'string', 
-	// 	max: 500
-	// },
-	// srcProfileImg: {
-	// 	type: 'string'
-	// },
-	// insta: {
-	// 	type: 'string'
-	// },
-	// yt: {
-	// 	type: 'string'
-	// },
-	// fb: {
-	// 	type: 'string'
-	// },
-	// web: {
-	// 	type: 'string'
-	// },
-	// twitter: {
-	// 	type: 'string'
-	// }
 });
 
 // document instance method... see mongoose docs

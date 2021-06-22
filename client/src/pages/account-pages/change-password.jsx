@@ -27,7 +27,6 @@ class changePassword extends Component {
 
 	changePassword() {
 
-		console.log(this.state);
 
 		const data = {
 			oldPwd: this.state.oldPwd,
@@ -37,7 +36,7 @@ class changePassword extends Component {
 
 		const postOptions = {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 'Content-Type': 'application/json' }, // type of data being sent
 			body: JSON.stringify(data)
 		};
 

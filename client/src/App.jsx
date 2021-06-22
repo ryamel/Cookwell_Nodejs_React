@@ -100,9 +100,9 @@ class App extends React.Component {
 	}
 
 
-	componentWillUnmount() {
-		this.abortController.abort();
-	}
+	// componentWillUnmount() {
+	// 	this.abortController.abort();
+	// }
 
 
 	render() {

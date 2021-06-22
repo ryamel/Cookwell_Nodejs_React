@@ -2,13 +2,11 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 var cookieParser = require('cookie-parser');
 
-// middleware
-// only checks for valid token
+// verifyToken looks for the jwt token in cookies. Validates it. And puts the payload data into the request object as <req.tokenData>
 
 
 function verifyToken(req, res, next) {
-	// console.log(req.headers.cookie);
-	//console.log('Cookies: ', req.cookies); // cookie parser ass .cookies method to req
+
 	const token = req.cookies['jwt'];
 
 	if (!token) return res.status(401).json('Access denied. No valid token provided.');
@@ -27,12 +25,4 @@ function verifyToken(req, res, next) {
 module.exports = verifyToken;
 
 
-
-
-
-// use middlware function for determining if user is authorized
-// router.post('/', auth, async (req, res) => {
-// 	console.log('success! I am authorized');
-// 	console.log(req.userPayload);
-// })
 

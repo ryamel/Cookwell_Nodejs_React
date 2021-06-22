@@ -41,7 +41,7 @@ class submitRecipe extends React.Component {
 	}
 
 	// put file into state variable
-	fileHandler(e) {
+	fileHandler(event) {
 		if (this.fileInput.current.files[0]) {
 	   		this.setState({
 	   			fileName: this.fileInput.current.files[0].name,
@@ -284,8 +284,8 @@ class submitRecipe extends React.Component {
 						</label>
 						<label style={{cursor: 'pointer'}}>
 							<input className='fileUploadInput' ref={this.fileInput} onChange={this.fileHandler} type='file' name='file' />
-							<img className='phIcon' src={photoIcon} />
-							<div id='fileUploadName'>
+							<img className='phIcon phIcon-submit' src={photoIcon} />
+							<div className='uploadText-submit fileUpload'>
 								{ this.state.fileName ? this.state.fileName : 'Upload .png or .jpg file type'  }
 							</div> 
 						</label>
