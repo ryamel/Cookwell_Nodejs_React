@@ -1,10 +1,38 @@
 @import '../../_App.sass'
 
+// bug fix float right
+.clearfix::after 
+	content: ""
+	clear: both
+	display: table
 
-#uploadInput-container
+
+#photo-container
 	display: block
-	margin: 10px 0
+	padding-bottom: 10px
+	#photo-msg
+		font-size: 0.75em
+		width: 220px
+		height: 200px
+		text-align: center
+		line-height: 1.3em
+		padding: 55px 20px 20px
+		border: 1px solid rgb(219,219,219)
+		margin-left: 222px
+	#img-show
+		object-fit: cover
+	
+#uploadInput-container
 	cursor: pointer
+	position: relative
+	right: -222px
+	top: 0px
+	color: black
+
+.ph-label
+	position: absolute
+	top: 80px
+	left: 50px
 
 .phIcon-profile
 	display: inline-block
@@ -25,33 +53,31 @@
 		font-size: 20px
 		position: relative
 		top: 2px
-	#flexContainer
-		display: flex
-		width: 598px
-		@include accountSecondBreak
-			width: calc(100vw - 70px)
-		@include accountSecondBreak
-			display: block
+	// #flexContainer
+	// 	display: flex
+	// 	width: 598px
+	// 	@include accountSecondBreak
+	// 		width: calc(100vw - 70px)
+	// 	@include accountSecondBreak
+	// 		display: block
 
-.inlineContainer
-	width: 50%
-	vertical-align: top
+.fieldContainer
+	min-height: 40px
 	color: grey
-	&:first-child
-		padding-right: 30px
+	margin-bottom: 10px
 	@include accountSecondBreak
 		width: 100%
 	input
 		font-size: 12px
-		width: 100%
+		width: 377px
 		margin-bottom: 10px
 		border: 1px solid lightgrey
+		float: right
 	textarea
 		font-size: 12px
 		resize: none
-		width: 100%
-		height: 213px
 		border: 1px solid lightgrey
+		float: right
 		&:focus
 			outline: none
 
@@ -73,10 +99,6 @@
 	color: grey
 	margin: 5px 0 25px 0
 
-#emailInput
-	width: 270px
-	display: block
-	margin-bottom: 10px
 
 
 
@@ -89,6 +111,8 @@
 
 #Password-email:hover
 	color: red
+
+
 
 
 	

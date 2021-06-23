@@ -206,7 +206,9 @@ const validate_RecipeData = require('../middleware/validate_RecipeData');
 
 // 4
 router.post('/upload', (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
+    console.log(req);
+    let imageFile = req.files.file;
     
     console.log('sup');
     res.status(200).json('success');

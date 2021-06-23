@@ -3,24 +3,22 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
-
-const socialSchema = new mongoose.Schema({ 
-	insta: 'string',
-	yt: 'string',
-	fb: 'string',
-	web: 'string',
-	tw: 'string'
-});
+// const socialSchema = new mongoose.Schema({ 
+// 	insta: 'string',
+// 	yt: 'string',
+// 	fb: 'string',
+// 	web: 'string',
+// 	tw: 'string'
+// });
 
 const userSchema = new mongoose.Schema({ 
 	name: {
 		type: 'string', 
-		min: 4, //'Name must be greater than 4 characters'],
-		max: 100 //'Max 100 characters for Name']
+		minLength: [4, 'Name must be at least 4 characters long'], //'Name must be greater than 4 characters'],
+		maxLength: [100, 'Name cannot be longer than 100 characters'] //'Max 100 characters for Name']
 	},
 	pwd: {
 		type: 'string',
-		min: 8, //'Password must be at least 8 characters long'],
 		required: true
 	},
 	email: {
@@ -35,15 +33,17 @@ const userSchema = new mongoose.Schema({
 	},
 	about: {
 		type: 'string', 
-		max: 500
+		maxLength: [500, 'About cannot be longer than 500 characters']
 	},
 	proileImg: {
-		type: 'string'
-	},
-	socialLinks: {
-		type: {socialSchema}
+		type: 'string',
+		default: 'default.jpg'
 	}
+	// socialLinks: {
+	// 	type: {socialSchema}
+	// }
 });
+
 
 // document instance method... see mongoose docs
 // this gives a method to the resulting object from calling the constructor. I.e 'new User'

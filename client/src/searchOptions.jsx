@@ -1,3 +1,6 @@
+
+// NOTE: if updating entries. You must also update the models enum property in Nodejs
+
 const cuisine = [
 					'American', 
 					'Asian', 
@@ -75,3 +78,4 @@ const units = [
 
 
 export { mealTypes, dietOptions, cuisine, units };
+

@@ -102,84 +102,94 @@ router.post('/change-password', verifyToken, async (req, res) => {
 
 
 
-
+ var validUrl = require('valid-url');
 
 
 router.post('/update-profile', [verifyToken, upload.single('file')], async (req, res) => {
+    //console.log(req.body);
+
+
     
-    // validate file and place into temp folder
+    // validate uploaded file and place into temp folder
     if (typeof req.file !== "undefined") {
-
-        console.log(req.body);
-        console.log(req.file);
-
-        const proileImg = req.body.name.replace(/\s/g,'_') + '_' + Date.now();
         const extension = path.extname(req.file.originalname).toLowerCase();
-        // const tempPath = path.join(__dirname, "client", "public", "test_upload", 'file_1624347088180.png'); // req.file.filename
-        // const targetPath = path.join(__dirname, "client", "public", "user_profile_img", 'file_1624347088180.png');// req.file.filename
+        const profileImg = req.body.name.replace(/\s/g,'_') + '_' + Date.now() + extension;
+        const tempPath = path.join(req.file.path);
+        const targetPath = path.join("client", "public", "user_profile_img", profileImg);
 
+        // append img name
+        req.body.profileImg = profileImg;
 
-        fs.renameSync('file_1624354135900.png', 'test.png', function (err) {
-            if (err) {
-                console.log(err);
-                //fs.unlink(tempPath, err => console.log(err));
-                //return res.status(500).json({error: 'Server error'});
-            }
-        });
-
-        return null;
+       
+        // console.log(req.file);
+        // console.log(tempPath);
+        // console.log(targetPath);
 
         if (req.file.size >= 8000000) {
-            await fs.unlink(tempPath, err => console.log(err));
+            fs.unlink(tempPath, err => console.log(err));
             return res.status(400).json({error: 'File size too large. Must be less than 8 MB.'});
         }
 
         if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) {
-            await fs.unlink(tempPath, err => console.log(err));
+            fs.unlink(tempPath, err => console.log(err));
             return res.status(400).json({error: 'File must be .png or .jpg'});
         }
 
-        // save img to permanent folder
-        fs.renameSync(tempPath, targetPath, function (err) {
-            if (err) {
-                console.log(err);
-                //fs.unlink(tempPath, err => console.log(err));
-                //return res.status(500).json({error: 'Server error'});
-            }
+        // move file from tmp dir to permenant dir
+        mv(tempPath, targetPath, function (err) {
+            if (err) console.log(err);
         });
 
-        // append img name
-        req.body.proileImg = proileImg;
-
-        console.log(req.body)
-        return null;
     }
 
     
+
     // update user data
 
     // find user
     const user = await User.findOne({_id: req.tokenData._id});
-    if (!user) return res.status(500).json({error: 'no user found'});
+    if (!user) {
+        fs.unlink(targetPath, err => console.log(err));
+        return res.status(500).json({error: 'no user found'});
+    }
+    const old_profileImg = user.profileImg;
+    console.log(user);
+
+
+    // // validate body
+    // const socialLinks = {};
+    // socialLinks.tw = req.body.tw;
+    // socialLinks.insta = req.body.insta;
+    // socialLinks.yt = req.body.yt;
+    // socialLinks.fb = req.body.fb;
+    // socialLinks.web = req.body.web;
+    // // check valid URL
+    // for ( link in socialLinks ) {
+    //     if ( socialLinks[link].length > 0 ) {
+    //         if ( !validUrl.isUri(socialLinks[link]) ) return res.status(400).json({error: 'Bad link: ' + socialLinks[link]});
+    //     }
+    // }
+    // req.body.socialLinks = socialLinks;
+
+
 
     // update user data
-    await User.findOneAndUpdate({_id: req.tokenData._id}, req.body, {new: true} );
+    await User.findOneAndUpdate({_id: req.tokenData._id}, req.body, {new: true, runValidators: true}, function (err) {
+        if (err) return res.status(500).json({error: err.message});
+    });
+
+    // delete old user profile img file
+    if (old_profileImg.length > 0) {
+        const oldImgPath = "client/public/user_profile_img/" + user.profileImg;
+        if (typeof req.file !== "undefined") fs.unlink(oldImgPath, err => { return null });
+    }
 
     // return updated user data
     const updatedUser = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin');
     return res.status(200).json(updatedUser);
 
 
-    console.log(req.body)
-    return null;
 
-    // catch (error) {
-    //     fs.unlink(tempPath, err => console.log(err));
-    //     res.json({error: error});
-    // }
-
-
-    // delete old user profile img file
 })
 
 
@@ -187,6 +197,7 @@ router.get('/get-profile', verifyToken, async (req, res) => {
     try {
         // find user
         const user = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin');
+        console.log(user);
         return res.status(200).json(user);
     }
     catch (error) {

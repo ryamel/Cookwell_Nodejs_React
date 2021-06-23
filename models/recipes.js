@@ -3,13 +3,37 @@ const mongoose = require('mongoose');
 
 
 
-
-
 const ingrSchema = new mongoose.Schema({
 	gtext: 'string',
 	qty: 'string',
-	unit: 'string'
-	
+	unit: {
+		type: 'string',
+		enum: [
+			'none',
+			'teaspoon (tsp)',
+			'tablespoon (Tbsp)',
+			'cup(s)',
+			'fluid ounce (floz)',
+			'ounce (oz)',
+			'pound (lb)',
+			'small',
+			'medium',
+			'large',
+			'millilitre (ml)',
+			'litre (L)',
+			'milligram (mg)',
+			'gram (g)',
+			'killogram (kg)',
+			'centimeter (cm)',
+			'inch (in)',
+			'dash',
+			'pinch',
+			'gal',
+			'fluid pint (fl pt)',
+			'fluid quart (fl qt)',
+			'gill'
+		]
+	}
 });
 
 const noteSchema = new mongoose.Schema({
@@ -22,8 +46,8 @@ const recipesSchema = new mongoose.Schema({
 	title: {
 		type: 'string',
 		required: true,
-		minLength: 0,
-		maxLength: 60
+		minLength: [3, 'Title must be at least 3 characters'],
+		maxLength: [80, 'Title must be less than 80 characters']
 	},
 	authid: {
 		type: 'ObjectId',
@@ -33,8 +57,7 @@ const recipesSchema = new mongoose.Schema({
 	description: {
 		required: true,
 		type: 'string',
-		minLength: 0,
-		maxLength: 500
+		maxLength: [500, 'Description cannot be longer than 500 characters']
 	},
 	mealType: { // check for duplicates
 		required: true,
@@ -111,7 +134,7 @@ const recipesSchema = new mongoose.Schema({
 	},
 	cookTime: {
 		required: true,
-		type: 'number',
+		type: ['number', 'Cook time must be a number, representing minutes'],
 		trim: true,
 		min: 0
 	},
