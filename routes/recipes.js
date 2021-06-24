@@ -2,16 +2,16 @@
 const { User, validateUser } = require('../models/users');
 const Recipe = require('../models/recipes'); // these constructors allow interaction with the DB tables
 
-
 const mogoose = require('mongoose');
 const express = require('express');
-
-
-
-
+const jwt = require('jsonwebtoken');
+const { upload } = require('../middleware/upload');
+const verifyToken = require('../middleware/verifyToken');
+const multer = require('multer');
+var path = require('path');
 const router = express.Router();
-
-
+const fs = require('fs');
+const mv = require('mv');
 
 
 
@@ -200,18 +200,64 @@ router.post('/add-new', async (req, res) => {
 
 
 
-const { upload, validate_img } = require('../middleware/upload');
-const validate_RecipeData = require('../middleware/validate_RecipeData');
+
+//const validate_RecipeData = require('../middleware/validate_RecipeData');
 
 
-// 4
-router.post('/upload', (req, res) => {
-    //console.log(req.body);
-    console.log(req);
-    let imageFile = req.files.file;
+
+router.post('/upload', [verifyToken, upload.single('file')], async (req, res) => {
+
+
+    if (typeof req.file == "undefined") {
+        return res.status(500).json({error: 'No recipe image'});
+    }
+
+    var extension = path.extname(req.file.originalname).toLowerCase();
+    var profileImg_new = req.body.title.replace(/\s/g,'_') + '_' + Date.now() + extension;
+    req.body.img = profileImg_new;
+    var tempPath = path.join(req.file.path);
+    var targetPath = path.join("client", "public", "user_recipes_img", profileImg_new);
     
-    console.log('sup');
-    res.status(200).json('success');
+
+
+    // check file size
+    if (req.file.size >= 8000000) {
+        fs.unlink(tempPath, err => console.log(err));
+        return res.status(400).json({error: 'File size too large. Must be less than 8 MB.'});
+    }
+    // check extension
+    if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) {
+        fs.unlink(tempPath, err => console.log(err));
+        return res.status(400).json({error: 'File must be .png or .jpg'});
+    }
+    // move file from tmp dir to permenant dir
+    mv(tempPath, targetPath, function (err) {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({error: 'Server error'});
+        }
+    });
+
+
+    // parse json objects (arrays and objects)
+    req.body.diet = JSON.parse(req.body.diet);
+    req.body.cuisine = JSON.parse(req.body.cuisine);
+    req.body.ingredients = JSON.parse(req.body.ingredients);
+    req.body.method = JSON.parse(req.body.method);
+    req.body.notes = JSON.parse(req.body.notes);
+    
+    // append author information
+    req.body.authid = req.tokenData._id;
+    const recipe = new Recipe(req.body);
+    try {
+        await recipe.save();
+        return res.status(200).json({msg: 'success'});
+    } catch (error) {
+        if (typeof req.file !== "undefined") { fs.unlink(targetPath, (err) => {if (err) console.log(err)}); }
+        return res.status(500).json({error: error.errors});
+    }
+    
+
 
 });
 
@@ -227,9 +273,6 @@ router.post('/upload', (req, res) => {
 
 
 module.exports = router;
-
-
-
 
 
 

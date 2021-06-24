@@ -35,9 +35,8 @@ const userSchema = new mongoose.Schema({
 		type: 'string', 
 		maxLength: [500, 'About cannot be longer than 500 characters']
 	},
-	proileImg: {
-		type: 'string',
-		default: 'default.jpg'
+	profileImg: {
+		type: 'string'
 	}
 	// socialLinks: {
 	// 	type: {socialSchema}

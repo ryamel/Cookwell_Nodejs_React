@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import './my-profile.sass';
 import photoIcon from '../../media/icons/photo45.png';
-const images = require.context('../../../public/user_profile_img', true);
+import PhotoShow from './photoShow';
+// const images = require.context('../../../public/user_profile_img', true);
 
 class MyProfile extends Component {
 	constructor() {
@@ -12,10 +13,6 @@ class MyProfile extends Component {
 			defaultName: '',
 			defaultAbout: '',
 			profileImg: '',
-			// defaultInsta: '',
-			// defaultYt: '',
-			// defaultFb: '',
-			// defaultWeb: '',
 			fileName: null,
 			selectedFile: null
 		}
@@ -25,11 +22,6 @@ class MyProfile extends Component {
 		this.email = React.createRef();
 		this.name = React.createRef();
 		this.about = React.createRef();
-		// this.tw = React.createRef();
-		// this.insta = React.createRef();
-		// this.yt = React.createRef();
-		// this.fb = React.createRef();
-		// this.web = React.createRef();
 		this.fileInput = React.createRef();
 	}
 
@@ -46,8 +38,9 @@ class MyProfile extends Component {
 	componentDidMount() {
 
 		const defaultValues = {};
+		var outside;
 
-		fetch('/api/users/get-profile')
+		fetch('/api/users/get-profile-data')
 		.then(res => res.json())
 		.then(data => {
 			this.setState({
@@ -55,19 +48,11 @@ class MyProfile extends Component {
 				defaultName: data.name,
 				defaultAbout: data.about,
 				profileImg: data.profileImg
-				// defaultTw: data.socialLinks.tw,
-				// defaultInsta: data.socialLinks.insta,
-				// defaultYt: data.socialLinks.yt,
-				// defaultFb: data.socialLinks.fb,
-				// defaultWeb: data.socialLinks.web
-			},console.log(this.state));
+			}, () => console.log(this.state));
 		})
 		.catch(err => console.log(err));
-
 		
 	}
-
-
 
 
 	updateProfile() {
@@ -75,28 +60,7 @@ class MyProfile extends Component {
 		formData.append('email', this.email.current.value);
 		formData.append('name', this.name.current.value);
 		formData.append('about', this.about.current.value);
-		// formData.append('tw', this.tw.current.value);
-		// formData.append('insta', this.insta.current.value);
-		// formData.append('yt', this.yt.current.value);
-		// formData.append('fb', this.fb.current.value);
-		// formData.append('web', this.web.current.value);
-		// formData.append('file', this.state.selectedFile);
-
-
-
-		// const data = {
-		// 	email: this.email.current.value,
-		// 	name: this.name.current.value,
-		// 	about: this.about.current.value,
-		// 	socialLinks: {
-		// 		tw: this.tw.current.value,
-		// 		insta: this.insta.current.value,
-		// 		yt: this.yt.current.value,
-		// 		fb: this.fb.current.value,
-		// 		web: this.web.current.value
-		// 	}
-		// }
-
+		formData.append('file', this.state.selectedFile);
 
 
 		fetch('/api/users/update-profile', {
@@ -108,16 +72,11 @@ class MyProfile extends Component {
 			if (typeof data.error !== "undefined") {
 				console.log(data.error);
 			} else {
-				//console.log(data);
 				this.setState({
 					defaultEmail: data.email,
 					defaultName: data.name,
-					defaultAbout: data.about
-					// defaultTw: data.socialLinks.tw,
-					// defaultInsta: data.socialLinks.insta,
-					// defaultYt: data.socialLinks.yt,
-					// defaultFb: data.socialLinks.fb,
-					// defaultWeb: data.socialLinks.web
+					defaultAbout: data.about,
+					profileImg: data.profileImg
 				}, () => console.log(this.state));
 			}
 		})
@@ -125,16 +84,8 @@ class MyProfile extends Component {
 		
 	}
 
- // This image will be next to your recipes. It's an easy way for people to recognize your work. It can be artwork, a logo, or just a photo of you and your dog.
+
 	render() {
-
-		//const { profileImg } = this.state;
-		// const profileImg = this.state.profileImg;
-		// console.log(profileImg);
-
-//onError="this.style.display='none'"
-
-	
 	
 		return (
 			<div className="accountContent">
@@ -147,26 +98,14 @@ class MyProfile extends Component {
 {/*					<div id="emailChangeNotice">
 		            	 To change your email, respond to the verification link sent to the new email. Be sure to check your spam folder.
 		            </div>*/}
-
-		            <div id='photo-container' className='clearfix'>
-		            	<label className='std-field-label ph-label'>
-							User photo
-						</label>
-		            {
-		           		this.state.profileImg.length > 0 ? 
-		           		<img id='img-show' src={images(`./${this.state.profileImg}`).default} /> : 
-		           		<div id='photo-msg'>
-		           			An image on your profile identifies you as a contributor. 
-		           			And for other people to recognize your awesome recipes! 
-		           			It can be artwork, a logo, or just of you.
-		           		</div>
-		           	}
-		           	</div>
-            		
-
+		        	
+		        	<PhotoShow profileImg={this.state.profileImg}/>
+		        		
+					
+		           	
 				
 
-				
+
 					<div className='fieldContainer clearfix'>
 						<label id='uploadInput-container'>
 							<input className='fileUploadInput' ref={this.fileInput} onChange={this.fileHandler} type='file' name='file' />

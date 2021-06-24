@@ -20,7 +20,7 @@ function IngredientElement(props) {
 				value={props.unit}
 				onChange={(e) => props.handleInput(e.target.name, e.target.value, props.number)}
 				>
-				<option className='unitDefault' >Unit</option>
+				<option className='unitDefault' >- Unit -</option>
 				{
 					units.map((unit, index) => 
 						<option key={index} value={unit} >{unit}</option>

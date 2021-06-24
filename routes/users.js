@@ -42,9 +42,7 @@ router.post('/register', async (req, res) => {
         pwd: hashPwd
     });
 
-    user.save()
-        .then(result => console.log(result))
-        .catch(error => res.status(500).json({error: error}));
+    await user.save().catch(error => res.status(500).json({error: error}));
 
     // return
     return res.status(200).json({msg: 'Registered User'});
@@ -70,7 +68,8 @@ router.post('/login', async (req, res) => {
     const token = user.generateAuthToken();
     // cookies res.setHeader('Set-cookie', <one string contains all attriubtes seperated by ; > )
     // res.setHeader('Set-Cookie', 'jwt=' + token + '; HttpOnly').status(200).json({log: true});
-    res.setHeader('Set-Cookie', 'jwt=' + token).status(200).json({log: true});
+    // res.setHeader('Set-Cookie', 'jwt=' + token).status(200).json({log: true});
+    res.setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').status(200).json({log: true});
 
 })
 // TASK
@@ -106,54 +105,62 @@ router.post('/change-password', verifyToken, async (req, res) => {
 
 
 router.post('/update-profile', [verifyToken, upload.single('file')], async (req, res) => {
-    //console.log(req.body);
 
 
     
-    // validate uploaded file and place into temp folder
+    // upload photo file and update user profile to reflec new profileImg
     if (typeof req.file !== "undefined") {
-        const extension = path.extname(req.file.originalname).toLowerCase();
-        const profileImg = req.body.name.replace(/\s/g,'_') + '_' + Date.now() + extension;
-        const tempPath = path.join(req.file.path);
-        const targetPath = path.join("client", "public", "user_profile_img", profileImg);
 
-        // append img name
-        req.body.profileImg = profileImg;
-
-       
-        // console.log(req.file);
-        // console.log(tempPath);
-        // console.log(targetPath);
-
+        var extension = path.extname(req.file.originalname).toLowerCase();
+        var profileImg_new = req.body.name.replace(/\s/g,'_') + '_' + Date.now() + extension;
+        var tempPath = path.join(req.file.path);
+        var targetPath = path.join("client", "public", "user_profile_img", profileImg_new);
+        // check file size
         if (req.file.size >= 8000000) {
             fs.unlink(tempPath, err => console.log(err));
             return res.status(400).json({error: 'File size too large. Must be less than 8 MB.'});
         }
-
+        // check extension
         if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) {
             fs.unlink(tempPath, err => console.log(err));
             return res.status(400).json({error: 'File must be .png or .jpg'});
         }
-
         // move file from tmp dir to permenant dir
         mv(tempPath, targetPath, function (err) {
             if (err) console.log(err);
         });
-
+        // query user data for old profileImg
+        var user = await User.findOne({_id: req.tokenData._id});
+        if (!user) {
+            fs.unlink(targetPath, err => console.log(err));
+            return res.status(500).json({error: 'no user found'});
+        }
+        var oldProfileImg_path = "client/public/user_profile_img/" + user.profileImg;
+        // update user data (new profileImg)
+        await User.findOneAndUpdate(
+            {_id: req.tokenData._id}, 
+            {profileImg: profileImg_new}, 
+            function (err) {
+                if (err) {
+                    fs.unlink(targetPath, err => console.log(err));
+                    return res.status(500).json({error: err.message});
+                }
+            }
+        );
+        // delete old profileImg
+        fs.unlink(oldProfileImg_path, err => { return null });
+        
     }
 
-    
 
-    // update user data
+
+    // Update user data
 
     // find user
-    const user = await User.findOne({_id: req.tokenData._id});
+    var user = await User.findOne({_id: req.tokenData._id});
     if (!user) {
-        fs.unlink(targetPath, err => console.log(err));
         return res.status(500).json({error: 'no user found'});
     }
-    const old_profileImg = user.profileImg;
-    console.log(user);
 
 
     // // validate body
@@ -174,30 +181,28 @@ router.post('/update-profile', [verifyToken, upload.single('file')], async (req,
 
 
     // update user data
-    await User.findOneAndUpdate({_id: req.tokenData._id}, req.body, {new: true, runValidators: true}, function (err) {
-        if (err) return res.status(500).json({error: err.message});
-    });
-
-    // delete old user profile img file
-    if (old_profileImg.length > 0) {
-        const oldImgPath = "client/public/user_profile_img/" + user.profileImg;
-        if (typeof req.file !== "undefined") fs.unlink(oldImgPath, err => { return null });
-    }
+    await User.findOneAndUpdate(
+        {_id: req.tokenData._id}, 
+        req.body, 
+        {new: true, runValidators: true}, 
+        function (err) {
+            if (err) return res.status(500).json({error: err.message});
+        }
+    );
 
     // return updated user data
-    const updatedUser = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin');
+    var updatedUser = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin');
     return res.status(200).json(updatedUser);
-
-
 
 })
 
 
-router.get('/get-profile', verifyToken, async (req, res) => {
+
+
+
+router.get('/get-profile-data', verifyToken, async (req, res) => {
     try {
-        // find user
         const user = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin');
-        console.log(user);
         return res.status(200).json(user);
     }
     catch (error) {
@@ -206,7 +211,15 @@ router.get('/get-profile', verifyToken, async (req, res) => {
 })
 
 
-
+// router.get('/get-profile-img', verifyToken, async (req, res) => {
+//     try {
+//         const user = await User.findOne({_id: req.tokenData._id}, 'profileImg');
+//         return res.sendFile(path.join(__dirname,'../client/public/user_profile_img/', user.profileImg), function (err) { if (err) console.log(err); });
+//     }
+//     catch (error) {
+//         res.status(500).json(error);
+//     }
+// })
 
 
 

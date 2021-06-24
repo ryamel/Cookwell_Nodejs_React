@@ -56,33 +56,31 @@ class submitRecipe extends React.Component {
 		// formData does not suport nested objects, only key/value pairs. 
 		// So any nested data was turned into json strings. And then converted into objects on the server side
 
-		var data = new FormData();
-   		data.append('file', this.state.selectedFile);
-   		// data.append('title', this.state.title);
-   		// data.append('authid', this.state.authid);
-   		// data.append('description', this.state.description);
-   		// data.append('mealType', this.state.mealType);
-   		// data.append('diet', JSON.stringify(this.state.diet));
-   		// data.append('cuisine', JSON.stringify(this.state.cuisine));
-   		// data.append('servings', this.state.servings);
-   		// data.append('cookTime', this.state.cookTime);
-   		// data.append('ingredients', JSON.stringify(this.state.ingredients));
-   		// data.append('method', JSON.stringify(this.state.method));
-   		// data.append('notes', JSON.stringify(this.state.notes));
+		var formData = new FormData();
+   		formData.append('file', this.state.selectedFile);
+   		formData.append('title', this.state.title);
+   		formData.append('description', this.state.description);
+   		formData.append('mealType', this.state.mealType);
+   		formData.append('diet', JSON.stringify(this.state.diet));
+   		formData.append('cuisine', JSON.stringify(this.state.cuisine));
+   		formData.append('servings', this.state.servings);
+   		formData.append('cookTime', this.state.cookTime);
+   		formData.append('ingredients', JSON.stringify(this.state.ingredients));
+   		formData.append('method', JSON.stringify(this.state.method));
+   		formData.append('notes', JSON.stringify(this.state.notes));
 
 
 
 		// const data = new FormData();
-		// data.append('file', this.state.selectedFile);
-		// data.append('title', this.state.title);
+		// formData.append('file', this.state.selectedFile);
+		// formData.append('title', this.state.title);
 
 		fetch('/api/recipes/upload', {
 			method: 'POST',
-			headers: { 'Content-Type': 'multipart/form-data' },
-			body: data,
+			body: formData
 		})
 		.then(res => res.json())
-		.then(body => console.log(body))
+		.then(data => console.log(data))
 		.catch(err => console.log(err));
 	
 
