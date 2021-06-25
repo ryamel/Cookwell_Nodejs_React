@@ -4,47 +4,51 @@ import { mealTypes, dietOptions, cuisine } from '../../searchOptions';
 import './submit-recipe.sass';
 import axios from 'axios';
 
-import photoIcon from '../../media/icons/photo45.png';
 import DropMenu from '../../components/dropMenu';
 import MultiSelectMenu from '../../components/multiSelectMenu';
 import Ingredients from '../../components/ingredients';
 import Methods from '../../components/method';
 import Notes from '../../components/notes';
+import PhotoShow from './photoShow';
+
+
 
 class submitRecipe extends React.Component {
-	constructor() {
+	constructor(props) {
 		super();
 		this.state = {
 			title: '',
-			authid: '60ac3fd7520326cbcf375237',
+			authid: '',
 			description: '',
 			mealType: '',
 			diet: [],
 			cuisine: [],	
 			servings: '',			
-			cookTime: null,
+			cookTime: '',
 			ingredients: [{gtext: ' ', qty: ' ', unit: ' '}],
 			method: [''],
-			notes: [{note: '', stepNum: ''}],
+			notes: [{text: '', stepNum: ''}],
 			edit: false,
 			selectedFile: null,
 			fileName: null,
-			error: null,
+			profileImg: '',
+			error: null
 		};
 
-		this.fileInput = React.createRef();
+		this.fileRef = React.createRef();
 		this.handleInput = this.handleInput.bind(this);
 		this.removeField = this.removeField.bind(this);
 		this.addField = this.addField.bind(this);
 		this.fileHandler = this.fileHandler.bind(this);
 		this.uploadRecipe = this.uploadRecipe.bind(this);
+		this.editMode = this.editMode.bind(this);
 	}
 
 	// put file into state variable
 	fileHandler(event) {
-		if (this.fileInput.current.files[0]) {
+		if (this.fileRef.current.files[0]) {
 	   		this.setState({
-	   			fileName: this.fileInput.current.files[0].name,
+	   			fileName: this.fileRef.current.files[0].name,
 				selectedFile: event.target.files[0]
 			}, () => console.log(this.state.selectedFile))
 	   	}
@@ -64,7 +68,7 @@ class submitRecipe extends React.Component {
    		formData.append('diet', JSON.stringify(this.state.diet));
    		formData.append('cuisine', JSON.stringify(this.state.cuisine));
    		formData.append('servings', this.state.servings);
-   		formData.append('cookTime', this.state.cookTime);
+   		formData.append('cookTime', parseInt(this.state.cookTime));
    		formData.append('ingredients', JSON.stringify(this.state.ingredients));
    		formData.append('method', JSON.stringify(this.state.method));
    		formData.append('notes', JSON.stringify(this.state.notes));
@@ -131,7 +135,7 @@ class submitRecipe extends React.Component {
 		var newState = this.state[stateName];
 		stateName == 'ingredients' && newState.push( {gtext: '', qty: '', unit: ''} )
 		stateName == 'method' && newState.push('')
-		stateName == 'notes' && newState.push({note: '', stepNum: ''})
+		stateName == 'notes' && newState.push({text: '', stepNum: ''})
 		this.setState({[stateName]: newState}, () => console.log(this.state[stateName]));
 	}
 
@@ -146,7 +150,6 @@ class submitRecipe extends React.Component {
 
 
 	handleInput(fieldName, value, number = null) {
-
 		// ingredients
 		if (fieldName === 'qty' || fieldName === 'unit' || fieldName === 'gtext') {
 			var newState = this.state.ingredients;
@@ -154,7 +157,6 @@ class submitRecipe extends React.Component {
 			this.setState({ingredients: newState}, () => console.log(this.state.ingredients));	
 			return null;
 		}
-
 		// method
 		if (fieldName === 'method') {
 			var newState = this.state.method;
@@ -162,7 +164,6 @@ class submitRecipe extends React.Component {
 			this.setState({method: newState}, () => console.log(this.state.method));	
 			return null;
 		}
-
 		// notes
 		if (fieldName === 'stepNum') {
 			var newState = this.state.notes;
@@ -175,13 +176,10 @@ class submitRecipe extends React.Component {
 			this.setState({notes: newState}, () => console.log(this.state.notes));	
 			return null;
 		}
-
-
 		// title, description, servings, cookTime, mealType
 		if (fieldName === 'title' || fieldName === 'description' || fieldName === 'servings' || fieldName === 'cookTime' || fieldName === 'mealType') {
 			var newState = value;
 		}
-
 		// diet
 		if (fieldName === 'diet') {
 			var dietArr = this.state.diet;
@@ -194,8 +192,6 @@ class submitRecipe extends React.Component {
 				var newState = dietArr;
 			}
 		}
-
-
 		// cuisine
 		if (fieldName === 'cuisine') {
 			var cuisineArr = this.state.cuisine;
@@ -208,25 +204,54 @@ class submitRecipe extends React.Component {
 				var newState = cuisineArr;
 			}
 		}
-
-
 		//update state
 		this.setState({
 			[fieldName]: newState
 		}, () => console.log(this.state[fieldName]));
-
-
 	}
 
+	editMode() {
+		// read url/Link for edit paramaters. (recipeId)...  achieved parent component
 
+		// fetch recipe data from server
 
+		// update state with data
+
+		// modify render. (Submit button changes, title changes, recipe photo is displayed)
+
+		// create now route end point to handle update on server
+	}
+
+	componentDidMount() {
+		//console.log(encodeURIComponent(this.props.title));
+		if (this.props.editTitle.length > 0) {
+			const url = '/api/recipes/get-edit/' + encodeURIComponent(this.props.editTitle);
+
+			fetch(url)
+			.then(res => res.json())
+			.then(data => {
+				console.log(data);
+				this.setState({
+					title: data.title,
+					description: data.description,
+					mealType: data.mealType,
+					diet: data.diet,
+					cuisine: data.cuisine,
+					servings: data.servings,
+					cookTime: data.cookTime.toString(),
+					ingredients: data.ingredients,
+					method: data.method,
+					notes: data.notes, 
+					profileImg: data.img
+				})
+			})
+			.catch(err => console.log(err));
+		}
+	}
 
 	render() {
-
 		return (
-
 			<div className="accountContent">
-	  
 				<div id="submit-container">
 
 
@@ -248,8 +273,8 @@ class submitRecipe extends React.Component {
 		            </div>*/}
 
 		            {
-		            	this.state.edit
-		            	? <div className='submit-form-heading'>EDIT RECIPE</div>
+		            	this.props.edit
+		            	? <div className='my-account-titles'>Edit Recipe</div>
 		            	: <div className='my-account-titles'>Submit Recipe</div>		            	
 		            }
 
@@ -271,22 +296,36 @@ class submitRecipe extends React.Component {
 						</div>
 					</div>
 */}
-					
-					
+
 
 
 					<div className='subRec-field-container'>
-						<label>
-							Photo
-							<span className='requiredStar'> *</span> 
-						</label>
-						<label style={{cursor: 'pointer'}}>
+						
+						{/*<label className='std-field-label photo-mv'>Photo<span className='requiredStar'> *</span></label> */}
+						<div id='img-pos'> 
+							<PhotoShow 
+								profileImg={this.state.profileImg} 
+								imageType='recipe'
+								ref={this.fileRef} 
+								onChange={this.fileHandler}
+								fileName={this.state.fileName}
+								/> 
+						</div>
+						<label className='std-field-label pos-photo-title'>Photo<span className='requiredStar'> *</span> </label>
+					
+{/*
+					{   this.state.profileImg ? 
+						<PhotoShow profileImg={this.state.profileImg} imageType='recipe' /> : 
+						null 
+					}*/}
+					
+{/*						<label className='img-upload-btn'>
 							<input className='fileUploadInput' ref={this.fileInput} onChange={this.fileHandler} type='file' name='file' />
 							<img className='phIcon phIcon-submit' src={photoIcon} />
 							<div className='uploadText-submit fileUpload'>
 								{ this.state.fileName ? this.state.fileName : 'Upload .png or .jpg file type'  }
 							</div> 
-						</label>
+						</label>*/}
 					</div>
 		               
 
@@ -295,7 +334,7 @@ class submitRecipe extends React.Component {
 					
 
 					<div className="subRec-field-container title clearfix">
-						<label>
+						<label className='std-field-label'>
 							Title
 							<span className="requiredStar"> *</span>
 						</label>
@@ -310,7 +349,7 @@ class submitRecipe extends React.Component {
 					</div>
 
 					<div className="subRec-field-container description clearfix">
-						<label>
+						<label className='std-field-label'>
 							Description
 							<span className="requiredStar"> *</span>
 						</label>
@@ -335,11 +374,12 @@ class submitRecipe extends React.Component {
 
 
 					<div className="subRec-field-container servings">
-						<label>
+						<label className='std-field-label'>
 							Servings
 							<span className="requiredStar"> *</span>
 						</label>
 						<input 
+							className='pos-input'
 							type="text" 
 							name="servings"
 							placeholder='example 1-9 persons or 24 Cookies' 
@@ -351,17 +391,17 @@ class submitRecipe extends React.Component {
 
 
 		            <div className="subRec-field-container time">
-		               	<label>
+		               	<label className='std-field-label'>
 		               		Cook & Preparation Time
 		               		<span className="requiredStar"> *</span>
 		               	</label>
 		            	<input 
-		            		className="cookTime-input" 
+		            		className="pos-input cookTime-input" 
 		            		type="text" 
 		            		name="cookTime" 
 		            		placeholder='minutes'
 		            		maxLength="3" 
-		            		value={this.state.time}
+		            		value={this.state.cookTime}
 							onChange={(e) => this.handleInput(e.target.name, e.target.value)}
 		            		/>
 		            </div>
@@ -371,7 +411,7 @@ class submitRecipe extends React.Component {
 					<div className="subRec-field-container">
 						<div className="sub-subRec-field-container">
 
-				 			<label className='subRec-title'>
+				 			<label className='subRec-title std-field-label'>
 								Meal Type
 								<span className="requiredStar"> *</span>
 							</label>
@@ -394,25 +434,27 @@ class submitRecipe extends React.Component {
 
 
 						<div className="sub-subRec-field-container">
-							<label className='subRec-title'>
+							<label className='subRec-title std-field-label'>
 								Cuisine
 							</label>
 							<MultiSelectMenu 
 								name='cuisine'
 								options={cuisine}
 								handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
+								state={this.state.cuisine}
 								/>
 						</div>
 
 
 						<div className="sub-subRec-field-container">
-							<label className='subRec-title'>
+							<label className='subRec-title std-field-label'>
 								Dietary
 							</label>
 							<MultiSelectMenu 
 								name='diet'
 								options={dietOptions}
 								handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
+								state={this.state.diet}
 								/>
 
 						</div>
@@ -447,15 +489,22 @@ class submitRecipe extends React.Component {
 
 
 
-		           {/* <button className="submitr-btn" type="submit" name="submit_edit">Save Changes</button>*/}
+		   			{
+		            	this.props.edit
+		            	? <button className="submitr-btn" type="submit" name="submit_edit">Save Changes</button>
+		            	: <React.Fragment>
+		            		<button className="submitr-btn" type="submit" name="submit" onClick={this.uploadRecipe}>Submit Recipe</button>
+		            		<div id="submit-note"><div>Once submitted, recipes are reviewed for grammar and clarity.<br/>Please be patient while recipies upload.</div></div>  
+		            	  </React.Fragment> 
 
-		            <button className="submitr-btn" type="submit" name="submit" onClick={this.uploadRecipe}>Submit Recipe</button>
+		            }
 
+{/*		            {
+		            	this.state.edit
+		            	? null
+		            	: <div id="submit-note"><div>Once submitted, recipes are reviewed for grammar and clarity.<br/>Please be patient while recipies upload.</div></div>            	
+		            }*/}
 
-
-					<div id="submit-note">
-						<div>Once submitted, recipes are reviewed for grammar and clarity.<br/>Please be patient while recipies upload.</div>
-					</div>
 
 				</div>
 			</div>

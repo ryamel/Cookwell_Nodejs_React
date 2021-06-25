@@ -2,14 +2,15 @@
 // NOTE: if updating entries. You must also update the models enum property in Nodejs
 
 const cuisine = [
-					'American', 
-					'Asian', 
-					'Carribean',
+					'American',
+					'Asian',
+					'Caribbean',
 					'Chinese',
 					'French',
 					'German',
 					'Greek',
 					'Hawaiian',
+					'Korean',
 					'Mediterranean',
 					'Mexican',
 					'Thai',
@@ -18,11 +19,12 @@ const cuisine = [
 					'Italian',
 					'Soul Food',
 					'Spanish',
-					'Western'
+					'Western',
+					'None'
 				];
 
 const mealTypes = [
-					'Breakfest & Brunch', 
+					'Breakfest & Brunch',
 					'Soups & Stews',
 					'Sauces',
 					'Sandwiches',

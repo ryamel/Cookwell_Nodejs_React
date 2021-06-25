@@ -3,7 +3,6 @@ import { units } from '../searchOptions';
 
 
 function NoteElement(props) {
-
 	return (
         <div className='field-container-add'>
         	<input 

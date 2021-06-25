@@ -10,14 +10,14 @@ function IngredientElement(props) {
 				className='quantity' 
 				name='qty' 
 				placeholder='Quantity' 
-				value={props.qty}
+				value={props.ingr.qty}
 				onChange={(e) => props.handleInput(e.target.name, e.target.value, props.number)}
 				/>
 
 			<select 
 				className='typeSelectUnit' 
 				name='unit'
-				value={props.unit}
+				value={props.ingr.unit}
 				onChange={(e) => props.handleInput(e.target.name, e.target.value, props.number)}
 				>
 				<option className='unitDefault' >- Unit -</option>
@@ -32,7 +32,7 @@ function IngredientElement(props) {
 				className='ingr' 
 				name='gtext' 
 				placeholder='Ingredient Name' 
-				value={props.gtext}
+				value={props.ingr.gtext}
 				onChange={(e) => props.handleInput(e.target.name, e.target.value, props.number)}
 				/>
 

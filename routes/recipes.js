@@ -217,8 +217,6 @@ router.post('/upload', [verifyToken, upload.single('file')], async (req, res) =>
     req.body.img = profileImg_new;
     var tempPath = path.join(req.file.path);
     var targetPath = path.join("client", "public", "user_recipes_img", profileImg_new);
-    
-
 
     // check file size
     if (req.file.size >= 8000000) {
@@ -245,10 +243,12 @@ router.post('/upload', [verifyToken, upload.single('file')], async (req, res) =>
     req.body.ingredients = JSON.parse(req.body.ingredients);
     req.body.method = JSON.parse(req.body.method);
     req.body.notes = JSON.parse(req.body.notes);
+
     
     // append author information
     req.body.authid = req.tokenData._id;
     const recipe = new Recipe(req.body);
+
     try {
         await recipe.save();
         return res.status(200).json({msg: 'success'});
@@ -256,18 +256,25 @@ router.post('/upload', [verifyToken, upload.single('file')], async (req, res) =>
         if (typeof req.file !== "undefined") { fs.unlink(targetPath, (err) => {if (err) console.log(err)}); }
         return res.status(500).json({error: error.errors});
     }
-    
-
 
 });
 
 
+router.get('/get-user-recipes', verifyToken, async (req, res) => {
+    const recipes = await Recipe.find({authid: req.tokenData._id});
+    res.status(200).json(recipes);
+});
 
-// middleware validate recipe data using .validate in mongoose
 
-// if no issues with .validate run multer middlware, saving img
 
-// finally .save recipe data
+router.get('/get-edit/:recipeName', verifyToken, async (req, res) => {
+    // req.tokenData._id
+    const recipe = await Recipe.findOne({authid: req.tokenData._id, title: req.params.recipeName}).select('-authid -uploadDate -__v -_id');
+    if (!recipe) res.status(400).json({error: 'No recipe found'});
+
+    res.status(200).json(recipe);
+
+});
 
 
 

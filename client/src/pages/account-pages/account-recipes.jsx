@@ -15,11 +15,8 @@ class accountRecipes extends React.Component {
 
 	componentDidMount() {
 
-		let user_id = '60ac3fd7520326cbcf375237';
-		let url = '/api/recipes/getbyuserid/' + user_id;
 
-
-		fetch(url)
+		fetch('/api/recipes/get-user-recipes')
 			.then(res => res.json())
 			.then((data) => {
 				this.setState({
@@ -28,13 +25,7 @@ class accountRecipes extends React.Component {
 					error: false
 				}, console.log(data));
 			})
-			.catch(err => {
-				this.setState({
-					recipes: data,
-					isLoaded: true,
-					error: false
-				}, console.log(data));
-			});
+			.catch(err => console.log(err));
 	}
 
 	render() {

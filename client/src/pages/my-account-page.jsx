@@ -13,6 +13,14 @@ function myAccountPage(props) {
 
 	let { path, url } = useRouteMatch();
 	
+	//  set state of submit-recipe
+	var editTitle = getParameterByName('editTitle');
+	var edit = getParameterByName('edit');
+	if (!edit) edit = false;
+	if (!editTitle) editTitle = '';
+	// console.log(editTitle);
+	//Submitrecipe.forceUpdate(callback);
+
 
 	return(
 		<div className='accountBody'>
@@ -50,10 +58,10 @@ function myAccountPage(props) {
 			<div className='spacer'>
 
 				<Switch>
-					<Route exact path="/my-account"> 				<Accountrecipes /> 		</Route>
-					<Route path="/my-account/submit-recipe"> 		<Submitrecipe /> 		</Route> 
-					<Route path="/my-account/my-profile"> 			<Myprofile /> 			</Route> 
-					<Route path="/my-account/change-password"> 		<Changepassword /> 		</Route>
+					<Route exact path="/my-account"> 						<Accountrecipes /> 								</Route>
+					<Route path="/my-account/submit-recipe"> 				<Submitrecipe editTitle={editTitle} edit={edit} /> 	</Route>
+					<Route path="/my-account/my-profile"> 					<Myprofile /> 									</Route> 
+					<Route path="/my-account/change-password"> 				<Changepassword /> 								</Route>
 				</Switch>
 
 			</div>
@@ -62,6 +70,16 @@ function myAccountPage(props) {
 
 	);
 	
+}
+
+
+function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
 

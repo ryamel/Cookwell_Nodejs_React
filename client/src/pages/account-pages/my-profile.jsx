@@ -22,13 +22,13 @@ class MyProfile extends Component {
 		this.email = React.createRef();
 		this.name = React.createRef();
 		this.about = React.createRef();
-		this.fileInput = React.createRef();
+		this.fileRef = React.createRef();
 	}
 
 	fileHandler(event) {
-		if (this.fileInput.current.files[0]) {
+		if (this.fileRef.current.files[0]) {
 	   		this.setState({
-	   			fileName: this.fileInput.current.files[0].name,
+	   			fileName: this.fileRef.current.files[0].name,
 				selectedFile: event.target.files[0]
 			}, () => console.log(this.state.selectedFile))
 	   	}
@@ -98,15 +98,19 @@ class MyProfile extends Component {
 {/*					<div id="emailChangeNotice">
 		            	 To change your email, respond to the verification link sent to the new email. Be sure to check your spam folder.
 		            </div>*/}
-		        	
-		        	<PhotoShow profileImg={this.state.profileImg}/>
+
+
+		        	<label className='std-field-label ph-label'>
+            			Profile photo
+         			</label>
+		        	{/*<PhotoShow profileImg={this.state.profileImg} imageType={'recipes'}/>*/}
 		        		
 					
 		           	
 				
 
 
-					<div className='fieldContainer clearfix'>
+{/*					<div className='fieldContainer clearfix'>
 						<label id='uploadInput-container'>
 							<input className='fileUploadInput' ref={this.fileInput} onChange={this.fileHandler} type='file' name='file' />
 							<img className='phIcon phIcon-profile'  src={photoIcon} />
@@ -114,6 +118,21 @@ class MyProfile extends Component {
 								{ this.state.fileName ? this.state.fileName : 'Upload profile image ( .png or .jpg file type )'  }
 							</div> 
 						</label>
+					</div>*/}
+
+						
+					<div className='fieldContainer clearfix'>
+						<div id='pos-img'>
+							<PhotoShow 
+								profileImg={this.state.profileImg} 
+								imageType='profile'
+								ref={this.fileRef} 
+								onChange={this.fileHandler}
+								fileName={this.state.fileName}
+
+								/> 
+						</div>
+					
 					</div>
 
 

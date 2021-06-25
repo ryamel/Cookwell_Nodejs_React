@@ -34,12 +34,12 @@ const ingrSchema = new mongoose.Schema({
 			'gill'
 		]
 	}
-});
+}, { _id : false });
 
 const noteSchema = new mongoose.Schema({
-	step: 'string',
-	text: 'string'
-});
+	text: 'string',
+	stepNum: 'number'
+}, { _id : false });
 
 
 const recipesSchema = new mongoose.Schema({ 
@@ -84,8 +84,7 @@ const recipesSchema = new mongoose.Schema({
 			'Vegan',
 			'Ketogenic',
 			'Dairy Free',
-			'Nut Free',
-			'None'
+			'Nut Free'
 		],
 		validate: {
 			validator: function (v) {  // v is the element that was passed
@@ -134,9 +133,9 @@ const recipesSchema = new mongoose.Schema({
 	},
 	cookTime: {
 		required: true,
-		type: ['number', 'Cook time must be a number, representing minutes'],
+		type: 'number',
 		trim: true,
-		min: 0
+		min: [0, 'Cook time must be greater than zero']
 	},
 	ingredients: {
 		required: true,

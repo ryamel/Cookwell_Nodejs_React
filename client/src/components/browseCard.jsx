@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './browseCard.sass';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 //process.env.PUBLIC_URL works for folders in the public directory
 
@@ -25,6 +25,13 @@ class BrowseCard extends Component {
 				<div className='browse-imgContainer'>
 					<img src={process.env.PUBLIC_URL + '/user_recipes_img/' + this.props.img} alt=' '/>
 				</div>
+
+				<Link to={{pathname: "/my-account/submit-recipe", search: `?edit=true&editTitle=${this.props.title}`}} >
+					<div className='edit-btn'>
+						Edit
+					</div>
+				</Link>
+				
 
 				<div className='browse-textContainer'>
 					<div className='browse-recipe-title'>{this.props.title}</div>
