@@ -8,24 +8,16 @@ const imagesProfile = require.context('../../../public/user_profile_img', true);
 
 
 const PhotoShow = React.forwardRef((props, ref) => {
-
-   
-   // const check = images(`./${props.profileImg}`).default;
-   //console.log(photoIcon);
-
    return (
       <React.Fragment>
          { 
-            props.profileImg.length > 0 &&
-            <div id='photo-container' className='clearfix'>
-               <img src={tryReqPath(props.profileImg, props.imageType)} />
-            </div>
+            displayImg(props.file, props.fileName, props.fileObjURL, props.imageType)
          }
          <label className='img-upload-btn'>
             <input className='fileUploadInput' ref={ref} onChange={props.onChange} type='file' name='file' />
             <img className='phIcon' src={photoIcon} />
             <div className='uploadText fileUpload'>
-               { props.fileName ? props.fileName : 'Upload .png or .jpg file type'  }
+               Upload Image ( .png or .jpg file type )
             </div> 
          </label>
       </React.Fragment>
@@ -33,15 +25,17 @@ const PhotoShow = React.forwardRef((props, ref) => {
 })
 
 
-function tryReqPath(image, imageType) {
-   try {
-      if (imageType == 'recipe') return imagesRecipe(`./${image}`).default;
-      if (imageType == 'profile') return imagesProfile(`./${image}`).default;
+function displayImg(file, fileName, fileObjURL, imageType) {
+   if (!file && !fileName && !fileObjURL) return null;
+
+   if (!file && fileName && !fileObjURL) {
+      if (imageType == 'recipe') var img = <img src={imagesRecipe(`./${fileName}`).default} />; // case of download from sever --> fileName only
+      if (imageType == 'profile') var img = <img src={imagesProfile(`./${fileName}`).default} />;
    }
-   catch (err) {
-      console.log(err);
-      return null;
-   }
+
+   if (fileObjURL) var img = <img src={fileObjURL} />;// case of upload on client --> file fileName fileObjURL
+
+   return <div id='photo-container' className='clearfix'> {img} </div>;
 }
 
 

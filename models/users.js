@@ -14,8 +14,8 @@ const jwt = require('jsonwebtoken');
 const userSchema = new mongoose.Schema({ 
 	name: {
 		type: 'string', 
-		minLength: [4, 'Name must be at least 4 characters long'], //'Name must be greater than 4 characters'],
-		maxLength: [100, 'Name cannot be longer than 100 characters'] //'Max 100 characters for Name']
+		minLength: 3,
+		maxLength: 100 
 	},
 	pwd: {
 		type: 'string',
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
 	},
 	about: {
 		type: 'string', 
-		maxLength: [500, 'About cannot be longer than 500 characters']
+		maxLength: 500
 	},
 	profileImg: {
 		type: 'string'

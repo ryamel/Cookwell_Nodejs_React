@@ -1,71 +1,62 @@
 const express = require('express');
-const Recipe = require('../models/recipes');
-
-// validates img and recipe data. 
-// If pass... it will save the recipe data in MongoDB and pass to the next middlware, which will handle uploading of the img.
 
 
-// 2
-async function validate_RecipeData(req, res, next) {
-    console.log('validate_recipe');
-
-    // if (!req.file) {
-    //     return res.status(400).json({err: 'Only .png, .jpg and .jpeg format allowed!'});
-    // } else {
-    //     return res.status(200).json('success');
-    // }
-
-    // var imgFileName = req.body.title.replace(/\s+/g, '_').toLowerCase() + '_' + Date.now() + extension(req.file.mimetype);
-    // req.body.img = imgFileName;
-    console.log(req);
-    // console.log(req.body.cuisine);
-    // console.log(req.body.ingredients);
-    // console.log(req.body.method);
-    // console.log(req.body.notes);
 
 
-    const recipe = new Recipe({
-        title: req.body.title,
-        authid: req.body.authid,
-        description: req.body.description,
-        mealType: req.body.mealType,
-        diet: JSON.parse(req.body.diet),
-        cuisine: JSON.parse(req.body.cuisine),
-        servings: req.body.servings,
-        cookTime: req.body.cookTime,
-        ingredients: JSON.parse(req.body.ingredients),
-        method: JSON.parse(req.body.method),
-        notes: JSON.parse(req.body.notes)
-    });
+function validate_RecipeData(req, res, next) {
 
-    let error = recipe.validateSync();
-    console.log(error);
+    // parse json objects (arrays and objects)
+    req.body.diet = JSON.parse(req.body.diet);
+    req.body.cuisine = JSON.parse(req.body.cuisine);
+    req.body.ingredients = JSON.parse(req.body.ingredients);
+    req.body.method = JSON.parse(req.body.method);
+    req.body.notes = JSON.parse(req.body.notes);
+    req.body.cookTime = parseInt(req.body.cookTime);
 
-    try {
-        const saveRecipe = await recipe.save();
-        next();
-    }
-    catch (err) {
-        res.status(400).json({message: err.message}); 
-    }
+
+
+    // check title 
+    if (req.body.title.length < 3 ) return res.status(400).send('Title must be at least 3 characters')
+    if (req.body.title.length > 80 ) return res.status(400).send('Title must be less than 80 characters')
+    
+    // check if user has title of same recipe already
+
+
+    // check description
+    if (req.body.description.length > 500 ) return res.status(400).send('Description must be less than 500 characters')
+    
+    // check servings
+    if (req.body.servings.length < 1 ) return res.status(400).send('Servings field is required')
+
+    // check cooktime
+    if (!Number.isInteger(req.body.cookTime)) return res.status(400).send('Cook time must be a valid integer')
+
+    // diet
+    // if ( req.body.diet.includes('None') && req.body.diet.length > 1 ) return res.status(400).send('Invalid diet selection')
+    // if ( req.body.diet.includes('None') && req.body.diet.length == 1) req.body.diet = [];
+
+    // check ingredients
+    for (const ingr of req.body.ingredients) {
+        if (ingr.gtext.length < 1) return res.status(400).send('Empty ingredient field')
+        if (ingr.qty.length < 1) return res.status(400).send('Empty qty field')
+        if (ingr.unit.length < 1) return res.status(400).send('Empty unit field')
+    };
+
+    // check methods
+    for (const method of req.body.method) {
+        if (method.length < 1) return res.status(400).send('Empty method field')
+    };
+
+    // check notes
+    var notes = req.body.notes;
+    for (var i = notes.length - 1; i >= 0; i--) {
+        if (notes[i].length < 1) notes.splice(i, 1);
+    };
+    req.body.notes = notes;
+
+
+    next();
 }
-
-
-
-
-
-function extension(ext) {
-    if (ext == "image/png") {
-        return '.png';
-    } 
-    if (ext == "image/jpg" || ext == "image/jpeg") {
-        return '.jpg';
-    }
-}
-
-
-
 
 
 module.exports = validate_RecipeData;
-

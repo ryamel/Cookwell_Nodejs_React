@@ -19,8 +19,7 @@ const cuisine = [
 					'Italian',
 					'Soul Food',
 					'Spanish',
-					'Western',
-					'None'
+					'Western'
 				];
 
 const mealTypes = [

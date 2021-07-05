@@ -7,11 +7,12 @@ $accountForm-width: 700px
 	font-size: 1.2em
 	margin-bottom: 30px
 
-.accountBody
+.account_sideMenu_container
 	display: table
 	margin: 10px auto
-	position: relative
 	min-height: $std-pageMinHeight
+	width: fit-content
+	padding-right: $sideMenu-width
 	#newUserAccountMsg
 		width: 700px
 		white-space: normal
@@ -52,12 +53,12 @@ $accountForm-width: 700px
 				display: block
 				margin: 0 auto
 
-.spacer
+#loading-spacer
 	min-width: $accountForm-width
 	display: inline-block
 
 .sideMenu
-	display: inline
+	display: inline-block
 	width: 300px
 	background-color: white
 	width: $sideMenu-width
@@ -65,9 +66,6 @@ $accountForm-width: 700px
 	border-radius: 5px
 	margin: 0 10px 0 0
 	background-color: white
-	position: absolute
-	left: -210px
-	top: 0
 	font-family: 'Lato', sans-serif
 	@include accountFirstBreak
 		display: none

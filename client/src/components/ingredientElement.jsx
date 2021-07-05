@@ -3,6 +3,7 @@ import { units } from '../searchOptions';
 
 
 function IngredientElement(props) {
+
 	return (
     	<div className='field-container-add'>
 
@@ -20,7 +21,7 @@ function IngredientElement(props) {
 				value={props.ingr.unit}
 				onChange={(e) => props.handleInput(e.target.name, e.target.value, props.number)}
 				>
-				<option className='unitDefault' >- Unit -</option>
+				<option className='unitDefault'>unit of quantity</option> {/* ! You must adjust "/api/recipes/upload" server route code if this string is modified */}
 				{
 					units.map((unit, index) => 
 						<option key={index} value={unit} >{unit}</option>

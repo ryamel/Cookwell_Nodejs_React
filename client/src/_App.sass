@@ -31,8 +31,9 @@ $searchbar-border-radius: 2px
 $searchBarHeight: 35px
 $searchBarWidth: 300px
 
+$header-height: 65px
 
-$overlayBackground: rgb(255,255,255)
+$overlayBackground: rgba(190,190,190, 0.1)
 
 // error message font font-family:
 $error-font: 'Lato', sans-serif
@@ -232,22 +233,43 @@ a
 	margin-top: $footer-margin
 
 
+.header-blank
+	padding-top: 15px
+
+
+
 
 .bannerMsgBar
-	position: absolute
-	left: 0
-	right: 0
+	position: fixed
+	bottom: 50px
+	right: 100px
+	width: fit-content
+	padding: 7px 20px
+	border-radius: 3px
 	background-color: #36454f
-	height: 18px
+	height: 30px
 	text-align: center
 	color: white
 	letter-spacing: 0.1em
-	display: none
-	z-index: 100
+	z-index: 15
 	font-size: 0.85em
 	font-weight: 400
 	font-family: 'Lato', sans-serif
+	animation-duration: 0.5s
+	animation-name: slidein
+
+.logMsg
+	text-align: center
+	font-size: 0.8em
+	color: blue
+	margin-bottom: 5px
 
 
-.header-blank
-	padding-top: 15px
+
+
+@keyframes slidein
+	0%
+		transform: translateY(100px)
+	100%
+		transform: translateY(0px)
+

@@ -173,7 +173,7 @@ class App extends React.Component {
 					<Route path="/recipe-page/:id"> 	<Recipepage /> 							</Route>
 					<Route path="/search-page"> 		<Searchpage /> 							</Route>
 					<Route path="/login-page"> 			<Loginpage login={this.login} /> 		</Route>
-					<Route path="/signup-page"> 		<Signuppage /> 							</Route>
+					<Route path="/signup-page"> 		<Signuppage login={this.login}/> 		</Route>
 					<Route path="/privacy-policy"> 		<Privacypolicypage /> 					</Route>
 					<Route path="/forgot-password"> 	<Forgotpassword /> 						</Route>
 					<Route path="/my-account"> 			<Myaccountpage logout={this.logout} /> 	</Route>

@@ -36,18 +36,14 @@ const ingrSchema = new mongoose.Schema({
 	}
 }, { _id : false });
 
-const noteSchema = new mongoose.Schema({
-	text: 'string',
-	stepNum: 'number'
-}, { _id : false });
 
 
 const recipesSchema = new mongoose.Schema({ 
 	title: {
 		type: 'string',
 		required: true,
-		minLength: [3, 'Title must be at least 3 characters'],
-		maxLength: [80, 'Title must be less than 80 characters']
+		minLength: 3,
+		maxLength: 80
 	},
 	authid: {
 		type: 'ObjectId',
@@ -57,7 +53,7 @@ const recipesSchema = new mongoose.Schema({
 	description: {
 		required: true,
 		type: 'string',
-		maxLength: [500, 'Description cannot be longer than 500 characters']
+		maxLength: 500
 	},
 	mealType: { // check for duplicates
 		required: true,
@@ -84,19 +80,9 @@ const recipesSchema = new mongoose.Schema({
 			'Vegan',
 			'Ketogenic',
 			'Dairy Free',
-			'Nut Free'
-		],
-		validate: {
-			validator: function (v) {  // v is the element that was passed
-				if (v.length < 1) {
-					return 0;
-				};
-				if (v.includes('None') && v.length > 1 ) {
-					return 0;
-				}
-			},
-			message: "Invalid diet selection"
-		}
+			'Nut Free',
+			'None'
+		]
 	},
 	cuisine: { // check for duplicates
 		type: ['string'],
@@ -118,8 +104,7 @@ const recipesSchema = new mongoose.Schema({
 			'Italian',
 			'Soul Food',
 			'Spanish',
-			'Western',
-			'None'
+			'Western'
 		]
 	},
 	servings: {
@@ -135,7 +120,7 @@ const recipesSchema = new mongoose.Schema({
 		required: true,
 		type: 'number',
 		trim: true,
-		min: [0, 'Cook time must be greater than zero']
+		min: 0
 	},
 	ingredients: {
 		required: true,
@@ -143,16 +128,10 @@ const recipesSchema = new mongoose.Schema({
 	},
 	method: {
 		required: true,
-		type: ['string'],
-		validate: {
-			validator: function (v) {
-				return v && v.length > 0;
-		},
-			message: "Method should have at least 1 entry"
-		}
+		type: ['string']
 	},
 	notes: {
-		type: [noteSchema],
+		type: ['string'],
 		required: false
 	},
 	uploadDate: {

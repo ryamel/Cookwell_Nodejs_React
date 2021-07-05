@@ -1,38 +1,41 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import './signup-page.sass';
-
+import PropTypes from "prop-types";
+import { withRouter } from "react-router";
+import axios from 'axios';
 
 class Signuppage extends React.Component {
-	constructor() {
+	constructor(props) {
 		super();
 		this.state = {
 			email: '',
 			pwd: '',
-			pwdRepeat: ''
+			pwdRepeat: '',
+			errMsg: ''
 		}
 
-		this.signUpUser = this.signUpUser.bind(this);
+		this.registerUser = this.registerUser.bind(this);
 		this.handleInput = this.handleInput.bind(this);
+		this.handleError = this.handleError.bind(this);
 	}
 
-	signUpUser() {
+	registerUser() {
+	    const data = {
+	    	email: this.state.email,
+	        pwd: this.state.pwd,
+	        pwdRepeat: this.state.pwdRepeat
+	    }
 
-		const postOptions = {
-	        method: 'POST',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify({
-	        	email: this.state.email,
-	        	pwd: this.state.pwd,
-	        	pwdRepeat: this.state.pwdRepeat
-	        })
-	    };
-
-		fetch('/api/users/create', postOptions)
-			.then(res => res.json())
-			.then(data => console.log(data))
-			.catch(error => console.log(error.errors));
-
+		axios.post('/api/users/register', JSON.stringify(data), { headers: { 'Content-Type': 'application/json' }  })
+			.then(res => {
+				localStorage['logged_in'] = true;
+				this.props.login();
+				this.props.history.push('/my-account'); // redirect using withRouter and prototypes import
+			})
+			.catch(error => {
+				if (typeof error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
+			})
 	}
 
 	handleInput(e) {
@@ -42,9 +45,19 @@ class Signuppage extends React.Component {
 		})
 	}
 
+	handleError(msg){
+		if (msg.length > 0) {
+			const timer = setTimeout(() => {
+				this.setState({	error: '' });
+			}, 5500);
+			return <div className='logMsg'>{msg}</div>; // output msg
+		}
+	}
+
 	render () {
 		return (
 			<div className="signupForm-container">
+				{ this.handleError(this.state.errMsg)}
 				<input 
 					type="text" 
 					name="email" 
@@ -67,7 +80,7 @@ class Signuppage extends React.Component {
 					onChange={this.handleInput}
 				/>
 				<button 
-					onClick={this.signUpUser} 
+					onClick={this.registerUser} 
 					type="submit" 
 					name="submit">
 					Sign up
@@ -87,6 +100,6 @@ class Signuppage extends React.Component {
 	}
 }
 
+const SignuppageWithRouter = withRouter(Signuppage);
 
-
-export default Signuppage;
+export default SignuppageWithRouter;

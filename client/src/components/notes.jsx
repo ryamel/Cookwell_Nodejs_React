@@ -4,6 +4,12 @@ import NoteElement from './noteElement';
 
 function Notes(props) {
 
+	if (props.notes.length < 1) {
+		var notes = [''];
+	} else {
+		var notes = props.notes;
+	}
+
 	return (
 
         <div id='dynamic_notes'>
@@ -17,7 +23,7 @@ function Notes(props) {
 				<button id="remove_noteField" type="button" onClick={() => props.removeField('notes')}>Remove Last</button>
 			</div>
 			{
-				props.notes.map((note, index) => 
+				notes.map((note, index) => 
 					<NoteElement 
 						key={index}
 						number={index}
