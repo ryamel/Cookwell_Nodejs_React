@@ -2,7 +2,7 @@ import React, { Component, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import './login-page.sass';
 import { withRouter } from "react-router";
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"; // needed for HC withRouter
 import axios from 'axios';
 
 
@@ -67,7 +67,7 @@ function Loginpage(props) {
 					name="submit-loginPage">Log in
 				</button>
 				<div id="forgotPwd">
-					<Link to="/forgot-passsword">Forgot Password</Link>
+					<Link to="/forgot-password">Forgot Password</Link>
 				</div>
 				<div id="signUp">
 					Don't have an account? <Link to="/signup-page">Sign up</Link>

@@ -1,16 +1,17 @@
 
 
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const app = express();
-const Joi = require('joi'); // upper case named because module returns a Class
 const mongo = require('mongodb');
 const assert = require('assert');
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true)
-const cors = require('cors');
+const cors = require('cors'); 
 require('dotenv').config();
+const cookieParser = require('cookie-parser');// allows reading of cookies on front end (verifyToken middleware)
+app.use(cookieParser()); 
+app.use(express.json()); // * required to parse any http json data --> places json data into req.body
 
 
 if (!process.env.private_key) {
@@ -28,11 +29,9 @@ const db = mongoose.connect(process.env.DB_connection, {
 // app.use installs a middleware function
 
 
-app.use(cookieParser());
-app.use(express.json()); // * required to parse any http json data --> places json data into req.body
 
 
-//app.use(express.urlencoded({extended: true}));
+// app.use(express.urlencoded({extended: true}));
 
 // body parser
 // const bodyParser = require("body-parser");
@@ -42,8 +41,10 @@ app.use(express.json()); // * required to parse any http json data --> places js
 
 const users = require('./routes/users');
 const recipes = require('./routes/recipes');
+const mail = require('./routes/mail');
 app.use('/api/users', users);
 app.use('/api/recipes', recipes);
+app.use('/api/mail', mail);
 
 
 

@@ -15,6 +15,7 @@ const { validateEmail } = require('../serverFiles/validation');
 const { User } = require('../models/users');
 var { upload } = require('../middleware/upload');
 const verifyToken = require('../middleware/verifyToken');
+const { validatePwd } = require('../middleware/validatePwd');
 
 
 
@@ -54,11 +55,8 @@ router.post('/register', async (req, res) => {
     const valid = validateEmail(req.body.email);
     if ( !valid ) return res.status(400).send('Invalid email');
     // check valid password
-    if (req.body.pwd !== req.body.pwdRepeat) return res.status(400).send('Passwords do not match');
-    if (req.body.pwd.length < 8) return res.status(400).send('Password must be at least 8 characters');
-
-
-
+    let err = validatePwd(req.body.pwd, req.body.pwdRepeat);
+    if (err) return res.status(400).send(err);
     // encypt pwd using bcrypt library
     const salt = await bcrypt.genSalt(10);
     const hashPwd = await bcrypt.hash(req.body.pwd, salt);
@@ -68,7 +66,6 @@ router.post('/register', async (req, res) => {
         pwd: hashPwd
     });
     await user.save().catch(error => res.status(500).send('Server Error'));
-
     // login user (provide jwt)
     const token = user.generateAuthToken();
     return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send('User Registered'); 
@@ -134,11 +131,7 @@ router.post('/change-password', verifyToken, async (req, res) => {
 
 
 router.post('/update-profile', [verifyToken, upload.single('file')], async (req, res) => {
-
-
-    
     // upload photo file and update user profile to reflec new profileImg
-
     if (typeof req.file !== "undefined") {
         var extension = path.extname(req.file.originalname).toLowerCase();
         var profileImg_new = req.body.name.replace(/\s/g,'_') + '_' + Date.now() + extension;

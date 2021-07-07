@@ -1,6 +1,5 @@
 
 const mongoose = require('mongoose');
-const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 
 // const socialSchema = new mongoose.Schema({ 
@@ -54,7 +53,7 @@ userSchema.methods.generateAuthToken = function() {
 
 const User = mongoose.model('User', userSchema);
 
-
+//const Joi = require('joi');
 // validate function
 // function validateUser(user) {
 // 	const schema = {

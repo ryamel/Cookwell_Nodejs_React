@@ -11,6 +11,7 @@ import Signuppage from './pages/signup-page';
 import Privacypolicypage from './pages/privacy-policy-page';
 import Forgotpassword from './pages/forgot-password';
 import Myaccountpage from './pages/my-account-page';
+import ResetPassword from './pages/reset-password';
 
 import './App.sass';
 import mastHead from './media/brand/cookwell.png';
@@ -177,6 +178,7 @@ class App extends React.Component {
 					<Route path="/privacy-policy"> 		<Privacypolicypage /> 					</Route>
 					<Route path="/forgot-password"> 	<Forgotpassword /> 						</Route>
 					<Route path="/my-account"> 			<Myaccountpage logout={this.logout} /> 	</Route>
+					<Route path="/reset-password"> 		<ResetPassword /> 						</Route>
 				</Switch>
 
 			</Router>
