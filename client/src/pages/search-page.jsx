@@ -3,68 +3,75 @@ import './search-page.sass';
 import DropMenu from '../components/dropMenu';
 import MultiSelectMenu from '../components/multiSelectMenu';
 import { mealTypes, dietOptions, cuisine } from '../searchOptions';
-import ShowResults from './show-results'
-
+import ShowResults from '../components/show-results'
+import axios from 'axios';
 
 class Searchpage extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
 			show: false,
-			results: [],
+			searchResult: [],
 			isLoaded: false,
 			error: false,
-			searchText: '',
 			diet: [],
 			cuisine: [],
 			mealType: [],
-			time: null
+			time: null,
+			emtyResult: false
 		}
-
-		this.searchFunction = this.searchFunction.bind(this);
+		this.handleSearch = this.handleSearch.bind(this);
 		this.handleInput = this.handleInput.bind(this);
 	}
 
 
 	componentDidMount() {
+		// this is only such that on reload / refresh, the component will still load some results
+		if (!this.props.searchBtn) {
+			let data = JSON.stringify({
+				diet: this.state.diet,
+		       	cuisine: this.state.cuisine,
+		       	mealType: this.state.mealType,
+		       	time: this.state.time,
+		       	searchText: this.props.search
+			});
 
-		this.setState({searchText: this.props.searchText});
-
-		// on load search for random results
-		const postOptions = {
-	        method: 'POST',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify({})
-	    };
-
-		fetch("/api/recipes/search/1", postOptions)
-			.then(res => res.json())
-			.then(
-				(data) => {
-					console.log(data);
+			axios.post("/api/recipes/search", data, { headers: { 'Content-Type': 'application/json' } })
+				.then(res => {
 					this.setState({
-						results: data,
+						searchResult: res.data,
 						isLoaded: true
 					})
-				},
-				(error) => {
-					console.log('error');
-					this.setState({
-						isLoaded: false,
-						error: error
-					})
-				}
-			)
+				})
+				.catch(err => console.log(err));
+		}
+	}
+
+	handleSearch() {
+	
+		this.props.setSearchBtn(); // reset search btn to false
+		
+		let data = JSON.stringify({
+			diet: this.state.diet,
+	       	cuisine: this.state.cuisine,
+	       	mealType: this.state.mealType,
+	       	time: this.state.time,
+	       	searchText: this.props.search
+		});
+
+		axios.post("/api/recipes/search", data, { headers: { 'Content-Type': 'application/json' } })
+			.then(res => {
+				res.data.length < 1 ? this.setState({emtyResult: true}) : this.setState({emtyResult: false});
+				this.setState({
+					searchResult: res.data,
+					isLoaded: true
+				})
+			})
+			.catch(err => console.log(err));
 	}
 
 
 	handleInput(stateName, value) {
-
-		// console.log(stateName, value);
-
-		// var stateName = event.target.name;
-
 
 		// if time selection
 		if (stateName == 'time') {
@@ -113,56 +120,22 @@ class Searchpage extends React.Component {
 			}, console.log(this.state.searchText));
 		}
 		
-
 	}
 
-	searchFunction(input) {
 
-		const data = {
-			diet: this.state.diet,
-	       	cuisine: this.state.cuisine,
-	       	mealType: this.state.mealType,
-	       	time: this.state.time,
-	       	searchText: this.state.searchText
-		};
 
-		const postOptions = {
-	        method: 'POST',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(data)
-	    };
-
-	    	   
-		fetch("/api/recipes/search/0", postOptions)
-			.then(res => res.json())
-			.then(
-				(data) => {
-					console.log(data);
-					this.setState({
-						results: data,
-						isLoaded: true,
-						error: false
-					})
-				},
-				(error) => {
-					console.log('error');
-					this.setState({
-						isLoaded: false,
-						error: error
-					})
-				}
-			)
-	}
 
 
 	render() {
+		// handles behaviour
+		if (this.props.searchBtn) this.handleSearch();
 
 		return (
 			<React.Fragment>
 
 				<div id="filter-container"> 
 
-						<div id="filterSearchContainer">
+{/*						<div id="filterSearchContainer">
 							<input 
 								placeholder="Keywords" 
 								type="text" 
@@ -171,7 +144,7 @@ class Searchpage extends React.Component {
 								onChange={(e) => this.handleInput(e.target.name, e.target.value)} 
 							/>
 							<button onClick={this.searchFunction} className="searchBtn" type="submit">Search</button>
-						</div>
+						</div>*/}
 
 
 
@@ -182,6 +155,7 @@ class Searchpage extends React.Component {
 								<MultiSelectMenu 
 									name='diet'
 									options={dietOptions}
+									state={this.state.diet}
 									handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
 								/>
 							</div>
@@ -254,7 +228,12 @@ class Searchpage extends React.Component {
 
 
 
-				<ShowResults isLoaded={this.state.isLoaded} error={this.state.error} results={this.state.results} />
+				{
+					!this.state.emtyResult ? 
+					<ShowResults results={this.state.searchResult} />  : 
+					<div id='noResultsMsg'>No results... try modifying your search</div>
+				}
+				
 			
 
 			</React.Fragment>

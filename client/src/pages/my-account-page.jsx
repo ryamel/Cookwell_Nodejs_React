@@ -11,27 +11,19 @@ import Submitrecipe from './account-pages/submit-recipe';
 
 function myAccountPage(props) {
 
-
-
 	let { path, url } = useRouteMatch();
-
-
 	
 	//  set state of submit-recipe
 	var editTitle = getParameterByName('editTitle');
 	var edit = getParameterByName('edit');
 	if (!edit) edit = false;
 	if (!editTitle) editTitle = '';
-	//console.log(edit);
-	//Submitrecipe.forceUpdate(callback);
 
 
 	return(
 		<div className='account_sideMenu_container'>
 
-
 			<div className="sideMenu">
-
 				<Link to="/my-account" className='sideMenuOption'>
 					Recipes 
 					<i className="arrow right"></i>
@@ -56,20 +48,16 @@ function myAccountPage(props) {
 					Log Out 
 					<i className="arrow right"></i>
 				</Link>
-
 			</div>
 
-
-				<Switch>
-					<Route exact path="/my-account"> 						<Accountrecipes /> 								</Route>
-					<Route path="/my-account/submit-recipe"> 				<Submitrecipe editTitle={editTitle} edit={edit} /> 	</Route>
-					<Route path="/my-account/my-profile"> 					<Myprofile /> 									</Route> 
-					<Route path="/my-account/change-password"> 				<Changepassword /> 								</Route>
-				</Switch>
-
+			<Switch>
+				<Route exact path="/my-account"> 						<Accountrecipes /> 								</Route>
+				<Route path="/my-account/submit-recipe"> 				<Submitrecipe editTitle={editTitle} edit={edit} /> 	</Route>
+				<Route path="/my-account/my-profile"> 					<Myprofile /> 									</Route> 
+				<Route path="/my-account/change-password"> 				<Changepassword /> 								</Route>
+			</Switch>
 
 		</div>
-
 	);
 	
 }

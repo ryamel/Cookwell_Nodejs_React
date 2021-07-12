@@ -1,18 +1,17 @@
 @import './_App.sass'
 
 // remaining is header specific //
-
+.underline
+	border-bottom: 3px solid rgb(148,214,104)
 
 #headerBody
 	background-color: white
-	position: relative
-	width: 100vw
 	border-bottom: 1px solid $std-container-borderColour
 	height: $header-height
-	padding: 0
+	display: flex
 	#mast	
 		display: inline-block
-		margin: 20px 30px 0 20px
+		padding: 28px 30px 0 20px
 		img
 			height: 25px
 		@include midBreakHeader
@@ -29,10 +28,10 @@
 		@include lowBreakHeader
 			display: none
 	#loginBtn
-		float: right
 		position: relative
-		top: 18px
+		top: 30px
 		right: 22px
+		width: 80px
 		@include midBreakHeader
 			position: absolute
 			right: 20px
@@ -55,54 +54,60 @@
 			float: right
 			font-family: 'Exo', sans-serif
 			font-weight: 500
-	#navBar-container
-		padding: 0
-		display: inline-block
+	// @include midBreakHeader
+	// 	text-align: center
+	// 	width: 100%
+#navBar-container
+	padding-top: 32px
+	width: 700px
+	a
+		color: black
+		font-size: 1em
+		font-family: 'Lato', sans-serif
+		letter-spacing: 0.1em
+		text-decoration: none
 		position: relative
-		top: -8px
-		@include midBreakHeader
-			text-align: center
-			width: 100%
-		a
-			color: black
-			position: relative
-			text-decoration: none
-			font-size: 0.9em
-			font-family: 'Lato', sans-serif
-			letter-spacing: 0.1em
-		a:before
-			text-decoration: none
-			content: ""
-			position: absolute
-			width: 0
-			height: 3px
-			bottom: -3px
-			left: 0
-			background-color: rgb(142,212,97)
-			visibility: hidden
-			transition: all 0s
-			transition-delay: 0.1s
-		a:hover::before
-			text-decoration: none
-			visibility: visible
-			width: 100%
-			transition: all 0.25s ease-in-out 
-			transition-delay: 0.03s
-		a:not(:first-child)
-			margin-left: 30px
-			@include midBreakHeader
-				margin-left: 15px
-	#AdvancedSearch-title
-		position: absolute
-		top: -14px
-		right: 0
-		font-size: 0.65em
+		overflow: hidden
+	a:not(:first-child)
+		margin-left: 30px
+	// a:before
+	// 	text-decoration: none
+	// 	content: ""
+	// 	position: absolute
+	// 	width: 0
+	// 	height: 3px
+	// 	bottom: -3px
+	// 	right: 0
+	// 	background-color: rgb(142,212,97)
+	// 	visibility: hidden
+	// 	transition: all 0s
+	// 	transition-delay: 0.1s
+	// a:hover::before
+	// 	text-decoration: none
+	// 	visibility: visible
+	// 	width: 100%
+	// 	transition: all 0.25s ease-in-out 
+	// 	transition-delay: 0.03s
+	// 	@include midBreakHeader
+	// 		margin-left: 15px
+
+
+/* Slide in */
+li:nth-child(2) a 
+  
+
+
+
+#AdvancedSearch-title
+	position: absolute
+	top: -14px
+	right: 0
+	font-size: 0.65em
 
 .headerSearchBar
-	float: right
-	margin-top: 15px
+	margin-top: 20px
 	margin-right: 40px
-	width: $searchBarWidth
+	width: 100%
 	height: $searchBarHeight
 	border: 1px solid lightgrey
 	border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius

@@ -37,24 +37,18 @@ class changePassword extends Component {
 			newPwdRepeat: this.state.newPwdRepeat
 		}
 
-		// const postOptions = {
-		// 	method: 'POST',
-		// 	headers: { 'Content-Type': 'application/json' }, // type of data being sent
-		// 	body: JSON.stringify(data)
-		// };
-
-
-		// fetch('/api/users/change-password', postOptions)
-		// .then(res => res.json())
-		// .then(data => console.log(data))
-		// .catch(err => console.log(err));
-
 		axios.post('/api/users/change-password', JSON.stringify(data), { headers: {'Content-Type': 'application/json'} })
 		 	.then(res => {
-		 		if (typeof error.response.data !== 'undefined') this.setState({msg: error.response.data});
+		 		this.setState({
+		 			oldPwd: '',
+					newPwd: '',
+					newPwdRepeat: '',
+		 			msg: res.data
+		 		});
 			})
 			.catch(error => {
-				if (typeof error.response.data !== 'undefined') this.setState({msg: error.response.data});
+				console.log(error);
+				//if (!(typeof error.response.data === 'undefined')) this.setState({msg: error.response.data});
 			});
 
 	}

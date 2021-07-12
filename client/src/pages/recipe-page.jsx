@@ -1,185 +1,192 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './recipe-page.sass';
-import { useParams } from 'react-router-dom';
-import queryString from 'query-string';
+import axios from 'axios';
 
 
 
+class Recipepage extends Component {
+	constructor() {
+		super();
+		this.state = {
+			isLoaded: false,
+			result: null
+		}	
 
-function Recipepage() {
-
-	const [state, setState] = useState({});
-	const [error, setError] = useState(null);
-	const [isLoaded, setIsLoaded] = useState(false);
-
-	let { id } = useParams();
-
-
-	useEffect(() => {
-
-		fetch('/api/recipes/getbyid/' + id)
-			.then(res => res.json())
-			.then(
-				(result) => {
-					setState({result});
-					setIsLoaded(true);
-					console.log(result);
-				}, // setState is an sync function!
-				(error) => {
-					setError(error);
-					setIsLoaded(true);
-				} // handle errors without the try catch block. Avoids react bugs in components
-			);
-
-	}, []);
+		this.displayDietBanner = this.displayDietBanner.bind(this);
+		this.getParameterByName = this.getParameterByName.bind(this);
+	}
 
 
+	componentDidMount() {
+		let rtitle = this.getParameterByName('rtitle');
 
-	if (error) {
-		return <div> Error: {error} </div>
-	} else if (!isLoaded)  {
-		return <div>Loading...</div>;
-	} else {
-		return(
-			<div className="recipe-page-container">
-				<div id="recipe-content-banner">
+		axios.get('/api/recipes/getbytitle/' + rtitle)
+			.then(res => {
+				console.log(res.data);
+				this.setState({
+					result: res.data,
+					isLoaded: true
+				})
+			})
+			.catch(error => {
+				console.log(error);
+				//this.setState({errMsg: error.response.data});
+			})
+	}
 
-					<div id="rec-container-1">
+	getParameterByName(name, url = window.location.href) {
+	    name = name.replace(/[\[\]]/g, '\\$&');
+	    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+	        results = regex.exec(url);
+	    if (!results) return null;
+	    if (!results[2]) return '';
+	    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
+	
 
-						<div id='recipe-img-container'>
-							<img src={process.env.PUBLIC_URL + '/user_recipes_img/' + state.result.img} />
+	displayDietBanner(diet) {
+		if (diet.length < 1) {
+			return null;
+		}
+		if (diet.includes('Vegan') && diet.includes('Vegetarian')) {
+			const ind = diet.indexOf('Vegetarian');
+			diet.splice(ind, 1);
+		}
+		return (
+			<div id='legend-container'>
+				{ 
+					diet.map((name, index) => (
+						<div key={index} className='symContainer'>
+							<img src={process.env.PUBLIC_URL + '/diet/' + name.replace(' ','') + '.svg'} /> 
+							<span className='dietName'>{name}</span>
+						</div>
+					))
+				}
+			</div>
+		);
+	}
+
+
+	render() {
+		if (!this.state.isLoaded)  {
+			return null;
+		} else {
+			return(
+				<div className="recipe-page-container">
+					<div id="recipe-content-banner">
+
+						<div id="rec-container-1">
+
+							<div id='recipe-img-container'>
+								<img src={process.env.PUBLIC_URL + '/user_recipes_img/' + this.state.result.img} />
+							</div>
+
+							<div id="rec-container-1-title">{this.state.result.title}</div>
+							<div id='about-container'>{this.state.result.description}</div>
+							<div className='stat-name' id="recipePage-sym-container">display det symb</div>
+
+							<div id='stat-container'>
+								<div id="float-container">
+
+									<div id='stat-name-container'>
+										<div className='stat-name'>Time </div>
+										<div className='stat-name'>Serves </div>
+									</div>
+
+									<div id="stat-number-container">
+										<div className='stat-name'>{this.state.result.cookTime + ' min'}</div>
+										<div className='stat-name'>{this.state.result.servings}</div>
+									</div>
+
+								</div>
+							</div>
+
 						</div>
 
-						<div id="rec-container-1-title">{state.result.title}</div>
-						<div id='about-container'>{state.result.description}</div>
-						<div className='stat-name' id="recipePage-sym-container">display det symb</div>
+						<div id="rec-container-2">
+							<div className='rec-container-headings'>
+								INGREDIENTS 
+							</div>
+							<ul>
+								{this.state.result.ingredients.map((ingr, index) => (
+									<li key={index}> {fracToHtmlEntity(ingr.qty) + ' ' + ingr.text} </li>
+								))}	
+							</ul>
+						</div>
 
-						<div id='stat-container'>
-							<div id="float-container">
+						<div id="rec-container-3">
+							<div className='rec-container-headings'>
+								METHOD
+							</div>
+							<ol>
+								{this.state.result.method.map((method, index) => (
+									<li key={index}> {method} </li>
+								))}	
+							</ol>
+						</div>
 
-								<div id='stat-name-container'>
-									<div className='stat-name'>Time </div>
-									<div className='stat-name'>Serves </div>
-								</div>
-
-								<div id="stat-number-container">
-									<div className='stat-name'>{state.result.cookTime + ' min'}</div>
-									<div className='stat-name'>{state.result.servings}</div>
-								</div>
-
+						<div id='rec-container-4'>
+							<div className='rec-container-headings' id='note-title'>
+								NOTES
+							</div>
+							<div className='note-container'>
+								<ul>
+									{this.state.result.notes.map((note, index) => (
+										<li key={index}>
+											<span className='note'> {note}</span>
+										</li>
+									))}	
+								</ul>
 							</div>
 						</div>
 
 					</div>
 
-					<div id="rec-container-2">
-						<div className='rec-container-headings'>
-							INGREDIENTS 
-						</div>
-						<ul>
-							{state.result.ingredients.map((ingr, index) => (
-								<li key={index}> {fracToHtmlEntity(ingr.qty) + ' ' + ingr.text} </li>
-							))}	
-						</ul>
+					<div id="right-banner">
+						{ this.displayDietBanner(this.state.result.diet) }
+
+	{/*					<div id="share-this-container">
+
+							<div id="title">Share this recipe</div>
+
+							<div id="ad-flexbox-container">
+								<div><a href="#" className="fa fa-facebook"></a></div>
+								<div><a href="#" className="fa fa-twitter"></a></div>
+								<div><a href="#" className="fa fa-pinterest"></a></div>
+								<div><a href="#" className="fa fa-envelope"></a></div>
+							</div>
+
+						</div>*/}
 					</div>
 
-					<div id="rec-container-3">
-						<div className='rec-container-headings'>
-							METHOD
-						</div>
-						<ol>
-							{state.result.method.map((method, index) => (
-								<li key={index}> {method} </li>
-							))}	
-						</ol>
-					</div>
+	{/*				<div id='rec-container-5'>
 
-					<div id='rec-container-4'>
-						<div className='rec-container-headings' id='note-title'>
-							NOTES
+						<div className='rec-container-headings-5'>
+							RECOMENDED
 						</div>
-						<div className='note-container'>
-							<ul>
-								{state.result.notes.map((note, index) => (
-									<li key={index}>
-										<span className='noteNum'> Step {note.step}</span> 
-										<span className='note'> {note.text}</span>
-									</li>
-								))}	
-							</ul>
+
+						<div>
+							<div className='more-banner-card more-recomended'>
+								<Link to='/'>
+									<img src='Media/user_recipe_images/' />
+									<div className='overlay'>
+										<div className='overlay-title'></div>
+									</div>
+								</Link>
+							</div>
 						</div>
-					</div>
+					</div> */}
 
 				</div>
-
-				<div id="right-banner">
-					{displayDietBanner(state.result.diet)}
-
-{/*					<div id="share-this-container">
-
-						<div id="title">Share this recipe</div>
-
-						<div id="ad-flexbox-container">
-							<div><a href="#" className="fa fa-facebook"></a></div>
-							<div><a href="#" className="fa fa-twitter"></a></div>
-							<div><a href="#" className="fa fa-pinterest"></a></div>
-							<div><a href="#" className="fa fa-envelope"></a></div>
-						</div>
-
-					</div>*/}
-				</div>
-
-{/*				<div id='rec-container-5'>
-
-					<div className='rec-container-headings-5'>
-						RECOMENDED
-					</div>
-
-					<div>
-						<div className='more-banner-card more-recomended'>
-							<Link to='/'>
-								<img src='Media/user_recipe_images/' />
-								<div className='overlay'>
-									<div className='overlay-title'></div>
-								</div>
-							</Link>
-						</div>
-					</div>
-				</div> */}
-
-			</div>
-		);
+			);
+		}
 	}
 }
 
 
 
-function displayDietBanner(diet) {
 
-	if (diet.length < 1) {
-		return null;
-	}
-
-	if (diet.includes('Vegan') && diet.includes('Vegetarian')) {
-		const ind = diet.indexOf('Vegetarian');
-		diet.splice(ind, 1);
-	}
-
-	return (
-		<div id='legend-container'>
-			{ 
-				diet.map((name, index) => (
-					<div key={index} className='symContainer'>
-						<img src={process.env.PUBLIC_URL + '/diet/' + name.replace(' ','') + '.svg'} /> 
-						<span className='dietName'>{name}</span>
-					</div>
-				))
-			}
-		</div>
-	);
-
-}
 
 
 

@@ -48,7 +48,7 @@ const recipesSchema = new mongoose.Schema({
 	authid: {
 		type: 'ObjectId',
 		required: true,
-		min: 0
+		ref: 'User'
 	},
 	description: {
 		required: true,
@@ -140,6 +140,16 @@ const recipesSchema = new mongoose.Schema({
 	},
 	authorName: {
 		type: 'string'
+	},
+	reviewed: {
+		type: 'boolean',
+		required: true,
+		default: false
+	},
+	contactedAuthor: {
+		type: 'boolean',
+		required: true,
+		default: false
 	}
 });
 

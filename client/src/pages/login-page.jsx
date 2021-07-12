@@ -33,7 +33,6 @@ function Loginpage(props) {
 				props.history.push('/'); // redirect using withRouter and prototypes import
 			})
 			.catch(error => {
-				
 				if (typeof error.response.data !== 'undefined') setMsg(error.response.data);
 			})
 	}

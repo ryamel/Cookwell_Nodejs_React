@@ -13,7 +13,7 @@ function MultiSelectMenu(props) {
 						<label key={index} className="check-container"> 
 							{option}
 							<input 
-								checked={ props.state.includes(option) ? true : false }
+								checked={props.state.includes(option) ? true : false}
 								name={props.name} 
 								type='checkbox' 
 								value={option}

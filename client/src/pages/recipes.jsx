@@ -41,14 +41,11 @@ class Recipes extends Component {
 	render() {
 		const { error, isLoaded } = this.state;
 
-		if (error) {
-			return <div>Error: {error.message}</div>;
-		} else if (!isLoaded) {
-			return <div>Loading...</div>;
+
+		if (!isLoaded) {
+			return null;
 		} else {
-
 			const { cardData } = this.state;
-
 			return (
 				<div className='browse-body'>
 					<div className='recipe-grid-container'>

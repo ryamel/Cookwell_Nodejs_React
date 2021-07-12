@@ -59,6 +59,14 @@ class accountRecipes extends React.Component {
 	render() {
 		if (!this.state.isLoaded) {
 			return <div id='loading-spacer'></div>;
+		} else if (this.state.recipes.length == 0) {
+			return (
+				<div id='loading-spacer'>
+					<div id='msg-spacer'>
+						Your recipes will appear here
+					</div>
+				</div>
+			);
 		} else {
 			return (
 				<React.Fragment>
@@ -73,6 +81,7 @@ class accountRecipes extends React.Component {
 										img={cardData.img} 
 										description={cardData.description} 
 										author={cardData.authorName} 
+										edit={true}
 										title={cardData.title}
 									/>	
 								)

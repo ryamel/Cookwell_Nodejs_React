@@ -45,47 +45,78 @@ router.get('/', async (req, res) => {
 
 
 
-
-
-router.post('/search/:random', async (req, res) => {
+router.get('/getbytitle/:title', async (req, res) => {
+    //return res.status(500).send('Server Error');
     try {
-
-        // build query object
-        var query = {};
-        if (req.params.random == 1) {
-            // figure out how to shuffle results for intial load of results on search-page
-        } else {
-
-            if (req.body.diet.length > 0) {
-                query['diet'] = {$all: req.body.diet};
-            }
-            if (req.body.time) {
-                query['cookTime'] = {$lt: parseInt(req.body.time)};
-            }
-            if (req.body.cuisine.length > 0) {
-                query['cuisine'] = {$in: req.body.cuisine};
-            }
-            if (req.body.mealType.length > 0) {
-                query['mealType'] = {$in: req.body.mealType};
-            }
-            if (req.body.searchText !== "") {
-                query['$text'] = {$search: req.body.searchText}; // searchs all fields specfied under Text Index on MongoDB
-            }
-
-        }
-
-
-        // search query
-        var recipes = await Recipe
-            .find(query); // will need to add pagination at some point...
-
-        res.json(recipes);
+        const recipe = await Recipe.findOne({title: req.params.title}).select('-_id -__v -uploadDate').populate('authid', '-_id name profileImg');
+        if (!recipe) return res.status(400).send('Server Error');
+        return res.status(200).json(recipe);
     }
     catch (err) {
-        res.status(400).json({message: err.message}); 
+        console.log(err);
+        return res.status(500).send('Server Error');
+    }
+
+    
+})
+
+
+
+
+// addiotnal feature to add... when empty search takse place, shuffle results so they're not always the same
+router.post('/search', async (req, res) => {
+    console.log('run');
+    // build query
+    var query = {};
+
+    if (req.body.diet.length > 0) {
+        query['diet'] = {$all: req.body.diet};
+    }
+    if (req.body.time) {
+        query['cookTime'] = {$lt: parseInt(req.body.time)};
+    }
+    if (req.body.cuisine.length > 0) {
+        query['cuisine'] = {$in: req.body.cuisine};
+    }
+    if (req.body.mealType.length > 0) {
+        query['mealType'] = {$in: req.body.mealType};
+    }
+    if (req.body.searchText !== "") {
+        query['$text'] = {$search: req.body.searchText}; // searchs all fields specfied under Text Index on MongoDB
+    }
+
+    try {
+        var recipes = await Recipe.find(query).populate('authid', '-_id name profileImg'); // will need to add pagination at some point...
+        return res.status(200).json(recipes);
+    }
+    catch (err) {
+        return res.status(400).send(err.message); 
     }
 
 });
+
+
+
+
+
+
+// router.post('/text-search', async (req, res) => {   
+//     if (req.body.search.length !== 0) {
+//         var query = { $text: { $search: req.body.search } };
+//     } else {
+//         var query = {};
+//     }
+
+//     try {   
+//         var recipes = await Recipe.find(query); // will need to add pagination at some point...
+//         return res.status(200).json(recipes);
+//     }
+//     catch (err) {
+//         return res.status(500).send(err.message); 
+//     }
+
+// });
+
 
 
 
@@ -125,20 +156,13 @@ router.get('/getbyuserid/:id', async (req, res) => {
 
 
 router.get('/get-latest/', async (req, res) => {
-
-    try {
-        var recipes = await Recipe.find().limit(8).sort({uploadDate: -1}); //.sort({uploadDate: -1});
-        let i = 0;
-
-        for (const recipe of recipes) {
-            var auth = await User.findOne({_id: recipe.authid}).select('displayName -_id'); 
-            recipes[i].authorName = auth.displayName; // keys added to object must be included in mongoose schema!
-            i++;
-        }
-        res.json(recipes);
+    try { 
+        //.sort({uploadDate: -1});
+        var recipes = await Recipe.find().limit(8).sort({uploadDate: -1}).populate('authid', '-_id name profileImg');
+        return res.json(recipes);
     }
     catch (err) {
-        res.status(500).json( {message: err.message} ); // server fucks up, send 500
+        return res.status(500).json( {message: err.message} );
     }
     
 });
@@ -149,21 +173,14 @@ router.get('/get-latest/', async (req, res) => {
 
 
 router.get('/get-featured/', async (req, res) => {
-
     try {
-        var recipes = await Recipe.find().limit(8);
-        let i = 0;
-
-        for (const recipe of recipes) {
-            var auth = await User.findOne({_id: recipe.authid}).select('displayName -_id'); 
-            recipes[i].authorName = auth.displayName; // keys added to object must be included in mongoose schema!
-            i++;
-        }
-        
-        res.json(recipes);
+        // use ref and populate to link author data to recipe doc. This will prevent haveing to perform additional queries
+        var recipes = await Recipe.find().limit(8).select('-__v').populate('authid', '-_id name profileImg'); 
+        return res.json(recipes);
     }
     catch (err) {
-        res.status(500).json( {message: err.message} ); // server fucks up, send 500
+        console.log(err);
+        res.status(500).send('Server Error');
     }
     
 });
@@ -384,12 +401,6 @@ router.post('/delete-recipe', [verifyToken], async (req, res) => {
 
 
 
-
-
-
-
-
-
 router.get('/get-edit/:recipeName', verifyToken, async (req, res) => {
     // req.tokenData._id
     const recipe = await Recipe.findOne({authid: req.tokenData._id, title: req.params.recipeName}).select('-authid -uploadDate -__v -_id');
@@ -399,6 +410,35 @@ router.get('/get-edit/:recipeName', verifyToken, async (req, res) => {
 
 });
 
+
+
+
+router.get('/get-review', verifyToken, async (req, res) => {
+    if (!req.tokenData.admin) return res.status(401).send();
+
+    try {
+        const recipeData = await Recipe.find({reviewed: false}).populate('authid', 'name email');
+        return res.status(200).json(recipeData);
+    }
+    catch(err) {
+        console.log(err);
+    }
+    return res.status(500);
+});
+
+
+
+
+router.post('/approve', verifyToken, async (req, res) => {
+    await Recipe.findOneAndUpdate(
+        { title: req.body.title, authid: req.body.authid },  
+        { reviewed: true }, 
+        function (err) {
+            if (err) return res.status(500).send('Server Error');
+        });
+
+    return res.status(200).send('wors');
+})
 
 
 

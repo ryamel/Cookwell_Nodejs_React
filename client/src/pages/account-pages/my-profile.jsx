@@ -52,9 +52,7 @@ class MyProfile extends Component {
 			})
 			.catch(error => {
 				if (error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
-			});
-
-		
+			});	
 	}
 
 
@@ -71,7 +69,8 @@ class MyProfile extends Component {
 					defaultEmail: res.data.email,
 					defaultName: res.data.name,
 					defaultAbout: res.data.about,
-					fileName: res.data.profileImg
+					fileName: res.data.profileImg,
+					errMsg: 'Profile Updated'
 				}, () => console.log(this.state));
 			})
 			.catch(error => {
@@ -93,7 +92,6 @@ class MyProfile extends Component {
 
 
 	render() {
-	
 		return (
 			<React.Fragment>
 
@@ -150,7 +148,7 @@ class MyProfile extends Component {
 
 						<div className='fieldContainer clearfix'>
 							<label className='std-field-label'>
-								User name
+								Username
 							</label>
 							<input 
 								type='text' 

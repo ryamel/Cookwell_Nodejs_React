@@ -106,7 +106,7 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/change-password', verifyToken, async (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
 
     if (req.body.newPwd !== req.body.newPwdRepeat) return res.status(400).send('Passwords do not match');
     // find user
@@ -121,7 +121,7 @@ router.post('/change-password', verifyToken, async (req, res) => {
     // update
     User.findOneAndUpdate({_id: req.tokenData._id}, {pwd: hashPwd}, (err) => {
         if (err) return res.status(500).send('server error');
-        return res.send('User password updated!');
+        return res.status(200).send('User password updated!');
     });
 
 })
@@ -176,7 +176,6 @@ router.post('/update-profile', [verifyToken, upload.single('file')], async (req,
 
     /// validate data ///
     let obj = JSON.parse(JSON.stringify(req.body)); // work around object null prototype
-    console.log(obj.about.length)
     if (obj.name.length < 3) return res.status(400).send('Username must be at least 3 characters');
     if (obj.about.length >= 500) return res.status(400).send('About section must be less than 500 characters');
     if (obj.email.length < 5) return res.status(400).send('A valid email is required');

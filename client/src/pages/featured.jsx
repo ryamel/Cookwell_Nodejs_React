@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import BrowseCard from '../components/browseCard';
 import './featured.sass';
-
+//import { Route, Redirect } from 'react-router'
 
 // featured titles need to be added inside the browseCard on the first of the line
 
 class Featured extends Component {
-	constructor() {
+	constructor(props) {
 		super();
 		this.state = {
 			featCardData: [],
@@ -18,6 +18,11 @@ class Featured extends Component {
 	}
 
 	componentDidMount() {
+		
+		//if (window.location.pathname) console.log('hello');
+		// if (typeof this.props.location !== 'undefined') {
+		// 	console.log(this.props.location.state.ref);
+		// }
 
 		// no need to use relative file path for '/api/recipes' with fetch. Fetch will auto find server.js in root dir
 		fetch("/api/recipes/get-featured/")
@@ -61,10 +66,8 @@ class Featured extends Component {
 	render() {
 		const { error, isFeatLoaded, isLatestLoaded } = this.state;
 
-		if (error) {
-			return <div>Error: {error.message}</div>;
-		} else if ( !isFeatLoaded || !isLatestLoaded ) {
-			return <div>Loading...</div>;
+		if ( !isFeatLoaded || !isLatestLoaded ) {
+			return null;
 		} else {
 
 			const { featCardData, latestCardData } = this.state;
@@ -75,16 +78,37 @@ class Featured extends Component {
 				<React.Fragment>
 
 					<div className='index-grid'>
-						{featCardData.map((cardData, index) => 
-							<BrowseCard key={index} rid={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authorName} title={cardData.title} index={index} firstCardHeader='Featured' />	
-						)}
+						{
+							featCardData.map((cardData, index) => 
+								<BrowseCard 
+									key={index} 
+									img={cardData.img} 
+									description={cardData.description} 
+									author={cardData.authorName} 
+									rtitle={cardData.title} 
+									index={index} 
+									edit={false}
+									firstCardHeader='Featured' 
+								/>	
+							)
+						}
 					</div>
 
-
 					<div className='index-grid'>
-						{latestCardData.map((cardData, index) => 
-							<BrowseCard key={index} rid={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authorName} title={cardData.title} index={index} firstCardHeader='Most Recent' />
-						)}
+						{
+							latestCardData.map((cardData, index) => 
+								<BrowseCard 
+									key={index} 
+									img={cardData.img} 
+									description={cardData.description} 
+									author={cardData.authorName} 
+									rtitle={cardData.title} 
+									index={index} 
+									edit={false}
+									firstCardHeader='Most Recent' 
+								/>
+							)
+						}
 					</div>
 
 				</React.Fragment>

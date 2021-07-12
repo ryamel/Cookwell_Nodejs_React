@@ -6,12 +6,35 @@ const crypto = require("crypto");
 const { Token } = require('../models/tokens');
 const { User } = require('../models/users');
 const { validatePwd } = require('../middleware/validatePwd');
+const Recipe = require('../models/recipes');
 //"use strict";
+
+
+// email function
 const nodemailer = require("nodemailer");
-
-
-
 const clientURL = "http://localhost:3000";
+async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
+	let testAccount = await nodemailer.createTestAccount();
+	let transporter = nodemailer.createTransport({
+		host: "smtp.ethereal.email",
+		port: 587,
+		secure: false, // true for 465, false for other ports
+		auth: {
+			user: testAccount.user, // generated ethereal user
+			pass: testAccount.pass, // generated ethereal password
+		},
+	});
+	let info = await transporter.sendMail({
+		from: fromEmail, // sender address
+		to: toEmail, // list of receivers
+		subject: subject, // Subject line
+		text: ``, // plain text body
+		html:  htmlBody
+	});
+	console.log("Message sent: %s", info.messageId);
+	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+}
+
 
 
 
@@ -107,6 +130,48 @@ router.post('/pwd-reset-update', async (req, res) => {
 	res.status(200).send('Password Updated. Try logging in with your new password.');
 })
 
+
+
+router.post('/edit-contact-author', async (req, res) => {
+	// check bddy length
+	if (req.body.emailBody.length < 5) return res.status(400).send('Email body too short, message not sent');
+
+	// email details
+	const subject = 'Cookwell - Edit Recipe';
+	const from = 'foo@example.com';
+	const to = req.body.userEmail;
+	const html = 
+		`<html>
+			<head>
+			    <style>
+			    </style>
+			</head>
+			<body>
+			    <p>Hello ${req.body.authorName},</p>
+			    <p>
+			    	At Cookwell we peform a quick review of all recipes uploaded for content, spelling/grammar, and photo quality. Sometimes we ask for corrections before we publish a recipe. 
+			    	Please make the following corrections to '${req.body.rtitle}', detailed below. Then reply to this email, notifying us the corrections were made, and we will publish your recipe.
+			    </p>
+			    <p>${req.body.emailBody}</p>
+			</body>
+		</html>`;
+
+	// send Email
+	sendEmail(from, to, subject, html).catch(err => {
+		console.log(err);
+		return res.status(500).send('Server error, Email not sent');
+	});
+
+	// set status of Sent Email
+	await Recipe.findOneAndUpdate(
+		{title: req.body.rtitle, authid: req.body.authid},
+		{contactedAuthor: true},
+		function (err) {
+            if (err) return res.status(500).send('Email Sent, with server error');
+        })
+
+	res.status(200).send('Email sent!');
+})
 
 
 
