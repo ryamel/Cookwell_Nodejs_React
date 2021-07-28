@@ -12,16 +12,14 @@ class BrowseCard extends Component {
 	}
 
 
-	renderHeader(prop, header) {
-		if (header === undefined || prop === undefined) {
-			return;
-		}
-
-		if (prop === 0) {
+	renderHeader() {
+		if (this.props.firstCardHeader === undefined || this.props.index === undefined) {
+			return null;
+		} else if (this.props.index === 0) {
 			return (
 				<React.Fragment>
-						<div className='feature-titles'>{header}</div>
-						<div className='mediaTitle'>{header}</div>
+						<div className='feature-titles'>{this.props.firstCardHeader}</div>
+						<div className='mediaTitle'>{this.props.firstCardHeader}</div>
 				</React.Fragment>
 			);
 		}
@@ -42,7 +40,8 @@ class BrowseCard extends Component {
 	render() {
 		return (
 			<div className='browse-card'>
-				{ this.renderHeader(this.props.index, this.props.firstCardHeader) }
+
+				{ this.renderHeader() }
 
 				<Link to={{pathname: process.env.PUBLIC_URL + '/recipe-page/?rtitle=' + encodeURIComponent(this.props.rtitle)}}>
 					<span className='card-link'></span>

@@ -107,6 +107,7 @@ router.post('/search', async (req, res) => {
         return res.status(200).json(recipes);
     }
     catch (err) {
+        console.log(err);
         return res.status(400).send(err.message); 
     }
 
@@ -123,7 +124,8 @@ router.get('/search/auto', async (req, res) => {
         var recipes = await Recipe.find();
         return res.json(recipes);
     }
-    catch (error) {
+    catch (err) {
+        console.log(err);
         return res.status(400).json({message: err.message});
     }
 });
@@ -159,6 +161,7 @@ router.get('/getrecent/', async (req, res) => {
         return res.status(200).json(recipes);
     }
     catch (err) {
+        console.log(err);
         return res.status(500).json( {message: err.message} );
     }
     
@@ -222,6 +225,7 @@ router.post('/addnew', async (req, res) => {
         return res.status(201).json(saveRec);
     }
     catch (err) {
+        console.log(err);
         return res.status(400).json({message: err.message}); 
     }
 
@@ -259,14 +263,17 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
     req.body.img = fileName;
    
     // save doc data
-    const re = new Recipe(req.body);
-    const savedDoc = await re.save();
-    if (!savedDoc) {
+    try {
+        const rec = new Recipe(req.body);
+        await rec.save();
+    }
+    catch (err) {
+        console.log(err);
         try {
             fs.unlinkSync("client/public/user_recipes_img/card/" + fileName);
             fs.unlinkSync("client/public/user_recipes_img/display/" + fileName);
             fs.unlinkSync("client/public/user_recipes_img/original/" + fileName);
-        } catch (err) {}
+        } catch (err) { console.log(err) }
         return res.status(400).send('Server Error');
     }
 
@@ -280,8 +287,8 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
 
 
 
-router.post('/saveedit', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
-    console.log('saveedit');
+router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
+    console.log('saveEdit');
 
     try {
 
@@ -290,53 +297,53 @@ router.post('/saveedit', [verifyToken, upload.single('file'), validate_RecipeDat
 
             // valid file
             if (!validFileProperties(req.file.originalname, req.file.size)) { 
-                fs.unlink(req.file.path, err => console.log(err));
+                try { fs.unlinkSync(req.file.path) }
+                catch (err) { console.log(err) }
                 return res.status(400).send('Image file must be a .png or .jpg under 8MB');
             }
 
             // save new img file to folder
             let fileName = await saveImage(req.body.title, req.file.path);
-            if (fileName === false) return res.status(500).send('Server error');
+            if (fileName == false) {
+                return res.status(501).send('Server error');
+            }
+
+            // append new img filename for doc
             req.body.img = fileName;
+
+            // grab old img file name for deletion
+            var oldRecipe = await Recipe.findOne({ _id: req.body.rid }).select('img');
         }
 
         req.body.title = req.body.title.trim();
         req.body.servings = req.body.servings.trim();
         req.body.description = req.body.description.trim();
 
-        // grab old img file name for deletion
-        var oldRecipe = await Recipe.findOne({ _id: req.body.rid }).select('img');
-
         // update document 
         await Recipe.findOneAndUpdate({ _id: req.body.rid }, req.body, { runValidators: true });
 
-        // delete old img files
-        try {
-            fs.unlinkSync("client/public/user_recipes_img/card/" + oldRecipe.img);
-            fs.unlinkSync("client/public/user_recipes_img/display/" + oldRecipe.img);
-            fs.unlinkSync("client/public/user_recipes_img/original/" + oldRecipe.img);
-        } catch (e) {}
+        // delete old img files (if req.files was uploaded)
+        if (typeof req.file !== "undefined") {
+            try {
+                fs.unlinkSync("client/public/user_recipes_img/card/" + oldRecipe.img);
+                fs.unlinkSync("client/public/user_recipes_img/display/" + oldRecipe.img);
+                fs.unlinkSync("client/public/user_recipes_img/original/" + oldRecipe.img);
+            } catch (e) { console.log(e)}
+        }
 
+        return res.status(200).send(''); 
     }
     catch (err) {
-
+        console.log(err);
         try {
             fs.unlinkSync("client/public/user_recipes_img/card/" + fileName);
             fs.unlinkSync("client/public/user_recipes_img/display/" + fileName);
             fs.unlinkSync("client/public/user_recipes_img/original/" + fileName);
-        } catch (e) {}
+        } catch (e) { console.log(e) }
 
         return res.status(500).send('Server Error');
     }
-
-    // return updated recipe (for state)
-    //let recipe_updated = await Recipe.findOne({ _id: req.body.rid });
-    return res.status(200).send(); 
 });
-
-
-
-
 
 
 
@@ -344,8 +351,14 @@ router.post('/saveedit', [verifyToken, upload.single('file'), validate_RecipeDat
 
 router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
     console.log('getuserrecipesprivate');
-    const recipes = await Recipe.find({authid: req.tokenData._id}).select('-uploadDate -__v -contactedAuthor');
-    return res.status(200).json(recipes);
+    try {
+        const recipes = await Recipe.find({authid: req.tokenData._id}).select('-uploadDate -__v -contactedAuthor');
+        return res.status(200).json(recipes);
+    }
+    catch (err) { 
+        console.log(err);
+        return res.status(500).send();
+    }
 });
 
 
@@ -359,9 +372,14 @@ router.post('/getuserrecipespublic', async (req, res) => {
 
 router.post('/deleterecipe', [verifyToken], async (req, res) => {
     console.log('deleterecipe');
-    Recipe.deleteOne({authid: req.tokenData._id, title: req.body.title})
-        .then(res.status(200).json({msg: 'success'}))
-        .catch(err => res.status(500).json({error: err}));
+    try {
+        await Recipe.deleteOne({_id: req.body.rid})
+        return res.status(200).send('');
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).send('Server Error');
+    }
 })
 
 
@@ -402,6 +420,7 @@ router.post('/approve', verifyToken, async (req, res) => {
             { reviewed: true });
     }
     catch (err) {
+        console.log(err);
         return res.status(500).send('Server Error');
     }
 
@@ -425,58 +444,15 @@ router.post('/getcookbanner', async (req,res) => {
 
 
 function validFileProperties(fileName, fileSize) {
-    // check extension
     let extension = path.extname(fileName).toLowerCase();
-    if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) return false;
-    // check file size
-    if (fileSize >= 8000000) return false;
-
+    if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) return false;// check extension
+    if (fileSize >= 10000000) return false;// check file size (10 MB)
     return true;
 }
 
 
 
-async function saveImage(giveName, filePath) {
-    // returns image name
-    // save original and compressed images. Note: sharp is a good library for resizing and compressing
-    let extension = path.extname(filePath).toLowerCase();
-    var fileName = giveName.replace(/\s/g,"_").replace(/[\\\.\+\*\?\^\$\,\[\]\{\}\|<>#%!`&'"=:@~;()]/g, '') + '_' + Date.now() + extension;
-    var savePath_orig = path.join("client", "public", "user_recipes_img", "original", fileName);
-    var savePath_card = path.join("client", "public", "user_recipes_img", "card", fileName);
-    var savePath_disp = path.join("client", "public", "user_recipes_img", "display", fileName);
 
-
-    try {
-        // save original
-        await fsProm.copyFile(filePath, savePath_orig);
-
-        // save compressed file one
-        await sharp(filePath)
-            .resize(250, 250, {fit: 'outside'}) // width, height (pixels)
-            .toFile(savePath_card);
-
-        // save compressed file two
-        await sharp(filePath)
-            .resize(500, 500, {fit: 'outside'}) // width, height (pixels)
-            .toFile(savePath_disp);
-    }
-    catch (err) { 
-        try {
-            fs.unlinkSync(filePath);
-            fs.unlinkSync(savePath_orig);
-            fs.unlinkSync(savePath_disp);
-            fs.unlinkSync(savePath_card);
-        } 
-        catch (e) { 
-            console.log('Warning, Error trying to unlinkSync:', e); // dont worry if this throws, my mean on of the paths did not exist 
-        }
-        console.log('Error trying to save image: ', err);
-        return false;
-    }
-
-    fs.unlinkSync(filePath);
-    return fileName;
-}
 
 
 
@@ -519,6 +495,55 @@ async function getRandomRecipes(ndocs, recipeName_ex = null) {
         return [];
     }
 }
+
+// function sleep(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+// }
+
+
+async function saveImage(giveName, filePath) {
+    // returns image name
+    // save original and compressed images. Note: sharp is a good library for resizing and compressing
+
+    try {
+        let extension = path.extname(filePath).toLowerCase();
+        var fileName = giveName.replace(/\s/g,"_").replace(/[\\\.\+\*\?\^\$\,\[\]\{\}\|<>#%!`&'"=:@~;()]/g, '') + '_' + Date.now() + extension;
+        var savePath_orig = path.join("client", "public", "user_recipes_img", "original", fileName);
+        var savePath_card = path.join("client", "public", "user_recipes_img", "card", fileName);
+        var savePath_disp = path.join("client", "public", "user_recipes_img", "display", fileName);
+
+        // save original
+        await fsProm.copyFile(filePath, savePath_orig);
+
+        sharp(filePath)
+            .resize(250, 250, {fit: 'outside'}) // width, height (pixels)
+            .toFile(savePath_card);
+
+        sharp(filePath)
+            .resize(500, 500, {fit: 'outside'}) // width, height (pixels)
+            .toFile(savePath_disp);
+
+        return fileName;
+    }
+    catch (err) { 
+        console.log('Error trying to save image: ');
+        try {
+            fs.unlinkSync(filePath);
+            fs.unlinkSync(savePath_orig);
+            fs.unlinkSync(savePath_disp);
+            fs.unlinkSync(savePath_card);
+        } 
+        catch (e) { 
+            console.log('Warning, Error trying to unlinkSync'); // dont worry if this throws, my mean on of the paths did not exist 
+        }
+        return false;
+    }
+}
+
+
+
+
+
 
 module.exports = router;
 
