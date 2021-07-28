@@ -13,7 +13,32 @@ $left-ban-padding: 20px
 $std-moreCard-fontSize: 0.9em
 $rec-li-spacing: 30px
 $rec-li-ingrSpacing: 5px
+$rightBanner-width: 170px
 
+
+#author-cardN
+	margin-bottom: 15px
+	background-color: white
+	width: $rightBanner-width
+	height: 40px
+	border: 1px solid $std-container-borderColour
+	border-radius: 5px
+	img
+		height: 100%
+		width: 38px
+		object-fit: cover
+		object-position: 50% 50%
+		border-radius: 5px 1px 1px 5px
+	#auth-name
+		display: inline-block
+		vertical-align: top
+		color: black
+		font-size: 0.95em
+		width: fit-content
+		position: relative
+		top: 12px
+		left: 6px
+		overflow: hidden
 
 .recipe-page-container
 	position: relative
@@ -40,16 +65,13 @@ $rec-li-ingrSpacing: 5px
 
 #right-banner
 	position: absolute
-	top: 0
+	top: 2px
 	bottom: 0
 	right: -190px
 	width: 170px
 	@include recipePageSecondBreak
 		display: none
 	#legend-container
-		position: absolute
-		top: 0
-		left: 0
 		border: 1px solid $std-container-borderColour
 		border-radius: 5px
 		background-color: white
@@ -288,7 +310,7 @@ $rec-li-ingrSpacing: 5px
 		font-size: $rec-container-font-size
 		line-height: 1.3em
 		list-style: square
-		padding: 0
+		padding: 0px
 		margin: 0px
 		li
 			margin: 0 0 $rec-li-ingrSpacing 17px
@@ -312,7 +334,8 @@ $rec-li-ingrSpacing: 5px
 		padding: 0 0 0 17px
 		margin: 0
 		li
-			margin-bottom: $rec-li-spacing
+			&:not(:last-of-type)
+				margin-bottom: $rec-li-spacing
 			span
 				position: relative
 				top: -6px
@@ -325,31 +348,27 @@ $rec-li-ingrSpacing: 5px
 		border-radius: none
 		border-left: unset
 		border-right: unset
-	#note-title
-		margin-bottom: 3px
 	.note-container
 		position: relative
-		left: 0
-		top: 15px
 		margin-left: 10px
 		line-height: 1.3em
-		&:not(:first-of-type)
-			margin-bottom: $rec-li-spacing
-		.noteNum
-			display: inline-block
-			position: absolute
-			left: 7px
-			top: -18px
-			font-size: 1em
-			letter-spacing: 0.04em
+		// &:not(:first-of-type)
+		// 	margin-bottom: $rec-li-spacing
+		// .noteNum
+		// 	display: inline-block
+		// 	position: absolute
+		// 	left: 7px
+		// 	top: -18px
+		// 	font-size: 1em
+		// 	letter-spacing: 0.04em
 		.note
 			font-size: 1.2em
 			position: relative
 			right: 32px
+		li
+			&:not(:last-of-type)
+				margin-bottom: $rec-li-spacing
 
-
-	// padding: 10px 20px 0 20px
-	// margin: 0px auto 130px
 
 #rec-container-5
 	display: none

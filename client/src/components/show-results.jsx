@@ -12,10 +12,10 @@ function ShowResults(props) {
 			<div id="results-body">
 			{
 				props.results.map((result, index) => 
-					<Link key={index}  className='resultLink' to={'/recipe-page/' + result.authid.name} >
+					<Link key={index}  className='resultLink' to={{pathname: process.env.PUBLIC_URL + '/recipe-page/?rtitle=' + encodeURIComponent(result.title)}} >
 						<div className='result-container'>
 							<div className='img-container'>
-								<img className='r_img' src={'/user_recipes_img/' + result.img }/>
+								<img src={'/user_recipes_img/card/' + result.img }/>
 							</div>
 							<div className='resultInfo-container'>					
 								<h4>{result.title}</h4>

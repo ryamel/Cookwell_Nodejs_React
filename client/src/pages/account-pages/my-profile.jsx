@@ -34,7 +34,7 @@ class MyProfile extends Component {
 				file: event.target.files[0],
 				fileName: this.fileRef.current.files[0].name,
 				fileObjURL: URL.createObjectURL(event.target.files[0])
-			}, () => console.log(this.state.selectedFile))
+			})
 	   	}
 	}
 
@@ -48,7 +48,7 @@ class MyProfile extends Component {
 					defaultName: res.data.name,
 					defaultAbout: res.data.about,
 					fileName: res.data.profileImg
-				}, () => console.log(this.state));
+				});
 			})
 			.catch(error => {
 				if (error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
@@ -71,7 +71,7 @@ class MyProfile extends Component {
 					defaultAbout: res.data.about,
 					fileName: res.data.profileImg,
 					errMsg: 'Profile Updated'
-				}, () => console.log(this.state));
+				});
 			})
 			.catch(error => {
 				if (typeof error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
@@ -97,7 +97,7 @@ class MyProfile extends Component {
 
 				{ this.handleError(this.state.errMsg) }
 
-				<div className="accountContent">
+				<div className="accountContent minBodyHeight">
 					<div id="edit-container">
 
 						<div className='my-account-titles'>
@@ -238,6 +238,12 @@ class MyProfile extends Component {
 								Update Account
 							</button>
 						</div>
+
+						{ this.state.defaultName.length < 1 && this.state.fileName.length < 1 ?
+							<div className='textStyle profileNote'>
+								Completing the above profile will make it easier to discover your recipes
+							</div> : null
+						}
 
 					</div>
 				</div>

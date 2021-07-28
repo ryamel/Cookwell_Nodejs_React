@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const router = express.Router();
 
@@ -6,7 +8,9 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const fsProm = require('fs').promises;
 const mv = require('mv');
+const sharp = require('sharp');
 
 const { User, validateUser } = require('../models/users');
 const Recipe = require('../models/recipes');
@@ -16,41 +20,54 @@ const validate_RecipeData = require('../middleware/validate_RecipeData');
 
 
 
+// dont use - within route names. Causes incorret/partial route name matching.
 
 
 
 
+router.get('/page/:skip/:limit', async (req, res) => {
+    console.log('recipePage');
 
+    let skip = parseInt(req.params.skip);
+    let limit = parseInt(req.params.limit);
 
+    // try {
+    //     if (req.params.skip == 0) var count = await Recipe.countDocuments({});
+    // }
+    // catch (err) {
+    //     console.log(err);
+    //     return res.status(400).send();
+    // }
 
-
-router.get('/', async (req, res) => {
-
+    // once num of recipes exceeds limit pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
     try {
-        var recipes = await Recipe.find().limit(20).sort({uploadDate: -1}); 
-        let i = 0;
+        var recipes = await Recipe
+            .find()
+            .limit(limit)
+            .skip(skip)
+            .sort({uploadDate: -1})
+            .populate('authid', '_id name profileImg');
 
-        for (const recipe of recipes) {
-            var auth = await User.findOne({_id: recipe.authid}).select('displayName -_id'); 
-            recipes[i].authorName = auth.displayName; 
-            i++;
-        }
-        res.json(recipes);
+        return res.json(recipes);
     }
     catch (err) {
-        res.status(500).json( {message: err.message} );
+        console.log(err);
+        return res.status(500).send('Server Error');
     }
-    
 });
 
 
 
 router.get('/getbytitle/:title', async (req, res) => {
-    //return res.status(500).send('Server Error');
+    console.log('getbytitle');
     try {
-        const recipe = await Recipe.findOne({title: req.params.title}).select('-_id -__v -uploadDate').populate('authid', '-_id name profileImg');
-        if (!recipe) return res.status(400).send('Server Error');
-        return res.status(200).json(recipe);
+        const recipe = await Recipe.findOne({title: req.params.title}).select('-_id -__v -uploadDate').populate('authid', '_id name profileImg');
+        console.log(req.params.title);
+        if (!recipe) {
+            return res.status(400).send('Server Error');
+        } else {
+            return res.status(200).json(recipe);
+        }
     }
     catch (err) {
         console.log(err);
@@ -65,7 +82,7 @@ router.get('/getbytitle/:title', async (req, res) => {
 
 // addiotnal feature to add... when empty search takse place, shuffle results so they're not always the same
 router.post('/search', async (req, res) => {
-    console.log('run');
+    console.log('search')
     // build query
     var query = {};
 
@@ -100,19 +117,30 @@ router.post('/search', async (req, res) => {
 
 
 
-// router.post('/text-search', async (req, res) => {   
-//     if (req.body.search.length !== 0) {
-//         var query = { $text: { $search: req.body.search } };
-//     } else {
-//         var query = {};
-//     }
 
-//     try {   
-//         var recipes = await Recipe.find(query); // will need to add pagination at some point...
-//         return res.status(200).json(recipes);
-//     }
-//     catch (err) {
-//         return res.status(500).send(err.message); 
+router.get('/search/auto', async (req, res) => {
+    try {
+        var recipes = await Recipe.find();
+        return res.json(recipes);
+    }
+    catch (error) {
+        return res.status(400).json({message: err.message});
+    }
+});
+
+
+
+
+
+
+// router.get('/getbyuserid/:id', async (req, res) => {
+
+//     const query = await Recipe.find({authid: req.params.id});
+
+//     if (!query) {
+//         res.status(404).json({msg: 'The course with given id was not found'});
+//     } else {
+//         res.status(200).json(query);
 //     }
 
 // });
@@ -122,44 +150,13 @@ router.post('/search', async (req, res) => {
 
 
 
-router.get('/search/auto', async (req, res) => {
-    try {
-        var recipes = await Recipe.find();
-        res.json(recipes);
-    }
-    catch (error) {
-        res.status(400).json({message: err.message});
-    }
-});
 
-
-
-
-
-
-router.get('/getbyuserid/:id', async (req, res) => {
-
-    const query = await Recipe.find({authid: req.params.id});
-
-    if (!query) {
-        res.status(404).json({msg: 'The course with given id was not found'});
-    } else {
-        res.status(200).json(query);
-    }
-
-});
-
-
-
-
-
-
-
-router.get('/get-latest/', async (req, res) => {
+router.get('/getrecent/', async (req, res) => {
+    console.log('getrecent');
     try { 
         //.sort({uploadDate: -1});
         var recipes = await Recipe.find().limit(8).sort({uploadDate: -1}).populate('authid', '-_id name profileImg');
-        return res.json(recipes);
+        return res.status(200).json(recipes);
     }
     catch (err) {
         return res.status(500).json( {message: err.message} );
@@ -172,15 +169,31 @@ router.get('/get-latest/', async (req, res) => {
 
 
 
-router.get('/get-featured/', async (req, res) => {
+router.get('/getfeatured/', async (req, res) => {
+    console.log('getfeatured');
     try {
         // use ref and populate to link author data to recipe doc. This will prevent haveing to perform additional queries
-        var recipes = await Recipe.find().limit(8).select('-__v').populate('authid', '-_id name profileImg'); 
-        return res.json(recipes);
+        var recipes = await Recipe.find().select('-__v').populate('authid', '-_id name profileImg'); 
+        return res.status(200).json(recipes);
     }
     catch (err) {
         console.log(err);
-        res.status(500).send('Server Error');
+        return res.status(500).send('Server Error');
+    }
+    
+});
+
+
+
+router.get('/getrandom/', async (req, res) => {
+    console.log('getrandom');
+    try {
+        let recipes = await getRandomRecipes(8)
+        return res.status(200).json(recipes);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).send('Server Error');
     }
     
 });
@@ -188,9 +201,7 @@ router.get('/get-featured/', async (req, res) => {
 
 
 
-
-
-router.post('/add-new', async (req, res) => {
+router.post('/addnew', async (req, res) => {
     const rec = new Recipe({
         title:  req.body.title,
         authid:  req.body.authid,
@@ -208,10 +219,10 @@ router.post('/add-new', async (req, res) => {
 
     try {
         const saveRec = await rec.save();
-        res.status(201).json(saveRec);
+        return res.status(201).json(saveRec);
     }
     catch (err) {
-        res.status(400).json({message: err.message}); 
+        return res.status(400).json({message: err.message}); 
     }
 
 });
@@ -225,57 +236,102 @@ router.post('/add-new', async (req, res) => {
 
 
 router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
+    console.log('upload');
 
+    // check for file
+    if (typeof req.file == "undefined") return res.status(400).send('No recipe image');
 
-    ////// validate recipe image ///////
-    if (typeof req.file == "undefined") {
-        return res.status(400).send('No recipe image');
+    // check image file
+    if (!validFileProperties(req.file.originalname, req.file.size)) {
+        fs.unlinkSync(req.file.path);
+        return res.status(400).send('Image file must be a .png or .jpg under 8MB');
     }
 
-    var extension = path.extname(req.file.originalname).toLowerCase();
-    var profileImg_new = req.body.title.replace(/\s/g,'_') + '_' + Date.now() + extension;
+    // save file
+    let fileName = await saveImage(req.body.title, req.file.path);
+    if (fileName === false) return res.status(500).send('Server Error');
 
-    req.body.img = profileImg_new;
-
-    var tempPath = path.join(req.file.path);
-    var targetPath = path.join("client", "public", "user_recipes_img", profileImg_new);
-
-    // check file size
-    if (req.file.size >= 8000000) {
-        fs.unlink(tempPath, err => console.log(err));
-        return res.status(400).send('File size too large. Must be less than 8 MB.');
+    // prep body
+    req.body.title = req.body.title.trim();
+    req.body.servings = req.body.servings.trim();
+    req.body.description = req.body.description.trim();
+    req.body.authid = req.tokenData._id; // append authId
+    req.body.img = fileName;
+   
+    // save doc data
+    const re = new Recipe(req.body);
+    const savedDoc = await re.save();
+    if (!savedDoc) {
+        try {
+            fs.unlinkSync("client/public/user_recipes_img/card/" + fileName);
+            fs.unlinkSync("client/public/user_recipes_img/display/" + fileName);
+            fs.unlinkSync("client/public/user_recipes_img/original/" + fileName);
+        } catch (err) {}
+        return res.status(400).send('Server Error');
     }
 
-    // check extension
-    if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) {
-        fs.unlink(tempPath, err => console.log(err));
-        return res.status(400).send('File must be .png or .jpg');
-    }
-
-    // move file from tmp dir to permenant dir
-    mv(tempPath, targetPath, function (err) {
-        if (err) {
-            console.log(err);
-            return res.status(500).send('Server error');
-        }
-    });
+    return res.status(200).send();
+});
 
 
-    //  append authId
-    req.body.authid = req.tokenData._id;
-    
 
-    ////// save ///////
+
+
+
+
+
+router.post('/saveedit', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
+    console.log('saveedit');
+
     try {
-        const recipe = new Recipe(req.body);
-        await recipe.save();
-        return res.status(200).send('success');
-    } catch (err) {
-        if (typeof req.file !== "undefined") { fs.unlink(targetPath, (err) => {if (err) console.log(err)}); }
-        //let errors = Object.values(err.errors).map(el => el.message);
-        return res.status(400).send('There was an unkown error');
+
+        // if image file save to folders
+        if (typeof req.file !== "undefined") {
+
+            // valid file
+            if (!validFileProperties(req.file.originalname, req.file.size)) { 
+                fs.unlink(req.file.path, err => console.log(err));
+                return res.status(400).send('Image file must be a .png or .jpg under 8MB');
+            }
+
+            // save new img file to folder
+            let fileName = await saveImage(req.body.title, req.file.path);
+            if (fileName === false) return res.status(500).send('Server error');
+            req.body.img = fileName;
+        }
+
+        req.body.title = req.body.title.trim();
+        req.body.servings = req.body.servings.trim();
+        req.body.description = req.body.description.trim();
+
+        // grab old img file name for deletion
+        var oldRecipe = await Recipe.findOne({ _id: req.body.rid }).select('img');
+
+        // update document 
+        await Recipe.findOneAndUpdate({ _id: req.body.rid }, req.body, { runValidators: true });
+
+        // delete old img files
+        try {
+            fs.unlinkSync("client/public/user_recipes_img/card/" + oldRecipe.img);
+            fs.unlinkSync("client/public/user_recipes_img/display/" + oldRecipe.img);
+            fs.unlinkSync("client/public/user_recipes_img/original/" + oldRecipe.img);
+        } catch (e) {}
+
+    }
+    catch (err) {
+
+        try {
+            fs.unlinkSync("client/public/user_recipes_img/card/" + fileName);
+            fs.unlinkSync("client/public/user_recipes_img/display/" + fileName);
+            fs.unlinkSync("client/public/user_recipes_img/original/" + fileName);
+        } catch (e) {}
+
+        return res.status(500).send('Server Error');
     }
 
+    // return updated recipe (for state)
+    //let recipe_updated = await Recipe.findOne({ _id: req.body.rid });
+    return res.status(200).send(); 
 });
 
 
@@ -286,161 +342,183 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
 
 
 
-
-router.post('/save-edit', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
-
-    // if file exists upload file
-    if (typeof req.file !== "undefined") {
-
-        var extension = path.extname(req.file.originalname).toLowerCase();
-        var fileName_new = req.body.title.replace(/\s/g,'_') + '_' + Date.now() + extension;
-        var tempPath = path.join(req.file.path);
-        var targetPath = path.join("client", "public", "user_recipes_img", fileName_new);
-        // check file size
-        if (req.file.size >= 8000000) {
-            fs.unlink(tempPath, err => console.log(err));
-            return res.status(400).send('File size too large. Must be less than 8 MB.');
-        }
-        // check extension
-        if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) {
-            fs.unlink(tempPath, err => console.log(err));
-            return res.status(400).send('File must be .png or .jpg');
-        }
-        // get old img name of recipe (for deletion)
-        var oldRecipe = await Recipe.findOne({title: req.body.titleOriginal, authid: req.tokenData._id}).select('img -_id');
-        
-        oldRecipe_img = oldRecipe.img;
-        var oldRecipe_img_path = "client/public/user_recipes_img/" + oldRecipe_img;
-
-        if (!oldRecipe_img) {
-            fs.unlink(tempPath, err => console.log(err));
-            return res.status(500).send('no recipe found');
-        }
-        // move file from tmp dir to permenant dir
-        mv(tempPath, targetPath, function (err) {
-            if (err) console.log(err);
-        });
-        // update recipe (new img)
-        await Recipe.findOneAndUpdate(
-            { authid: req.tokenData._id, title: req.body.titleOriginal }, 
-            { img: fileName_new }, 
-            function (err) {
-                if (err) {
-                    fs.unlink(targetPath, err => console.log(err));
-                    return res.status(500).send(err.message);
-                }
-            }
-        );
-        // delete old profileImg
-        fs.unlink(oldRecipe_img_path, err => { return null });
-    }
+router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
+    console.log('getuserrecipesprivate');
+    const recipes = await Recipe.find({authid: req.tokenData._id}).select('-uploadDate -__v -contactedAuthor');
+    return res.status(200).json(recipes);
+});
 
 
-    // // parse json objects (arrays and objects)
-    // req.body.diet = JSON.parse(req.body.diet);
-    // req.body.cuisine = JSON.parse(req.body.cuisine);
-    // req.body.ingredients = JSON.parse(req.body.ingredients);
-    // req.body.method = JSON.parse(req.body.method);
-    // req.body.notes = JSON.parse(req.body.notes);
-
-
-    // find and update with body request
-    const recipe_updated = await Recipe.findOneAndUpdate(
-        {
-            title: req.body.titleOriginal,
-            authid: req.tokenData._id
-        }, 
-        req.body, 
-        {
-            new: true, 
-            runValidators: true
-        }, 
-        function (err) { 
-            if (err) {
-                console.log(err.message);
-                return res.status(500);
-            }
-        }
-    );
-
-    if (!recipe_updated) res.status(400).send('No recipe found');
-
-    //send back updated data for state
-    res.status(200).json(recipe_updated);
+router.post('/getuserrecipespublic', async (req, res) => {
+    console.log('getuserrecipespublic');
+    const recipes = await Recipe.find({authid: req.body.authid}).select('-_id -contactedAuthor -reviewed -uploadDate -__v').populate('authid','-_id name');
+    return res.status(200).json(recipes);
 });
 
 
 
-
-
-
-
-
-
-
-router.get('/get-user-recipes', verifyToken, async (req, res) => {
-    const recipes = await Recipe.find({authid: req.tokenData._id});
-    res.status(200).json(recipes);
-});
-
-
-
-
-
-
-
-
-router.post('/delete-recipe', [verifyToken], async (req, res) => {
-
+router.post('/deleterecipe', [verifyToken], async (req, res) => {
+    console.log('deleterecipe');
     Recipe.deleteOne({authid: req.tokenData._id, title: req.body.title})
-    .then(res.status(200).json({msg: 'success'}))
-    .catch(err => res.status(500).json({error: err}));
-
-    //res.status(200).json({msg: 'success'});
+        .then(res.status(200).json({msg: 'success'}))
+        .catch(err => res.status(500).json({error: err}));
 })
 
 
 
-router.get('/get-edit/:recipeName', verifyToken, async (req, res) => {
-    // req.tokenData._id
-    const recipe = await Recipe.findOne({authid: req.tokenData._id, title: req.params.recipeName}).select('-authid -uploadDate -__v -_id');
-    if (!recipe) res.status(400).json({error: 'No recipe found'});
-
-    res.status(200).json(recipe);
-
+router.get('/getedit/:editId', verifyToken, async (req, res) => {
+    console.log('getedit');
+    const recipe = await Recipe.findOne({ _id: req.params.editId }).select('-authid -uploadDate -__v -contactedAuthor');
+    if (!recipe) res.status(500).send('Server Error');
+    return res.status(200).json(recipe);
 });
 
 
 
 
-router.get('/get-review', verifyToken, async (req, res) => {
+router.get('/getreview', verifyToken, async (req, res) => {
+     console.log('getreview');
     if (!req.tokenData.admin) return res.status(401).send();
 
     try {
-        const recipeData = await Recipe.find({reviewed: false}).populate('authid', 'name email');
+        const recipeData = await Recipe.find({reviewed: false}).populate('authid', 'name email -_id');
         return res.status(200).json(recipeData);
     }
     catch(err) {
         console.log(err);
+        return res.status(500);
     }
-    return res.status(500);
+    
 });
 
 
 
 
 router.post('/approve', verifyToken, async (req, res) => {
-    await Recipe.findOneAndUpdate(
-        { title: req.body.title, authid: req.body.authid },  
-        { reviewed: true }, 
-        function (err) {
-            if (err) return res.status(500).send('Server Error');
-        });
+    console.log('approve');
+    try {
+        await Recipe.findOneAndUpdate(
+            { title: req.body.title, authid: req.body.authid },  
+            { reviewed: true });
+    }
+    catch (err) {
+        return res.status(500).send('Server Error');
+    }
 
-    return res.status(200).send('wors');
+   return res.status(200).send();
 })
 
 
+router.post('/getcookbanner', async (req,res) => {
+     console.log('getcookbanner');
+    try {
+        let recipes = await getRandomRecipes(5, req.body.currentRecipe);
+        return res.status(200).json(recipes);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).send('Server Error');
+    }
+    // const data = await Recipe.find({title: {$ne: req.body.currentRecipe}}).select('title img -_id').limit(5);
+})
+
+
+
+function validFileProperties(fileName, fileSize) {
+    // check extension
+    let extension = path.extname(fileName).toLowerCase();
+    if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) return false;
+    // check file size
+    if (fileSize >= 8000000) return false;
+
+    return true;
+}
+
+
+
+async function saveImage(giveName, filePath) {
+    // returns image name
+    // save original and compressed images. Note: sharp is a good library for resizing and compressing
+    let extension = path.extname(filePath).toLowerCase();
+    var fileName = giveName.replace(/\s/g,"_").replace(/[\\\.\+\*\?\^\$\,\[\]\{\}\|<>#%!`&'"=:@~;()]/g, '') + '_' + Date.now() + extension;
+    var savePath_orig = path.join("client", "public", "user_recipes_img", "original", fileName);
+    var savePath_card = path.join("client", "public", "user_recipes_img", "card", fileName);
+    var savePath_disp = path.join("client", "public", "user_recipes_img", "display", fileName);
+
+
+    try {
+        // save original
+        await fsProm.copyFile(filePath, savePath_orig);
+
+        // save compressed file one
+        await sharp(filePath)
+            .resize(250, 250, {fit: 'outside'}) // width, height (pixels)
+            .toFile(savePath_card);
+
+        // save compressed file two
+        await sharp(filePath)
+            .resize(500, 500, {fit: 'outside'}) // width, height (pixels)
+            .toFile(savePath_disp);
+    }
+    catch (err) { 
+        try {
+            fs.unlinkSync(filePath);
+            fs.unlinkSync(savePath_orig);
+            fs.unlinkSync(savePath_disp);
+            fs.unlinkSync(savePath_card);
+        } 
+        catch (e) { 
+            console.log('Warning, Error trying to unlinkSync:', e); // dont worry if this throws, my mean on of the paths did not exist 
+        }
+        console.log('Error trying to save image: ', err);
+        return false;
+    }
+
+    fs.unlinkSync(filePath);
+    return fileName;
+}
+
+
+
+
+async function getRandomRecipes(ndocs, recipeName_ex = null) {
+    // ndocs: number of random docs to return
+    // recipeName_ex: exclude any recipes from search
+    try {
+        const date = Date.now() - 1210000000; // ignore recipes made in the last 2 weeks ( 1,210,000,000ms ) // uploadDate: { $lt: date } bug
+        if (typeof recipeName_ex === null) {
+            var recipes = await Recipe.find({})
+                .select('-__v -_id')
+                .populate('authid', '-_id name profileImg'); 
+            if (recipes.length < 1) return [];
+        } else {
+            var recipes = await Recipe.find({title: {$ne: recipeName_ex} })
+                .select('-__v -_id')
+                .populate('authid', '-_id name profileImg'); 
+            if (recipes.length < 1) return [];
+        }
+
+        // generate array of #ndoc random, unique, numbers. Ranging between 1 - recipe.count
+        let count = recipes.length;
+        let ranRecipes = [];
+        let num = Math.floor(Math.random() * count);
+        for (var i = 0; i < ndocs; i++) {
+            while (ranRecipes.includes(num)) num = Math.floor(Math.random() * count);
+            ranRecipes[i] = num;
+        }
+        // load array with recipes
+        for (var i = 0; i < ranRecipes.length; i++) {
+            ranRecipes[i] = recipes[ranRecipes[i]];
+        }
+
+        // return recipes
+        return ranRecipes;
+    }
+    catch (err) {
+        console.log(err);
+        return [];
+    }
+}
 
 module.exports = router;
 

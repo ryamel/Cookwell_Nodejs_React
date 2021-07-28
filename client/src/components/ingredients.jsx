@@ -3,9 +3,9 @@ import { units } from '../searchOptions';
 import IngredientElement from './ingredientElement';
 
 function Ingredients(props) {
-
 	return (
-		<div>
+		<React.Fragment>
+
 			<div className="std-field-label form-title-inline ingrMethNoteTitle">
 				Ingredients
 				<span className="requiredStar"> *</span>
@@ -15,8 +15,8 @@ function Ingredients(props) {
 				<button id="add_ingrField" onClick={() => props.addField('ingredients')} type="button">Add Entry</button>
 				<button id="remove_ingrField" onClick={() => props.removeField('ingredients')} type="button">Remove Last</button>
 			</div>
-			{
-				props.ingredients.map((ingredient, index) => 
+
+			{ 	props.ingredients.map((ingredient, index) => 
 					<IngredientElement 
 						key={index} 
 						number={index}
@@ -26,7 +26,7 @@ function Ingredients(props) {
 				)
 			}
 
-		</div>
+		</React.Fragment>
 	);
 	
 }

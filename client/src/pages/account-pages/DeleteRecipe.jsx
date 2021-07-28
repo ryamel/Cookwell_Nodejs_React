@@ -37,7 +37,7 @@ const DeleteRecipe = (props) => {
 function deleteRecipe(title, setDisplay, setRedirect){
 	// setDisplay('none');
 
-	fetch('/api/recipes/delete-recipe', {
+	fetch('/api/recipes/deleterecipe', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({title: title})

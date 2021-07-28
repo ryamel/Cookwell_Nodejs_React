@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import './photoShow.sass';
 import photoIcon from '../../media/icons/photo45.png';
-const imagesRecipe = require.context('../../../public/user_recipes_img', true);
-const imagesProfile = require.context('../../../public/user_profile_img', true);
+const imagesRecipe = require.context('../../../public/user_recipes_img/card/', true);
+const imagesProfile = require.context('../../../public/user_profile_img/', true);
   
 
 

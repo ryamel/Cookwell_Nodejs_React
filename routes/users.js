@@ -51,21 +51,32 @@ router.post('/register', async (req, res) => {
     // check if email is already taken (i.e unique email)
     let check = await User.findOne({email: req.body.email});
     if ( check ) return res.status(400).send('That email is alredy being used');
+
     // check email is valid
     const valid = validateEmail(req.body.email);
     if ( !valid ) return res.status(400).send('Invalid email');
+
     // check valid password
     let err = validatePwd(req.body.pwd, req.body.pwdRepeat);
     if (err) return res.status(400).send(err);
+
     // encypt pwd using bcrypt library
     const salt = await bcrypt.genSalt(10);
     const hashPwd = await bcrypt.hash(req.body.pwd, salt);
+
     // save user
     const user = new User({
         email: req.body.email,
         pwd: hashPwd
     });
-    await user.save().catch(error => res.status(500).send('Server Error'));
+
+    try {
+    	await user.save();
+    }
+    catch(error) { 
+    	console.log(error);
+    	return res.status(500).send('Server Error'); 
+    }
     // login user (provide jwt)
     const token = user.generateAuthToken();
     return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send('User Registered'); 
@@ -213,7 +224,15 @@ router.get('/get-profile-data', verifyToken, async (req, res) => {
     }
 })
 
-
+router.post('/get-cook-profile', async (req, res) => {
+    try {
+        const user = await User.findOne({_id: req.body.authid}).select('about name profileImg -_id');
+        res.status(200).json(user);
+    }
+    catch (err) {
+        return res.status(500).send();
+    }
+})
 
 
 

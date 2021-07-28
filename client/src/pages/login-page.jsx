@@ -27,7 +27,6 @@ function Loginpage(props) {
 
 		axios.post('/api/users/login', data, { headers: {'Content-Type': 'application/json'} } )
 			.then(response => {
-				console.log(response);
 				localStorage['logged_in'] = true;
 				props.login();
 				props.history.push('/'); // redirect using withRouter and prototypes import

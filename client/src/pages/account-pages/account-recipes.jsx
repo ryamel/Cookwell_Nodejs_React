@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import BrowseCard from '../../components/browseCard';
 import queryString from 'query-string';
+import Footer from '../../components/footer';
 
 
 class accountRecipes extends React.Component {
@@ -18,14 +19,16 @@ class accountRecipes extends React.Component {
 
 
 	componentDidMount() {
-		// get recipe data
-		fetch('/api/recipes/get-user-recipes')
+
+		// ***NOTE remove _id from route
+
+		fetch('/api/recipes/getuserrecipesprivate')
 			.then(res => res.json())
 			.then((data) => {
 				this.setState({
 					recipes: data,
 					isLoaded: true
-				}, console.log(data));
+				}, () => console.log(this.state));
 			})
 			.catch(err => console.log(err));
 
@@ -71,19 +74,19 @@ class accountRecipes extends React.Component {
 			return (
 				<React.Fragment>
 					{ this.handleMsg(this.state.msg) }
-					<div className="accountContent">
+					<div className="accountContent minBodyHeight">
 						<div id="cardContainer">
 							{
 								this.state.recipes.map((cardData, index) => 
 									<BrowseCard 
 										key={index} 
-										rid={cardData._id} 
 										img={cardData.img} 
 										description={cardData.description} 
 										author={cardData.authorName} 
 										edit={true}
-										title={cardData.title}
-									/>	
+										rtitle={cardData.title}
+										rid={cardData._id}
+										/>	
 								)
 							}
 					

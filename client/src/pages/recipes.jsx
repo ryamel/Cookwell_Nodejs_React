@@ -1,58 +1,95 @@
 import React, { Component } from "react";
 import BrowseCard from '../components/browseCard';
 import './recipes.sass';
-
+import Footer from '../components/footer';
+import axios from 'axios';
 
 // added task. Pagination using random recipes.
 
 
 class Recipes extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
 			cardData: [],
 			isLoaded: false,
-			error: null
+			loadFooter: false,
+			atBottom: false,
+			height: window.innerHeight,
+			skip: 0,
+			limit: 20
 		}
+		this.handleScroll = this.handleScroll.bind(this);
+		this.loadMoreRecipes = this.loadMoreRecipes.bind(this);
 	}
 
 	componentDidMount() {
-		fetch("/api/recipes/")
-			.then(res => res.json())
-			.then(
-				(data) => {
-					this.setState({
-						cardData: data,
+		window.addEventListener("scroll", this.handleScroll);
+
+
+		axios.get("/api/recipes/page/0/" + this.state.limit)
+			.then(res => {
+					this.setState(prevState => ({
+						cardData: res.data,
 						isLoaded: true,
-						error: false
-					});
-				},
-				(error) => {
-					this.setState({
-						isLoaded: true,
-						error: error
-					});
+						loadFooter: true,
+						skip: prevState.skip + prevState.limit
+					}));
 				}
 			)
 	}
 
+	loadMoreRecipes() { 
+		axios.get("/api/recipes/page/" + this.state.skip + "/" + this.state.limit)
+			.then(res => {
+					this.setState(prevState => ({
+						cardData: prevState.cardData.concat(res.data),
+						skip: prevState.skip + prevState.limit
+					}), console.log(this.state.cardData));
+				}
+			)
+	}
+
+	componentWillUnmount() {
+	    window.removeEventListener("scroll", this.handleScroll);
+	}
+
+
+	handleScroll() {
+        const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+        const body = document.body;
+        const html = document.documentElement;
+        const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+        const windowBottom = windowHeight + window.pageYOffset;
+        if (windowBottom >= docHeight ) {
+            console.log('bottom');
+            this.loadMoreRecipes();
+        }
+    }
 
 
 	render() {
-		const { error, isLoaded } = this.state;
+		const {isLoaded } = this.state;
 
 
 		if (!isLoaded) {
 			return null;
 		} else {
 			const { cardData } = this.state;
+			//console.log(cardData)
 			return (
 				<div className='browse-body'>
-					<div className='recipe-grid-container'>
-						{cardData.map((cardData, index) => 
-							<BrowseCard key={index} rid={cardData._id} img={cardData.img} description={cardData.description} author={cardData.authorName} title={cardData.title} />	
+					<div className='recipe-grid-container' >
+						{cardData.map((card, index) => 
+							<BrowseCard 
+								key={index} 
+								img={card.img} 
+								description={card.description} 
+								author={card.authid.name} 
+								rtitle={card.title} />	
 						)}
 					</div>
+					{/*<Footer isLoaded={this.state.loadFooter} />*/}
 				</div>
 			);
 		}

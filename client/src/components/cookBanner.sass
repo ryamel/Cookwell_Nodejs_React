@@ -1,0 +1,72 @@
+@import '../_App.sass'
+
+
+#left-bannerN
+	position: absolute
+	top: 2px
+	bottom: 0
+	left: -185px
+	@include recipePageSecondBreak
+		display: none
+
+
+#moreByAuthor-load-container
+	width: 100%
+	-ms-overflow-style: none  /* IE and Edge */
+	scrollbar-width: none  /* Firefox */
+	&::-webkit-scrollbar
+		display: none
+
+#arrow-down
+	margin-bottom: 20px
+	position: relative
+	left: ( $moreWidth ) / 2
+	top: 2px
+	width: 0
+	height: 0
+	border-left: 18px solid transparent
+	border-right: 18px solid transparent
+	border-top: 10px solid #737373
+	-webkit-transform: translate(-50%, 0)
+	-ms-transform: translate(-50%, 0)
+	transform: translate(-50%, 0)
+
+.more-banner-cardN
+	height: 200px
+	width: $moreWidth
+	margin-bottom: 20px
+	&:hover
+		box-shadow: 2px 2px 2px rgb(148, 214, 104)
+	img
+		height: 80%
+		width: 100%
+		object-fit: cover
+		object-position: 50% 50%
+	.titleInfo
+		height: 20%
+		font-size: 1em
+		line-height: 1.3em
+		padding: 5px 10px
+		position: relative
+		top: -4px
+		color: black
+		background-color: white
+
+
+
+#by
+	font-weight: bold
+
+// .overlay
+// 	color: white
+// 	position: absolute
+// 	bottom: 0
+// 	left: 0
+// 	right: 0
+// 	overflow: hidden
+// 	height: 0
+// 	background-color: rgb(40,40,40)
+	// transition: .5s cubic-bezier(0, 1, 0.25, 1)
+
+
+

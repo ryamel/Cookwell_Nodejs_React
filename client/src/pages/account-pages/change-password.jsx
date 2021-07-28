@@ -24,7 +24,7 @@ class changePassword extends Component {
 		//update state
 		this.setState({
 			[fieldName]: newState
-		}, () => console.log(this.state[fieldName]));
+		});
 
 	}
 
@@ -37,7 +37,7 @@ class changePassword extends Component {
 			newPwdRepeat: this.state.newPwdRepeat
 		}
 
-		axios.post('/api/users/change-password', JSON.stringify(data), { headers: {'Content-Type': 'application/json'} })
+		axios.post('/api/users/changepassword', JSON.stringify(data), { headers: {'Content-Type': 'application/json'} })
 		 	.then(res => {
 		 		this.setState({
 		 			oldPwd: '',
@@ -67,32 +67,40 @@ class changePassword extends Component {
 		return (
 			<React.Fragment>
 				{ this.handleError(this.state.msg) }
-				<div className="accountContent">
+				<div className="accountContent minBodyHeight">
 					<div id="editLogin">
 						<div className='my-account-titles'>Change Password</div>
 						<div id="pwdNotice">Password must be at least 8 characters, and can contain letters, numbers, or the symbols (!@#$%.?)</div>
 							
-						<label className='std-field-label'>Old Password</label>
-						<input 
-							type='password' 
-							name='oldPwd'
-							value={this.oldPwd}
-							onChange={this.handleInput}
-							/>
-						<label className='std-field-label'>New Password</label>
-						<input 
-							type='password' 
-							name='newPwd'
-							value={this.newPwd}
-							onChange={this.handleInput}
-							/>
-						<label className='std-field-label'>Confirm New Password</label>
-						<input 
-							type='password' 
-							name='newPwdRepeat'
-							value={this.newPwdRepeat}
-							onChange={this.handleInput}
-							/>
+						<div className='inputDiv'>
+							<label className='std-field-label'>Old Password</label>
+							<input 
+								type='password' 
+								name='oldPwd'
+								value={this.oldPwd}
+								onChange={this.handleInput}
+								/>
+						</div>
+
+						<div className='inputDiv'>
+							<label className='std-field-label'>New Password</label>
+							<input 
+								type='password' 
+								name='newPwd'
+								value={this.newPwd}
+								onChange={this.handleInput}
+								/>
+						</div>
+
+						<div className='inputDiv'>
+							<label className='std-field-label'>Confirm New Password</label>
+							<input 
+								type='password' 
+								name='newPwdRepeat'
+								value={this.newPwdRepeat}
+								onChange={this.handleInput}
+								/>
+						</div>
 
 						<div>
 							<button className='submitr-btn' type='submit' name='accountLogin' onClick={this.changePassword}>Update Account</button>

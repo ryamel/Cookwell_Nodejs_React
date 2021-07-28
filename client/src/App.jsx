@@ -6,7 +6,7 @@ import { withRouter } from "react-router"; // needed location history match
 
 import Featured from './pages/featured';
 import Recipes from './pages/recipes';
-import Cooks from './pages/cooks';
+import Authorpage from './pages/author-page';
 import Recipepage from './pages/recipe-page';
 import Searchpage from './pages/search-page';
 import Loginpage from './pages/login-page';
@@ -16,13 +16,14 @@ import Forgotpassword from './pages/forgot-password';
 import Myaccountpage from './pages/my-account-page';
 import ResetPassword from './pages/reset-password';
 import ReviewPage from './pages/review-page';
+import FAQ from './pages/faq';
+import Contact from './pages/contact';
 
 import './App.sass';
 import mastHead from './media/brand/cookwell.png';
 import mastHead_media from './media/brand/masthead_small.png';
-import search_icon from './media/icons/searchicon.svg';
+import search_icon from './media/icons/search_icon.svg';
 import login_icon from './media/icons/login.svg';
-
 
 
 
@@ -75,8 +76,7 @@ class App extends React.Component {
 			return (
 				<Link to='/my-account'>
 					<div id='loginBtn' >
-						<img src={login_icon} />
-						<span>Account</span>
+						<span>my account</span>
 					</div>
 				</Link>
 			);
@@ -84,8 +84,7 @@ class App extends React.Component {
 			return (
 				<Link to='/login-page'>
 					<div id='loginBtn'>
-						<img src={login_icon} />
-						<span>Login</span>
+						<span>sign in</span>
 					</div>
 				</Link>
 			);
@@ -104,37 +103,40 @@ class App extends React.Component {
 
 
 	render() {
-		// // detect
-		// window.location.pathname
-		// let feature = null;
-		// let recipe = 'underline';
-		// let cooks = null;
-
-		// const { match, location, history } = this.props;
-		// console.log('match');
-		// console.log(match);
-		// console.log('location');
-		// console.log(location);
-		// console.log('history');
-		// console.log(history);
-		// history.push('/cooks');
+		let { featHeader, recipeHeader, stickyHeader } = '';
+		let showFooter = true;
+		let currentURL = window.location.pathname;
+		if (currentURL == '/') featHeader = 'underLine';
+		if (currentURL == '/recipes') {
+			recipeHeader = 'underLine';
+			stickyHeader = 'stickyHeader';
+		}
+		if (currentURL.includes('search-page') || currentURL.includes('login-page') || currentURL.includes('signup-page') || currentURL.includes('forgot-password') || currentURL.includes('reset-password') || currentURL.includes('review') || currentURL.includes('author') ) showFooter = false;
 
 		return (
-			<div>
+			<div id='main'>
 
-				<div id='headerBody'>
+				<div id='headerBody' className={stickyHeader}>
 
 					<Link to="/" id="mast">
 						<img src={mastHead} alt='noimg' />
 					</Link>
 
-					<nav id='navBar-container'>
-						<NavLink  to="/">FEATURED</NavLink>
-				  		<NavLink  to="/recipes">RECIPES</NavLink>
-				  		<NavLink  to="/cooks">COOKS</NavLink>
-					</nav>				
+					<div id='navWrap'>
+						<NavLink className='feat' to="/">
+							FEATURED
+							<div className={featHeader}></div>
+						</NavLink>
+
+					  	<NavLink className='rec' to="/recipes">
+					  		RECIPES
+					  		<div className={recipeHeader}></div>
+					  	</NavLink>
+					</div>
+					
 					
 					<div className="headerSearchBar" >
+						{ this.logBtn(this.state.logged_in) } 
 						<input 
 							placeholder="Search" 
 							type="text" 
@@ -150,7 +152,7 @@ class App extends React.Component {
 							</Link>
 				 	</div>
 
-				 	{ this.logBtn(this.state.logged_in) } 
+				 	
 
 
 
@@ -181,9 +183,9 @@ class App extends React.Component {
 				{/*All pages to be used need to be listed under <Switch> as seen here. Import each page as a component and place under a <Route> tag */}
 				<Switch>
 					<Route exact path="/"> 				<Featured /> 											</Route>
-					<Route path="/recipes"> 			<Recipes /> 											</Route>
-					<Route path="/cooks"> 				<Cooks /> 												</Route>
-					<Route path="/recipe-page/:id"> 	<Recipepage /> 											</Route>
+					<Route exact path="/recipes"> 		<Recipes /> 											</Route>
+					<Route path="/author"> 				<Authorpage /> 											</Route>
+					<Route path="/recipe-page"> 		<Recipepage /> 											</Route>
 					<Route path="/search-page"> 		<Searchpage 
 															search={this.state.search} 
 															setSearchBtn={this.setSearchBtn} 
@@ -196,6 +198,8 @@ class App extends React.Component {
 					<Route path="/my-account"> 			<Myaccountpage logout={this.logout} /> 					</Route>
 					<Route path="/reset-password"> 		<ResetPassword /> 										</Route>
 					<Route path="/review"> 				<ReviewPage /> 											</Route>
+					<Route path="/faq"> 				<FAQ /> 												</Route>
+					<Route path="/contact"> 			<Contact /> 											</Route>
 				</Switch>
 
 			</div>

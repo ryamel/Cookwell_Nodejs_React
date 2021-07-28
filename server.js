@@ -22,7 +22,11 @@ if (!process.env.private_key) {
 const db = mongoose.connect(process.env.DB_connection, {
     useNewUrlParser: true, 
     useUnifiedTopology: true 
-}, () => console.log('connected to DB'));
+}, () => {
+	console.log('connected to mongooseDB');
+});
+
+
 
 
 
@@ -45,8 +49,6 @@ const mail = require('./routes/mail');
 app.use('/api/users', users);
 app.use('/api/recipes', recipes);
 app.use('/api/mail', mail);
-
-
 
 
 

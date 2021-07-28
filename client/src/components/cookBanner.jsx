@@ -1,0 +1,46 @@
+import React, { Component, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import './cookBanner.sass';
+//import photoIcon from '../../public/user_profile_img/CHange_Name_16246155695775.jpeg';
+
+const CookBanner = (props) => {
+	const [recipeData, setRecipeData] = useState([]);
+
+
+	useEffect(() => {
+		const data = JSON.stringify({currentRecipe: props.currentRecipe});
+
+		axios.post('/api/recipes/getcookbanner', data, { headers: {'Content-Type': 'application/json'} })
+			.then((res) => { setRecipeData(res.data) })
+			.catch((err) => { console.log(err) });
+	}, [props.currentRecipe])
+
+
+	if (!recipeData) {
+		return null;
+	} else {
+		return(
+			<div id='left-bannerN'>
+				<div id='moreByAuthor-load-container'>
+					{ 	
+						recipeData.map((recipe, index) => 
+							<div className='more-banner-cardN' key={index}>
+								<Link to={{pathname: process.env.PUBLIC_URL + '/recipe-page/?rtitle=' + encodeURIComponent(recipe.title)}}>
+									<img src={process.env.PUBLIC_URL + '/user_recipes_img/card/' + recipe.img} />
+									<div className='titleInfo'>
+										{recipe.title}
+									</div>
+								</Link>
+							</div>
+						)
+					}
+				</div>
+			</div>
+		);
+	}
+}
+
+
+
+export default CookBanner;

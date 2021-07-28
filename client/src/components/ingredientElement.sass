@@ -1,0 +1,36 @@
+@import '../_App.sass';
+
+
+input
+	display: inline-block
+	border: 1px solid lightgrey
+	margin: 0
+	padding: 0
+	&::-ms-input-placeholder
+		color: $placeholder-color
+		font-size: 0.8em
+	&:-ms-input-placeholder
+		color: $placeholder-color
+		font-size: 0.8em
+	&::placeholder
+		color: $placeholder-color
+		font-size: 0.8em
+
+.ingrd
+	width: 380px 
+	position: absolute
+	top: 0px
+
+.field-ingr-add
+	position: relative
+	margin-bottom: 8px
+
+.quantityd
+	display: inline-block
+	width: 70px
+
+.typeSelectUnit
+	width: 140px
+	position: relative
+	margin: 0 4px
+	border: 1px solid lightgrey

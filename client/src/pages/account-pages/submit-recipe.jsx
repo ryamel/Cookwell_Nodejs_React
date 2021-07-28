@@ -4,6 +4,7 @@ import { Redirect } from 'react-router'
 import { mealTypes, dietOptions, cuisine } from '../../searchOptions';
 import './submit-recipe.sass';
 import axios from 'axios';
+import { getURLparam } from '../../functions';
 
 import DropMenu from '../../components/dropMenu';
 import MultiSelectMenu from '../../components/multiSelectMenu';
@@ -18,7 +19,7 @@ class submitRecipe extends React.Component {
 	constructor(props) {
 		super();
 		this.state = {
-			titleOriginal: props.editTitle, // avoids passing around doc _id
+			rid: '',
 			title: '',
 			description: '',
 			mealType: '',
@@ -80,21 +81,21 @@ class submitRecipe extends React.Component {
 		if (fieldName === 'qty' || fieldName === 'unit' || fieldName === 'gtext') {
 			var newState = this.state.ingredients;
 			newState[parseInt(number)][fieldName] = value;
-			this.setState({ingredients: newState}, () => console.log(this.state.ingredients));	
+			this.setState({ingredients: newState});	
 			return null;
 		}
 		// method
 		if (fieldName === 'method') {
 			var newState = this.state.method;
 			newState[number] = value;
-			this.setState({method: newState}, () => console.log(this.state.method));	
+			this.setState({method: newState});	
 			return null;
 		}
 		// notes
 		if (fieldName === 'text') {
 			var newState = this.state.notes;
 			newState[number] = value;
-			this.setState({notes: newState}, () => console.log(this.state.notes));	
+			this.setState({notes: newState});	
 			return null;
 		}
 		// title, description, servings, cookTime, mealType
@@ -115,7 +116,6 @@ class submitRecipe extends React.Component {
 		}
 		// cuisine
 		if (fieldName === 'cuisine') {
-			//console.log(value);
 			var cuisineArr = this.state.cuisine;
 			var ind = cuisineArr.indexOf(value);
 			if (!cuisineArr.includes(value)) {
@@ -130,33 +130,31 @@ class submitRecipe extends React.Component {
 		//update state
 		this.setState({
 			[fieldName]: newState
-		}, () => console.log(this.state[fieldName]) );
+		});
 	}
 
 	componentDidMount() {
-		//console.log(encodeURIComponent(this.props.title));
-		if (this.props.editTitle.length > 0) {
-			const url = '/api/recipes/get-edit/' + encodeURIComponent(this.props.editTitle);
-
-			fetch(url)
-			.then(res => res.json())
-			.then(data => {
-				this.setState({
-					titleOriginal: data.title,
-					title: data.title,
-					description: data.description,
-					mealType: data.mealType,
-					diet: data.diet,
-					cuisine: data.cuisine,
-					servings: data.servings,
-					cookTime: data.cookTime,
-					ingredients: data.ingredients,
-					method: data.method,
-					notes: data.notes, 
-					fileName: data.img
+		let editId = getURLparam('editId');
+		if (editId) {
+			axios.get('/api/recipes/getedit/' + encodeURIComponent(editId))			
+				.then(res => {
+					this.setState({
+						rid: res.data._id,
+						title: res.data.title,
+						description: res.data.description,
+						mealType: res.data.mealType,
+						diet: res.data.diet,
+						cuisine: res.data.cuisine,
+						servings: res.data.servings,
+						cookTime: res.data.cookTime,
+						ingredients: res.data.ingredients,
+						method: res.data.method,
+						notes: res.data.notes, 
+						fileName: res.data.img
+					}, () => console.log(this.state))
 				})
-			})
 			.catch(err => console.log(err));
+
 		}
 	}
 
@@ -196,7 +194,7 @@ class submitRecipe extends React.Component {
 		var fdata = new FormData();
 		fdata.append('file', this.state.file);
    		fdata.append('title', this.state.title);
-   		fdata.append('titleOriginal', this.state.titleOriginal);
+   		fdata.append('rid', this.state.rid);
    		fdata.append('description', this.state.description);
    		fdata.append('mealType', this.state.mealType);
    		fdata.append('diet', JSON.stringify(this.state.diet));
@@ -211,24 +209,23 @@ class submitRecipe extends React.Component {
 		//   console.log(key, value);
 		// }
 
-   		axios.post('/api/recipes/save-edit', fdata)
+   		axios.post('/api/recipes/saveedit', fdata)
 	 	.then(res => {
-	 		console.log(res.data);
 			this.setState({
-				titleOriginal: res.data.title,
-				title: res.data.title,
-				description: res.data.description,
-				mealType: res.data.mealType,
-				diet: res.data.diet,
-				cuisine: res.data.cuisine,
-				servings: res.data.servings,
-				cookTime: res.data.cookTime,
-				ingredients: res.data.ingredients,
-				method: res.data.method,
-				notes: res.data.notes, 
-				fileName: res.data.img,
+				// rid: res.data.rid,
+				// title: res.data.title,
+				// description: res.data.description,
+				// mealType: res.data.mealType,
+				// diet: res.data.diet,
+				// cuisine: res.data.cuisine,
+				// servings: res.data.servings,
+				// cookTime: res.data.cookTime,
+				// ingredients: res.data.ingredients,
+				// method: res.data.method,
+				// notes: res.data.notes, 
+				// fileName: res.data.img,
 				redirect: 'saved' // redirect back to my-account page and display success msg on page
-			},() => console.log(this.state))
+			})
 		})
 		.catch(error => {
 			if (typeof error.response.data !== 'undefined') {
@@ -266,28 +263,20 @@ class submitRecipe extends React.Component {
 
 		return (
 			<React.Fragment>
-				{ this.handleError(this.state.error, this.state.errMsg) }
-				
 
+				{ this.handleError(this.state.error, this.state.errMsg) }
 
 				<div className="accountContent">
-
 					<div id="submit-container">
 						
-						
-
-
 		           		<DeleteRecipe 
 		           			edit={this.props.edit}
 		           			title={this.state.title}
-		           		/>
+		           			/>
 
-
-
-			            {
-			            	this.props.edit
-			            	? <div className='my-account-titles'>Edit Recipe</div>
-			            	: <div className='my-account-titles'>Submit Recipe</div>		            	
+			            {	this.props.edit
+			            		? <div className='my-account-titles'>Edit Recipe</div>
+			            		: <div className='my-account-titles'>Submit Recipe</div>		            	
 			            }
 
 			            <div id="req-note">
@@ -363,7 +352,7 @@ class submitRecipe extends React.Component {
 								type="text" 
 								name="servings"
 								placeholder='example 1-9 persons or 24 Cookies' 
-								maxLength="25" 
+								maxLength="40" 
 								value={this.state.servings}
 								onChange={(e) => this.handleInput(e.target.name, e.target.value)}
 								/>
@@ -395,8 +384,7 @@ class submitRecipe extends React.Component {
 									Meal Type
 									<span className="requiredStar"> *</span>
 								</label>
-								{ 
-									mealTypes.map((mealType, index) => 
+								{ 	mealTypes.map((mealType, index) => 
 										<label key={index} className="check-container">
 											{mealType}
 											<input 
@@ -439,9 +427,6 @@ class submitRecipe extends React.Component {
 						</div>
 
 
-
-
-
 						<Ingredients 
 							addField={this.addField} 
 							ingredients={this.state.ingredients} 
@@ -465,8 +450,7 @@ class submitRecipe extends React.Component {
 
 
 
-			   			{
-			            	this.props.edit
+			   			{	this.props.edit
 			            	? <button className="submitr-btn" type="submit" name="submit_edit" onClick={this.saveEdit}>Save Changes</button>
 			            	: <React.Fragment>
 			            		<button className="submitr-btn" type="submit" name="submit" onClick={this.uploadRecipe}>Submit Recipe</button>

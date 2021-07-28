@@ -28,6 +28,26 @@
 		font-size: 0.8em
 
 
+
+.field-container-add
+	margin-bottom: 4px
+	textarea
+		width: 598px
+		border: 1px solid lightgrey
+		margin-bottom: 4px
+		@include accountSecondBreak
+			width: 87vw
+		&::-ms-input-placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+		&:-ms-input-placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+		&::placeholder
+			color: $placeholder-color
+			font-size: 0.8em
+
+
 .submit-form-heading
 	margin-bottom: 30px
 
@@ -73,8 +93,6 @@
 	position: relative
 	margin: 0 0 15px 0
 	min-height: 30px
-	input
-		border: 1px solid lightgrey
 	select
 		display: block
 		width: 200px
@@ -182,7 +200,10 @@
 
 
 
-
+// .clearfix::after 
+// 	content: ""
+// 	clear: both
+// 	display: table
 
 
 
@@ -190,49 +211,10 @@
 	width: 380px
 	height: 50px
 	position: relative
-	// input
-	// 	width: unset
-	// 	height: unset
 
-.field-container-add
-	input
-		border: 1px solid lightgrey
-		margin-bottom: 4px
-		&::-ms-input-placeholder
-			color: $placeholder-color
-			font-size: 0.8em
-		&:-ms-input-placeholder
-			color: $placeholder-color
-			font-size: 0.8em
-		&::placeholder
-			color: $placeholder-color
-			font-size: 0.8em
-	.ingr
-		width: 380px
-		@include accountSecondBreak
-			width: calc(87vw - 220px)
-	.quantity
-		width: 70px
-	.typeSelectUnit
-		width: 140px
-		position: relative
-		margin: 0 4px
-		border: 1px solid lightgrey
-	textarea
-		width: 598px
-		border: 1px solid lightgrey
-		margin-bottom: 4px
-		@include accountSecondBreak
-			width: 87vw
-		&::-ms-input-placeholder
-			color: $placeholder-color
-			font-size: 0.8em
-		&:-ms-input-placeholder
-			color: $placeholder-color
-			font-size: 0.8em
-		&::placeholder
-			color: $placeholder-color
-			font-size: 0.8em
+
+
+
 
 
 
@@ -240,12 +222,6 @@ $ingr-method-note-leftPadding: 30px
 
 
 
-
-
-// .noteNum
-// 	padding-left: 5px
-// 	width: 50px
-// 	margin-right: 4px
 
 .noteInput
 	padding-left: 5px

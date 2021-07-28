@@ -1,75 +1,134 @@
 @import './_App.sass'
 
-// remaining is header specific //
-.underline
-	border-bottom: 3px solid rgb(148,214,104)
+.stickyHeader
+	position: -webkit-sticky
+	position: sticky
+	top: 0
+	z-index: 10
+
+#mast	
+	display: inline-block
+	padding: 28px 30px 0 20px
+	img
+		height: 25px
+	@include midBreakHeader
+		display: none
+#mast-media
+	display: none
+	position: absolute
+	top: 20px
+	left: 20px
+	img
+		height: 25px
+	@include midBreakHeader
+		display: block
+	@include lowBreakHeader
+		display: none
+
+.textStyle
+	font-size: 0.8em
+
+#loginBtn
+	position: absolute
+	top: -19px
+	right: 0px
+	color: rgba(10,10,10, 0.5)
+	cursor: pointer
+	&:hover
+		color: black
+	@include midBreakHeader
+		position: absolute
+		right: 20px
+	@include lowBreakHeader
+		display: none
+	span
+		font-size: 0.7em
+		@include midBreakHeader
+			display: none
+	a, button
+		margin: 3px 0 0 5px
+		background-color: white
+		border: none
+		font-size: 0.8em
+		color: black
+		float: right
+		font-family: 'Exo', sans-serif
+		font-weight: 500
+	// @include midBreakHeader
+	// 	text-align: center
+	// 	width: 100%
 
 #headerBody
 	background-color: white
 	border-bottom: 1px solid $std-container-borderColour
 	height: $header-height
-	display: flex
-	#mast	
-		display: inline-block
-		padding: 28px 30px 0 20px
-		img
-			height: 25px
-		@include midBreakHeader
-			display: none
-	#mast-media
+	
+
+#navWrap
+	display: inline-block
+	width: 240px // gives spacing to prevent searchBar overlap
+
+.underLine
+	border-bottom: 2px solid rgb(141,211,95)
+	position: absolute
+	left: 10%
+	right: 13%
+
+.feat, .rec
+	width: fit-content
+	color: black
+	font-size: 1em
+	font-family: 'Lato', sans-serif
+	letter-spacing: 0.1em
+	display: inline-block
+
+.feat
+	position: relative
+	left: 0px
+	top: -7px
+
+.rec
+	position: relative
+	left: 30px
+	top: -7px
+
+.headerSearchBar
+	display: inline-block
+	float: right
+	width: fit-content
+	border: 1px solid lightgrey
+	border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius
+	height: $searchBarHeight
+	position: relative
+	top: 23px
+	right: 30px
+	@include firstBreakHeader
 		display: none
-		position: absolute
-		top: 20px
-		left: 20px
-		img
-			height: 25px
-		@include midBreakHeader
-			display: block
-		@include lowBreakHeader
-			display: none
-	#loginBtn
-		position: relative
-		top: 30px
-		right: 22px
-		width: 80px
-		@include midBreakHeader
-			position: absolute
-			right: 20px
-		@include lowBreakHeader
-			display: none
-		span
-			position: relative
-			top: -6px
-			left: 4px
-			@include midBreakHeader
-				display: none
-		img
-			height: 22px
-		a, button
-			margin: 3px 0 0 5px
-			background-color: white
-			border: none
-			font-size: 0.8em
-			color: black
-			float: right
-			font-family: 'Exo', sans-serif
-			font-weight: 500
-	// @include midBreakHeader
-	// 	text-align: center
-	// 	width: 100%
-#navBar-container
-	padding-top: 32px
-	width: 700px
-	a
-		color: black
-		font-size: 1em
-		font-family: 'Lato', sans-serif
-		letter-spacing: 0.1em
-		text-decoration: none
-		position: relative
-		overflow: hidden
-	a:not(:first-child)
-		margin-left: 30px
+	input
+		padding: 0 0 0 12px
+		height: $searchBarHeight - 2px
+		width: $searchBarWidth 
+		margin: 0
+		border: none
+		border-radius: 0
+		&::placeholder
+			color: rgba(140,140,140, 0.8)
+			font-size: 1em
+			letter-spacing: 0.03em
+			padding-left: 3px
+			font-family: 'Lato', sans-serif
+			font-weight: 300
+	button
+		border-radius: none
+		border: none
+		height: $searchBarHeight - 2px
+		width: 35px
+		background-color: white
+		float: right
+
+// #navBar-container
+// 	padding-top: 32px
+// 	display: inline-block
 	// a:before
 	// 	text-decoration: none
 	// 	content: ""
@@ -97,47 +156,21 @@ li:nth-child(2) a
   
 
 
-
 #AdvancedSearch-title
 	position: absolute
 	top: -14px
 	right: 0
 	font-size: 0.65em
 
-.headerSearchBar
-	margin-top: 20px
-	margin-right: 40px
-	width: 100%
-	height: $searchBarHeight
-	border: 1px solid lightgrey
-	border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius
-	@include firstBreakHeader
-		display: none
-	input
-		padding: 0 0 0 12px
-		height: $searchBarHeight - 2px
-		width: $searchBarWidth - 40px
-		margin: 0
-		border: none
-		border-radius: 0
-		&::placeholder
-			color: grey
-			font-size: 1.1em
-			letter-spacing: 0.03em
-			padding-left: 3px
-			font-family: 'Lato', sans-serif
-			font-weight: 300
-	button
-		border-radius: none
-		border: none
-		height: $searchBarHeight - 2px
-		width: 35px
-		background-color: white
-		float: right
+
 
 		
 #searchIcon
-	height: 18px
+	height: 20px
+	color: blue
+	position: relative
+	top: 1px
+	right: 1px
 
 #searchIcon-media
 	height: 25px
@@ -197,3 +230,6 @@ li:nth-child(2) a
 .searchBtn
 	&:hover
 		cursor: pointer
+
+
+

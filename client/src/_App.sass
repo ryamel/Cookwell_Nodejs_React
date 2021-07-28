@@ -7,7 +7,6 @@ $recipe-form-color: #555555
 $placeholder-color: #999999
 $std-btn-border-radius: 3px
 $std-btn-border-fontSize: 0.8em
-$footer-margin: 200px
 $std-pageHeight: 1000px
 $std-input-field-border-radius: 2px
 $logoGreen: rgb(141, 211, 95)
@@ -28,8 +27,8 @@ $std-pageMinHeight: 650px
 
 // SEACH BAR
 $searchbar-border-radius: 2px
-$searchBarHeight: 38px
-$searchBarWidth: 300px
+$searchBarHeight: 35px
+$searchBarWidth: 500px
 
 $header-height: 80px
 
@@ -37,6 +36,10 @@ $overlayBackground: rgba(190,190,190, 0.1)
 
 // error message font font-family:
 $error-font: 'Lato', sans-serif
+
+$moreWidth: 160px
+$left-ban-padding: 20px
+
 
 /*--------------------Media Query--------------------*/
 
@@ -103,7 +106,7 @@ body
 
 
 input
-	width: 400px
+	// width: 400px
 	height: 30px
 	border: 1px solid lightgrey
 	padding: 0 0 0 5px
@@ -196,6 +199,11 @@ a
 	&:active
 		text-decoration: none!important
 
+// used to set min height of main body div, sets position of footer
+.minBodyHeight
+	min-height: 700px
+
+
 .AtagBtn
 	color: black
 	height: 26px
@@ -229,12 +237,6 @@ a
 	width: $card-width
 	display: inline-block
 
-.footer-marginTop
-	margin-top: $footer-margin
-
-
-.header-blank
-	padding-top: 15px
 
 
 

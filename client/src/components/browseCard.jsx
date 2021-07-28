@@ -27,10 +27,10 @@ class BrowseCard extends Component {
 		}
 	}
 
-	renderEditBtn(edit) {
-		if (edit) {
+	renderEditBtn() {
+		if (this.props.edit && this.props.rid) {
 			return (
-				<Link to={{pathname: "/my-account/submit-recipe", search: `?edit=true&editTitle=${this.props.rtitle}`}} >
+				<Link to={{pathname: "/my-account/submit-recipe", search: `?edit=true&editId=${this.props.rid}`}} >
 					<div className='edit-btn'>
 						Edit
 					</div>
@@ -44,15 +44,15 @@ class BrowseCard extends Component {
 			<div className='browse-card'>
 				{ this.renderHeader(this.props.index, this.props.firstCardHeader) }
 
-				<Link to={{pathname: process.env.PUBLIC_URL + '/recipe-page/?rtitle=' + this.props.rtitle}}>
+				<Link to={{pathname: process.env.PUBLIC_URL + '/recipe-page/?rtitle=' + encodeURIComponent(this.props.rtitle)}}>
 					<span className='card-link'></span>
 				</Link>
 
 				<div className='browse-imgContainer'>
-					<img src={process.env.PUBLIC_URL + '/user_recipes_img/' + this.props.img} alt=' '/>
+					<img src={process.env.PUBLIC_URL + '/user_recipes_img/display/' + this.props.img} alt=' '/>
 				</div>
 
-				{ this.renderEditBtn(this.props.edit) }
+				{ this.renderEditBtn() }
 				
 
 				<div className='browse-textContainer'>

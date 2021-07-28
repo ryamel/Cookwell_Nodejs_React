@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './recipe-page.sass';
 import axios from 'axios';
-
+import CookBanner from '../components/cookBanner';
+import Notes from '../components/notes-recipe-page';
+import Authcard from '../components/authcard';
+import Dietbanner from '../components/dietBanner';
 
 
 class Recipepage extends Component {
@@ -10,30 +13,13 @@ class Recipepage extends Component {
 		super();
 		this.state = {
 			isLoaded: false,
-			result: null
+			result: null,
+			rtitle: ''
 		}	
-
-		this.displayDietBanner = this.displayDietBanner.bind(this);
 		this.getParameterByName = this.getParameterByName.bind(this);
+		this.loadRecipe = this.loadRecipe.bind(this);
 	}
 
-
-	componentDidMount() {
-		let rtitle = this.getParameterByName('rtitle');
-
-		axios.get('/api/recipes/getbytitle/' + rtitle)
-			.then(res => {
-				console.log(res.data);
-				this.setState({
-					result: res.data,
-					isLoaded: true
-				})
-			})
-			.catch(error => {
-				console.log(error);
-				//this.setState({errMsg: error.response.data});
-			})
-	}
 
 	getParameterByName(name, url = window.location.href) {
 	    name = name.replace(/[\[\]]/g, '\\$&');
@@ -45,30 +31,34 @@ class Recipepage extends Component {
 	}
 	
 
-	displayDietBanner(diet) {
-		if (diet.length < 1) {
-			return null;
-		}
-		if (diet.includes('Vegan') && diet.includes('Vegetarian')) {
-			const ind = diet.indexOf('Vegetarian');
-			diet.splice(ind, 1);
-		}
-		return (
-			<div id='legend-container'>
-				{ 
-					diet.map((name, index) => (
-						<div key={index} className='symContainer'>
-							<img src={process.env.PUBLIC_URL + '/diet/' + name.replace(' ','') + '.svg'} /> 
-							<span className='dietName'>{name}</span>
-						</div>
-					))
-				}
-			</div>
-		);
+	loadRecipe(rtitle) {
+		axios.get('/api/recipes/getbytitle/' + rtitle)
+			.then(res => {
+				this.setState({
+					result: res.data,
+					isLoaded: true,
+					rtitle: rtitle
+				})
+			})
+			.catch(error => {
+				this.setState({
+					isLoaded: false
+				});
+				console.log(error);
+			})	
+	}
+
+	componentDidMount() {
+		let titleURL = this.getParameterByName('rtitle');
+		this.loadRecipe(titleURL);
 	}
 
 
 	render() {
+		let titleURL = this.getParameterByName('rtitle');
+		if (this.state.isLoaded && this.state.rtitle !== titleURL) this.loadRecipe(titleURL);
+		
+
 		if (!this.state.isLoaded)  {
 			return null;
 		} else {
@@ -79,7 +69,7 @@ class Recipepage extends Component {
 						<div id="rec-container-1">
 
 							<div id='recipe-img-container'>
-								<img src={process.env.PUBLIC_URL + '/user_recipes_img/' + this.state.result.img} />
+								<img src={process.env.PUBLIC_URL + '/user_recipes_img/display/' + this.state.result.img} />
 							</div>
 
 							<div id="rec-container-1-title">{this.state.result.title}</div>
@@ -110,10 +100,11 @@ class Recipepage extends Component {
 							</div>
 							<ul>
 								{this.state.result.ingredients.map((ingr, index) => (
-									<li key={index}> {fracToHtmlEntity(ingr.qty) + ' ' + ingr.text} </li>
+									<li key={index}> {fracToHtmlEntity(ingr.qty) + ' ' + ingr.gtext} </li>
 								))}	
 							</ul>
 						</div>
+
 
 						<div id="rec-container-3">
 							<div className='rec-container-headings'>
@@ -126,25 +117,22 @@ class Recipepage extends Component {
 							</ol>
 						</div>
 
-						<div id='rec-container-4'>
-							<div className='rec-container-headings' id='note-title'>
-								NOTES
-							</div>
-							<div className='note-container'>
-								<ul>
-									{this.state.result.notes.map((note, index) => (
-										<li key={index}>
-											<span className='note'> {note}</span>
-										</li>
-									))}	
-								</ul>
-							</div>
-						</div>
+
+						<Notes notes={this.state.result.notes} />
+
 
 					</div>
 
 					<div id="right-banner">
-						{ this.displayDietBanner(this.state.result.diet) }
+						<Authcard 
+							authid={this.state.result.authid._id} 
+							profileImg={this.state.result.authid.profileImg}
+							name={this.state.result.authid.name}
+							/>
+
+						<Dietbanner diet={this.state.result.diet} />
+
+					{/*	{	this.displayDietBanner(this.state.result.diet)	}*/}
 
 	{/*					<div id="share-this-container">
 
@@ -160,7 +148,12 @@ class Recipepage extends Component {
 						</div>*/}
 					</div>
 
-	{/*				<div id='rec-container-5'>
+
+					{	this.state.isLoaded && 
+						<CookBanner currentRecipe={this.state.rtitle} />
+					}
+
+{/*					<div id='rec-container-5'>
 
 						<div className='rec-container-headings-5'>
 							RECOMENDED

@@ -78,11 +78,11 @@ class Searchpage extends React.Component {
 			if (this.state.time === value) {
 				this.setState({
 					[stateName]: null
-				},console.log(this.state.time));
+				});
 			} else {
 				this.setState({
 					[stateName]: value
-				},console.log(this.state.time));
+				});
 			}
 			return;
 		}
@@ -109,7 +109,7 @@ class Searchpage extends React.Component {
 
 			this.setState({
 				[stateName]: newState
-			}, console.log(this.state));
+			});
 		}
 
 
@@ -117,7 +117,7 @@ class Searchpage extends React.Component {
 		if (stateName == 'searchText') {
 			this.setState({
 				[stateName]: value
-			}, console.log(this.state.searchText));
+			});
 		}
 		
 	}
@@ -231,7 +231,7 @@ class Searchpage extends React.Component {
 				{
 					!this.state.emtyResult ? 
 					<ShowResults results={this.state.searchResult} />  : 
-					<div id='noResultsMsg'>No results... try modifying your search</div>
+					<div id='noResultsMsg'>No results! Try another search</div>
 				}
 				
 			

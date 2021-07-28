@@ -18,9 +18,8 @@ function Forgotpassword() {
 
 	function sendEmail(email) {
 		const data = JSON.stringify({email: email});
-		axios.post('/api/mail/pwd-reset', data, { headers: {'Content-Type': 'application/json'} })
+		axios.post('/api/mail/pwdreset', data, { headers: {'Content-Type': 'application/json'} })
 			.then(res => {
-				//console.log(res.data);
 				setMsg(res.data);
 			})
 			.catch(error => {
