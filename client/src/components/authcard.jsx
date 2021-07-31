@@ -10,7 +10,7 @@ const Authcard = (props) => {
 		return (
 			<div id='author-cardN'>
 				<Link to={{pathname: '/author', state: { authid: props.authid } }} >
-					<img src={process.env.PUBLIC_URL + '/user_profile_img/' + props.profileImg}/>
+					<img src={process.env.PUBLIC_URL + '/user_profile_img/thumb/' + props.profileImg}/>
 					<div id='auth-name'>
 						<span id='by'>By </span>
 						{props.name}

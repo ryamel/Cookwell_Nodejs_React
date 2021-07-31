@@ -37,7 +37,7 @@ const AuthorPage = (props) => {
 		if (img !== "") {
 			return (
 				<div id='img-wrapper'>
-					<img src={process.env.PUBLIC_URL + '/user_profile_img/' + userData.profileImg} />
+					<img src={process.env.PUBLIC_URL + '/user_profile_img/card/' + userData.profileImg} />
 				</div>
 			);
 		} else {

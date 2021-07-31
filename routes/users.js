@@ -18,8 +18,7 @@ const { User } = require('../models/users');
 var { upload } = require('../middleware/upload');
 const verifyToken = require('../middleware/verifyToken');
 const { validatePwd } = require('../middleware/validatePwd');
-const { encrypt, decrypt } = require('../functions');
-
+const { encrypt, decrypt, saveUserImage, validFileProperties } = require('../functions');
 
 
 
@@ -150,69 +149,60 @@ router.post('/changepassword', verifyToken, async (req, res) => {
 
 
 router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, res) => {
-    // upload photo file and update user profile to reflec new profileImg
-    if (typeof req.file !== "undefined") {
-        var extension = path.extname(req.file.originalname).toLowerCase();
-        var profileImg_new = req.body.name.replace(/\s/g,'_') + '_' + Date.now() + extension;
-        var tempPath = path.join(req.file.path);
-        var targetPath = path.join("client", "public", "user_profile_img", profileImg_new);
-        // check file size
-        if (req.file.size >= 8000000) {
-            fs.unlink(tempPath, err => console.log(err));
-            return res.status(400).send('File size too large. Must be less than 8 MB.');
-        }
-        // check extension
-        if (!(extension == ".png" || extension == ".jpg" || extension == ".jpeg")) {
-            fs.unlink(tempPath, err => console.log(err));
-            return res.status(400).send('File must be .png or .jpg');
-        }
-        // move file from tmp dir to permenant dir
-        mv(tempPath, targetPath, function (err) {
-            if (err) console.log(err);
-        });
-        // query user data for old profileImg
-        var user = await User.findOne({_id: req.tokenData._id});
-        if (!user) {
-            fs.unlink(targetPath, err => console.log(err));
-            return res.status(500).send('No User Found');
-        }
-        var oldProfileImg_path = "client/public/user_profile_img/" + user.profileImg;
-        // update user data (new profileImg)
-        await User.findOneAndUpdate(
-            { _id: req.tokenData._id }, 
-            { profileImg: profileImg_new }, 
-            function (err) {
-                if (err) {
-                    fs.unlink(targetPath, err => console.log(err));
-                    return res.status(500).send('Server Error');
-                }
+    console.log('updateprofile');
+    try {
+        if (typeof req.file !== "undefined") {
+            // valid file
+            if (!validFileProperties(req.file.originalname, req.file.size)) { 
+                try { fs.unlinkSync(req.file.path) }
+                catch (err) { console.log(err) }
+                return res.status(400).send('Image file must be a .png or .jpg under 8MB');
             }
-        );
-        // delete old profileImg
-        fs.unlink(oldProfileImg_path, err => { return null });
+            // save file
+            let fileName = await saveUserImage(req.body.name, req.file.path);
+            if (fileName === false) return res.status(500).send('Server Error');
+
+            // append new img filename for doc
+            req.body.profileImg = fileName;
+
+            // query user data for old profileImg
+            var oldUser = await User.findOne({_id: req.tokenData._id}).select('profileImg -_id');
+        }
+
+        req.body.email = req.body.email.trim();
+        req.body.about = req.body.about.trim();
+        req.body.name = req.body.name.trim();
+
+        // validate
+        if (req.body.name.length < 3) return res.status(400).send('Username must be at least 3 characters');
+        if (req.body.about.length >= 500) return res.status(400).send('About section must be less than 500 characters');
+
+        // send email to new user address
+        // ****
+
+        // update document 
+        await User.findOneAndUpdate({ _id: req.tokenData._id }, req.body, { runValidators: true });
+
+        // delete old img files (if req.files was uploaded)
+        if (typeof req.file !== "undefined") {
+            try {
+                fs.unlinkSync("client/public/user_profile_img/card/" + oldUser.profileImg);
+                fs.unlinkSync("client/public/user_profile_img/thumb/" + oldUser.profileImg);
+                fs.unlinkSync("client/public/user_profile_img/original/" + oldUser.profileImg);
+            } catch (e) { console.log(e) }
+        }
+    }
+    catch (err) {
+        console.log(err);
+        try {
+            fs.unlinkSync("client/public/user_profile_img/card/" + fileName);
+            fs.unlinkSync("client/public/user_profile_img/thumb/" + fileName);
+            fs.unlinkSync("client/public/user_profile_img/original/" + fileName);
+        } catch (e) { console.log(e) }
     }
 
-
-    /// validate data ///
-    let obj = JSON.parse(JSON.stringify(req.body)); // work around object null prototype
-    if (obj.name.length < 3) return res.status(400).send('Username must be at least 3 characters');
-    if (obj.about.length >= 500) return res.status(400).send('About section must be less than 500 characters');
-    if (obj.email.length < 5) return res.status(400).send('A valid email is required');
-
-    // send email to new user address
-
-    // find user and update 
-    var user = await User.findOneAndUpdate(
-        {_id: req.tokenData._id}, 
-        req.body, 
-        {new: true, runValidators: true}, 
-        function (err) {
-            if (err) return res.status(500).send('Server Error');
-        }
-    );
-    if (!user) return res.status(500).send('No User Found');
     // return updated user data
-    var updatedUser = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin');
+    var updatedUser = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin -__v');
     return res.status(200).json(updatedUser);
 })
 
@@ -222,10 +212,11 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
 
 
 
-router.post('/getmyuserdata', verifyToken, async (req, res) => {
+router.get('/getmyuserdata', verifyToken, async (req, res) => {
+    console.log('getmyuserdata');
     try {
-        const user = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin');
-        if (!user) return res.status(400).send();
+        const user = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin -__v');
+        if (!user) return res.status(500).send('Server Error');
         return res.status(200).json(user);
     }
     catch (error) {
@@ -235,6 +226,7 @@ router.post('/getmyuserdata', verifyToken, async (req, res) => {
 
 
 router.post('/getuserdata', async (req, res) => {
+    console.log('getuserdata');
     try {
         // decrytp authid
         var authid = decrypt(req.body.authid);
@@ -259,6 +251,9 @@ router.post('/getuserdata', async (req, res) => {
 //         return res.status(500).send();
 //     }
 // })
+
+
+
 
 
 

@@ -11,7 +11,7 @@ import MultiSelectMenu from '../../components/multiSelectMenu';
 import Ingredients from '../../components/ingredients';
 import Methods from '../../components/method';
 import Notes from '../../components/notes';
-import PhotoShow from './photoShow';
+import PhotoShow from '../../components/photoShow';
 import DeleteRecipe from '../../components/deleteRecipe';
 let source;
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import './my-profile.sass';
-import photoIcon from '../../media/icons/photo45.png';
-import PhotoShow from './photoShow';
+// import photoIcon from '../../media/icons/photo45.png';
+import PhotoShow from '../../components/photoShow';
 import axios from 'axios';
 let source;
 
@@ -40,8 +40,9 @@ class MyProfile extends Component {
 
 
 	componentDidMount() {
-		axios.get('/api/users/getprofiledata', {cancelToken: source.token})
+		axios.get('/api/users/getmyuserdata', {cancelToken: source.token})
 		 	.then(res => {
+		 		console.log(res.data);
 		 		this.setState({
 					defaultEmail: res.data.email,
 					defaultName: res.data.name,
@@ -50,7 +51,8 @@ class MyProfile extends Component {
 				});
 			})
 			.catch(error => {
-				if (error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
+				//if (error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
+				console.log(error);
 			});	
 	}
 
@@ -60,7 +62,8 @@ class MyProfile extends Component {
 		formData.append('email', this.email.current.value);
 		formData.append('name', this.name.current.value);
 		formData.append('about', this.about.current.value);
-		formData.append('file', this.state.selectedFile);
+		formData.append('file', this.state.file);
+		console.log(this.state.file);
 
 		axios.post('/api/users/updateprofile', formData, {cancelToken: source.token})
 		 	.then(res => {
@@ -135,12 +138,12 @@ class MyProfile extends Component {
 						<div className='fieldContainer clearfix'>
 							<div id='pos-img'>
 								<PhotoShow 
-									imageType='profile'
+									imageType='user'
 									ref={this.fileRef} 
+									onChange={this.fileHandler}
 									file={this.state.file}
 									fileName={this.state.fileName}
 									fileObjURL={this.state.fileObjURL}
-									onChange={this.fileHandler}
 									/> 
 							</div>
 						
