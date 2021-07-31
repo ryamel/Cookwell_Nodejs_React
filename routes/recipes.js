@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 const mogoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
@@ -11,14 +12,15 @@ const fs = require('fs');
 const fsProm = require('fs').promises;
 const mv = require('mv');
 const sharp = require('sharp');
+//const CryptoJS = require("crypto-js");
 
 const { User, validateUser } = require('../models/users');
 const Recipe = require('../models/recipes');
 const { upload } = require('../middleware/upload');
 const verifyToken = require('../middleware/verifyToken');
 const validate_RecipeData = require('../middleware/validate_RecipeData');
-
-
+const { encrypt, decrypt } = require('../functions');
+const { featList } = require('../featuredRecipeList');
 
 // dont use - within route names. Causes incorret/partial route name matching.
 
@@ -31,14 +33,6 @@ router.get('/page/:skip/:limit', async (req, res) => {
     let skip = parseInt(req.params.skip);
     let limit = parseInt(req.params.limit);
 
-    // try {
-    //     if (req.params.skip == 0) var count = await Recipe.countDocuments({});
-    // }
-    // catch (err) {
-    //     console.log(err);
-    //     return res.status(400).send();
-    // }
-
     // once num of recipes exceeds limit pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
     try {
         var recipes = await Recipe
@@ -47,6 +41,14 @@ router.get('/page/:skip/:limit', async (req, res) => {
             .skip(skip)
             .sort({uploadDate: -1})
             .populate('authid', '_id name profileImg');
+        if (!recipes) return res.status(400).send();
+
+        // convert recipe to proper "object"
+        var recipes = JSON.parse(JSON.stringify(recipes));
+        // encrypt authid
+        recipes.forEach((recipe, index, recipes) => {
+            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+        })
 
         return res.json(recipes);
     }
@@ -61,13 +63,20 @@ router.get('/page/:skip/:limit', async (req, res) => {
 router.get('/getbytitle/:title', async (req, res) => {
     console.log('getbytitle');
     try {
-        const recipe = await Recipe.findOne({title: req.params.title}).select('-_id -__v -uploadDate').populate('authid', '_id name profileImg');
-        console.log(req.params.title);
-        if (!recipe) {
-            return res.status(400).send('Server Error');
-        } else {
-            return res.status(200).json(recipe);
-        }
+        var recipe = await Recipe.findOne({title: req.params.title}).select('-_id -__v -uploadDate -contactedAuthor').populate('authid', 'name profileImg');
+        if (!recipe) return res.status(400).send('Server Error');
+
+        var recipe = recipe.toJSON(); // turns mongoose "object" it into proper JSON YAY!
+
+        // encypt id
+        var authIdEncrypt = encrypt(recipe.authid._id.toString());
+        //var encrypted = CryptoJS.AES.encrypt(recipe.authid._id.toString(), "Secret Passphrase");
+
+
+        // append encrypt id
+        recipe.authid._id = authIdEncrypt;
+
+        return res.status(200).json(recipe);
     }
     catch (err) {
         console.log(err);
@@ -152,12 +161,20 @@ router.get('/search/auto', async (req, res) => {
 
 
 
-
 router.get('/getrecent/', async (req, res) => {
     console.log('getrecent');
     try { 
         //.sort({uploadDate: -1});
-        var recipes = await Recipe.find().limit(8).sort({uploadDate: -1}).populate('authid', '-_id name profileImg');
+        var recipes = await Recipe.find().limit(8).sort({uploadDate: -1}).populate('authid', 'name profileImg');
+        if (!recipes) return res.status(400).send();
+
+        // convert recipe to proper "object"
+        var recipes = JSON.parse(JSON.stringify(recipes));
+        // encrypt authid
+        recipes.forEach((recipe, index, recipes) => {
+            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+        })
+
         return res.status(200).json(recipes);
     }
     catch (err) {
@@ -176,7 +193,18 @@ router.get('/getfeatured/', async (req, res) => {
     console.log('getfeatured');
     try {
         // use ref and populate to link author data to recipe doc. This will prevent haveing to perform additional queries
-        var recipes = await Recipe.find().select('-__v').populate('authid', '-_id name profileImg'); 
+        var recipes = await Recipe.find({
+            '_id': { $in: featList }
+            }).select('-__v').populate('authid', 'name profileImg'); 
+        if (!recipes) return res.status(400).send();
+
+        // convert recipe to proper "object"
+        var recipes = JSON.parse(JSON.stringify(recipes));
+        // encrypt authid
+        recipes.forEach((recipe, index, recipes) => {
+            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+        })
+
         return res.status(200).json(recipes);
     }
     catch (err) {
@@ -352,7 +380,16 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
 router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
     console.log('getuserrecipesprivate');
     try {
-        const recipes = await Recipe.find({authid: req.tokenData._id}).select('-uploadDate -__v -contactedAuthor');
+        let recipes = await Recipe.find({authid: req.tokenData._id}).select('-uploadDate -__v -contactedAuthor').populate('authid','name _id');
+        if (!recipes) return res.status(400).send();
+
+        // convert recipe to proper "object"
+        recipes = JSON.parse(JSON.stringify(recipes));
+        // encrypt authid
+        recipes.forEach((recipe, index, recipes) => {
+            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+        })
+
         return res.status(200).json(recipes);
     }
     catch (err) { 
@@ -364,8 +401,29 @@ router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
 
 router.post('/getuserrecipespublic', async (req, res) => {
     console.log('getuserrecipespublic');
-    const recipes = await Recipe.find({authid: req.body.authid}).select('-_id -contactedAuthor -reviewed -uploadDate -__v').populate('authid','-_id name');
-    return res.status(200).json(recipes);
+    try {
+        var authId = decrypt(req.body.authid);
+        if (!authId) return res.status(500).send();
+
+        let recipes = await Recipe
+            .find({ authid: authId })
+            .select('-_id -contactedAuthor -reviewed -uploadDate -__v')
+            .populate('authid','name profileImg _id');
+        if (!recipes) return res.status(500).send();
+
+        // convert recipe to proper "object"
+        recipes = JSON.parse(JSON.stringify(recipes));
+        // encrypt authid
+        recipes.forEach((recipe, index, recipes) => {
+            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+        })
+
+        return res.status(200).json(recipes);
+    } 
+    catch (err) {
+        console.log(err);
+        return res.status(500).send();
+    }
 });
 
 
@@ -396,6 +454,8 @@ router.get('/getedit/:editId', verifyToken, async (req, res) => {
 
 router.get('/getreview', verifyToken, async (req, res) => {
      console.log('getreview');
+     //console.log(req.tokenData);
+
     if (!req.tokenData.admin) return res.status(401).send();
 
     try {
@@ -456,7 +516,6 @@ function validFileProperties(fileName, fileSize) {
 
 
 
-
 async function getRandomRecipes(ndocs, recipeName_ex = null) {
     // ndocs: number of random docs to return
     // recipeName_ex: exclude any recipes from search
@@ -465,12 +524,12 @@ async function getRandomRecipes(ndocs, recipeName_ex = null) {
         if (typeof recipeName_ex === null) {
             var recipes = await Recipe.find({})
                 .select('-__v -_id')
-                .populate('authid', '-_id name profileImg'); 
+                .populate('authid', 'name profileImg'); 
             if (recipes.length < 1) return [];
         } else {
             var recipes = await Recipe.find({title: {$ne: recipeName_ex} })
                 .select('-__v -_id')
-                .populate('authid', '-_id name profileImg'); 
+                .populate('authid', 'name profileImg'); 
             if (recipes.length < 1) return [];
         }
 
@@ -487,6 +546,13 @@ async function getRandomRecipes(ndocs, recipeName_ex = null) {
             ranRecipes[i] = recipes[ranRecipes[i]];
         }
 
+        // convert ranRecipes to proper "object"
+        ranRecipes = JSON.parse(JSON.stringify(ranRecipes));
+        // encrypt authid
+        ranRecipes.forEach((recipe, index, ranRecipes) => {
+            ranRecipes[index].authid._id = encrypt(recipe.authid._id.toString());
+        })
+
         // return recipes
         return ranRecipes;
     }
@@ -496,9 +562,7 @@ async function getRandomRecipes(ndocs, recipeName_ex = null) {
     }
 }
 
-// function sleep(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-// }
+
 
 
 async function saveImage(giveName, filePath) {

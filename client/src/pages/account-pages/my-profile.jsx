@@ -4,7 +4,7 @@ import './my-profile.sass';
 import photoIcon from '../../media/icons/photo45.png';
 import PhotoShow from './photoShow';
 import axios from 'axios';
-
+let source;
 
 class MyProfile extends Component {
 	constructor() {
@@ -18,7 +18,7 @@ class MyProfile extends Component {
 			fileObjURL: '',
 			errMsg: ''
 		}
-
+		source = axios.CancelToken.source();
 		this.updateProfile = this.updateProfile.bind(this);
 		this.fileHandler = this.fileHandler.bind(this);
 		this.handleError = this.handleError.bind(this);
@@ -40,8 +40,7 @@ class MyProfile extends Component {
 
 
 	componentDidMount() {
-
-		axios.get('/api/users/get-profile-data')
+		axios.get('/api/users/getprofiledata', {cancelToken: source.token})
 		 	.then(res => {
 		 		this.setState({
 					defaultEmail: res.data.email,
@@ -63,7 +62,7 @@ class MyProfile extends Component {
 		formData.append('about', this.about.current.value);
 		formData.append('file', this.state.selectedFile);
 
-		axios.post('/api/users/update-profile', formData)
+		axios.post('/api/users/updateprofile', formData, {cancelToken: source.token})
 		 	.then(res => {
 		 		this.setState({
 					defaultEmail: res.data.email,
@@ -79,6 +78,9 @@ class MyProfile extends Component {
 		
 	}
 
+	componentWillUnmount() {
+		if (source) source.cancel();
+	}
 
 
 	handleError(errMsg){
@@ -239,9 +241,10 @@ class MyProfile extends Component {
 							</button>
 						</div>
 
-						{ this.state.defaultName.length < 1 && this.state.fileName.length < 1 ?
+						{ this.state.defaultName == "" || this.state.fileName.length < 1 ?
 							<div className='textStyle profileNote'>
-								Completing the above profile will make it easier to discover your recipes
+								Completing your profile information makes it easier to discover your recipes. <br/> Without a <i>username</i> the author of your recipes will be 
+								listed as 'Anonymous'.
 							</div> : null
 						}
 

@@ -9,7 +9,9 @@ class CookProfile extends Component {
 				<Link>{this.props.cookLink}</Link>
 				<div className='leftCon'>
 					<img className='imgCook' src={this.props.imgLocation} />
-					<div className='title'>{this.props.cookName}</div>
+					<div className='title'>
+						{this.props.cookName}
+					</div>
 					<Link className='web'>{this.props.web}</Link>
 				</div>
 				<div className='rightCon'>{this.props.description}</div>

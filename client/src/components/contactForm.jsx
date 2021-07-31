@@ -18,7 +18,7 @@ const ContactForm = (props) => {
 
 		axios.post('/api/mail/editcontactauthor', data, { headers: {'Content-Type': 'application/json'} } )
 			.then(res => {
-				props.handleError(res.data)
+				props.handleError(res.data);
 			})
 			.catch(err => {
 				props.handleError(err.response.data);

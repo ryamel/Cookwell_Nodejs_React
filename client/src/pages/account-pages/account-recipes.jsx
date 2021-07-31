@@ -4,6 +4,8 @@ import BrowseCard from '../../components/browseCard';
 import queryString from 'query-string';
 import Footer from '../../components/footer';
 import axios from 'axios';
+let source;
+
 
 class accountRecipes extends React.Component {
 	constructor(props) {
@@ -14,12 +16,14 @@ class accountRecipes extends React.Component {
 			msg: ''
 		};
 		// this.handleMsg = this.handleMsg.bind(this);
+		source = axios.CancelToken.source();
 	}
 
 
 	componentDidMount() {
-		axios.get('/api/recipes/getuserrecipesprivate')
+		axios.get('/api/recipes/getuserrecipesprivate', {cancelToken: source.token})
 			.then(res => {
+				console.log(res.data);
 				this.setState({
 					recipes: res.data,
 					isLoaded: true
@@ -53,6 +57,12 @@ class accountRecipes extends React.Component {
 	// 	}
 	// }
 
+	componentWillUnmount() {
+		if (source) {
+			source.cancel();
+		}
+	}
+
 	render() {
 		if (!this.state.isLoaded) {
 			return <div id='loading-spacer'></div>;
@@ -76,7 +86,8 @@ class accountRecipes extends React.Component {
 										key={index} 
 										img={cardData.img} 
 										description={cardData.description} 
-										author={cardData.authorName} 
+										author={cardData.authid.name} 
+										aId={cardData.authid._id} 
 										edit={true}
 										rtitle={cardData.title}
 										rid={cardData._id}

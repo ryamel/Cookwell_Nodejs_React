@@ -36,39 +36,52 @@
 			text-align: center
 			width: 100%
 			letter-spacing: 0.3em
-	.browse-textContainer
-		height: 28%
-		padding: 1px 8px 0
-		background-color: rgb(255,255,255)
-		font-family: 'Roboto', sans-serif
-		border-radius: 0 0 $browse-card-border-radius $browse-card-border-radius
-		white-space: normal
-		overflow: hidden
-		.browse-recipe-title
-			text-align: left
-			font-size: 0.85em
-			font-family: 'Roboto', sans-serif
-			font-weight: 500
-			letter-spacing: 0.02em
-		.browse-recipe-descrip
-			font-size: 0.73em
-			letter-spacing: 0.03em
-			line-height: 120% // 1.20em
-			overflow: hidden
-			height: 59%
-			font-weight: 300
-		.browse-author
-			text-align: right
-			padding-top: 1px
-			font-size: 0.7em
-			color: rgb(2,120,200)
 
-.creator-link
+.browse-textContainer
+	height: 28%
+	padding: 2px 5px 0
+	background-color: rgb(255,255,255)
+	font-family: 'Roboto', sans-serif
+	border-radius: 0 0 $browse-card-border-radius $browse-card-border-radius
+	white-space: normal
+	overflow: hidden
 	position: relative
-	top: 4px
+	// background-color: red
+	.browse-recipe-title
+		text-align: left
+		font-size: 0.85em
+		font-family: 'Roboto', sans-serif
+		font-weight: 500
+		letter-spacing: 0.02em
+		// background-color: grey
+		max-height: 32px
+		margin-bottom: 2px
+	.browse-recipe-descrip
+		font-size: 0.73em
+		letter-spacing: 0.03em
+		line-height: 122% // 1.20em
+		overflow: hidden
+		font-weight: 300
+		// background-color: blue
+
+.maxHeight
+	max-height: 84%
+	overflow: hidden
+
+.authLink
+	font-size: 0.7em
+	color: rgb(2,120,200)
+	position: absolute
+	bottom: 1px
+	right: 6px
 	z-index: 2
+	color: black
 	&:hover
-		color: rgb(0,191,255)
+		color: grey
+
+.noHover
+	pointer-events: none
+
 
 .edit-btn
 	height: fit-content

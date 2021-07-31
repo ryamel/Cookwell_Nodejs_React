@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import './reset-password.sass';
 import axios from 'axios';
+let source;
 
 // load url params
 
@@ -22,6 +23,7 @@ class ResetPassword extends React.Component {
 			pwd: '',
 			pwdRepeat: ''
 		}
+		source = axios.CancelToken.source();
 		this.updatePwd = this.updatePwd.bind(this);
 		this.handleMsg = this.handleMsg.bind(this);
 		this.getParameterByName = this.getParameterByName.bind(this);
@@ -50,20 +52,24 @@ class ResetPassword extends React.Component {
 	}
 
 	updatePwd() {
-		const data = JSON.stringify({
+		const body = ({
 			uid: this.state.uid, 
 			token: this.state.token,
 			pwd: this.state.pwd,
 			pwdRepeat: this.state.pwdRepeat
 		});
 
-		axios.post('/api/mail/pwd-reset-update', data, { headers: {'Content-Type': 'application/json'} })
-			.then(response => {
-				this.setState({msg: response.data});
+		axios.post('/api/mail/pwdresetupdate', body, {cancelToken: source.token})
+			.then(res => {
+				this.setState({msg: res.data});
 			})
 			.catch(error => {
-				if (typeof error.response.data !== 'undefined') this.setState({msg: error.response.data});
+				if (typeof error.res.data !== 'undefined') this.setState({msg: error.res.data});
 			})
+	}
+
+	componentWillUnmount() {
+		if (source) source.cancel();
 	}
 
 	render() {

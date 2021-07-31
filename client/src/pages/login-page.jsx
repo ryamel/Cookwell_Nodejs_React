@@ -4,7 +4,7 @@ import './login-page.sass';
 import { withRouter } from "react-router";
 import PropTypes from "prop-types"; // needed for HC withRouter
 import axios from 'axios';
-
+let source;
 
 function Loginpage(props) {
 
@@ -21,13 +21,13 @@ function Loginpage(props) {
 		}
 	}
 
-
 	function login(email, pwd) {
-		const data = JSON.stringify({ email: email, password: pwd });
+		source = axios.CancelToken.source();
+		const body = { email: email, password: pwd };
 
-		axios.post('/api/users/login', data, { headers: {'Content-Type': 'application/json'} } )
+		axios.post('/api/users/login', body, {cancelToken: source.token} )
 			.then(response => {
-				localStorage['logged_in'] = true;
+				localStorage['logged_in'] = true; // used to prevent logout on refresh
 				props.login();
 				props.history.push('/'); // redirect using withRouter and prototypes import
 			})
@@ -35,6 +35,13 @@ function Loginpage(props) {
 				if (typeof error.response.data !== 'undefined') setMsg(error.response.data);
 			})
 	}
+
+	useEffect(() => {
+		if (source) {
+			console.log('cancel');
+			return () => source.cancel();
+		}
+	})
 
 
 	return (

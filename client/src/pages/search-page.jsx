@@ -5,6 +5,7 @@ import MultiSelectMenu from '../components/multiSelectMenu';
 import { mealTypes, dietOptions, cuisine } from '../searchOptions';
 import ShowResults from '../components/show-results'
 import axios from 'axios';
+let source;
 
 class Searchpage extends React.Component {
 	constructor(props) {
@@ -20,6 +21,7 @@ class Searchpage extends React.Component {
 			time: null,
 			emtyResult: false
 		}
+		source = axios.CancelToken.source();
 		this.handleSearch = this.handleSearch.bind(this);
 		this.handleInput = this.handleInput.bind(this);
 	}
@@ -28,15 +30,15 @@ class Searchpage extends React.Component {
 	componentDidMount() {
 		// this is only such that on reload / refresh, the component will still load some results
 		if (!this.props.searchBtn) {
-			let data = JSON.stringify({
+			let body = {
 				diet: this.state.diet,
 		       	cuisine: this.state.cuisine,
 		       	mealType: this.state.mealType,
 		       	time: this.state.time,
 		       	searchText: this.props.search
-			});
+			};
 
-			axios.post("/api/recipes/search", data, { headers: { 'Content-Type': 'application/json' } })
+			axios.post("/api/recipes/search", body, {cancelToken: source.token})
 				.then(res => {
 					this.setState({
 						searchResult: res.data,
@@ -51,15 +53,15 @@ class Searchpage extends React.Component {
 	
 		this.props.setSearchBtn(); // reset search btn to false
 		
-		let data = JSON.stringify({
+		let body2 = {
 			diet: this.state.diet,
 	       	cuisine: this.state.cuisine,
 	       	mealType: this.state.mealType,
 	       	time: this.state.time,
 	       	searchText: this.props.search
-		});
+		};
 
-		axios.post("/api/recipes/search", data, { headers: { 'Content-Type': 'application/json' } })
+		axios.post("/api/recipes/search", body2, {cancelToken: source.token})
 			.then(res => {
 				res.data.length < 1 ? this.setState({emtyResult: true}) : this.setState({emtyResult: false});
 				this.setState({
@@ -121,7 +123,10 @@ class Searchpage extends React.Component {
 		}
 		
 	}
-
+	
+	componentWillUnmount() {
+		if (source) source.cancel();
+	}
 
 
 

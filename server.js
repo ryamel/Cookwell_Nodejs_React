@@ -1,17 +1,25 @@
-
+// app.use installs a middleware function
 
 const express = require('express');
 const app = express();
 const mongo = require('mongodb');
 const assert = require('assert');
+const cors = require('cors'); 
+
+// mongoose, plus depreciated settings to remove error msg's
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true)
-const cors = require('cors'); 
+
+// allows use of .env files
 require('dotenv').config();
-const cookieParser = require('cookie-parser');// allows reading of cookies on front end (verifyToken middleware)
+
+// allows reading of cookies on front end (verifyToken middleware)
+const cookieParser = require('cookie-parser'); 
 app.use(cookieParser()); 
-app.use(express.json()); // * required to parse any http json data --> places json data into req.body
+
+// * required to parse any http json data --> places json data into req.body
+app.use(express.json()); 
 
 
 if (!process.env.private_key) {
@@ -30,7 +38,7 @@ const db = mongoose.connect(process.env.DB_connection, {
 
 
 
-// app.use installs a middleware function
+
 
 
 

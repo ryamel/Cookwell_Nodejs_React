@@ -3,7 +3,7 @@ import BrowseCard from '../components/browseCard';
 import './recipes.sass';
 import Footer from '../components/footer';
 import axios from 'axios';
-
+let source;
 // added task. Pagination using random recipes.
 
 
@@ -19,15 +19,15 @@ class Recipes extends Component {
 			skip: 0,
 			limit: 20
 		}
+		source = axios.CancelToken.source();
 		this.handleScroll = this.handleScroll.bind(this);
 		this.loadMoreRecipes = this.loadMoreRecipes.bind(this);
 	}
 
 	componentDidMount() {
 		window.addEventListener("scroll", this.handleScroll);
-
-
-		axios.get("/api/recipes/page/0/" + this.state.limit)
+		
+		axios.get("/api/recipes/page/0/" + this.state.limit, {cancelToken: source.token})
 			.then(res => {
 					this.setState(prevState => ({
 						cardData: res.data,
@@ -40,7 +40,7 @@ class Recipes extends Component {
 	}
 
 	loadMoreRecipes() { 
-		axios.get("/api/recipes/page/" + this.state.skip + "/" + this.state.limit)
+		axios.get("/api/recipes/page/" + this.state.skip + "/" + this.state.limit, {cancelToken: source.token})
 			.then(res => {
 					this.setState(prevState => ({
 						cardData: prevState.cardData.concat(res.data),
@@ -51,6 +51,7 @@ class Recipes extends Component {
 	}
 
 	componentWillUnmount() {
+		if (source) source.cancel();
 	    window.removeEventListener("scroll", this.handleScroll);
 	}
 
@@ -71,7 +72,6 @@ class Recipes extends Component {
 	render() {
 		const {isLoaded } = this.state;
 
-
 		if (!isLoaded) {
 			return null;
 		} else {
@@ -86,7 +86,11 @@ class Recipes extends Component {
 								img={card.img} 
 								description={card.description} 
 								author={card.authid.name} 
-								rtitle={card.title} />	
+								aId={card.authid._id} 
+								rtitle={card.title} 
+								index={index} 
+								edit={false}
+								/>	
 						)}
 					</div>
 					{/*<Footer isLoaded={this.state.loadFooter} />*/}

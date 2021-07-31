@@ -19,27 +19,31 @@ const ReviewPage = () => {
 	let history = useHistory();
 
 	useEffect(() => {
-		axios.get('/api/recipes/get-review')
-		.then(res => {
-			setData(res.data);
-		})
-		.catch(err => {
-			history.push('/');
-		});
-	},[render])
+		let source = axios.CancelToken.source();
+
+		axios.get('/api/recipes/getreview', {cancelToken: source.token})
+			.then(res => {
+				setData(res.data);
+			})
+			.catch(err => {
+				history.push('/');
+			});
+
+		return () => source.cancel();
+	}, [render])
 
 
 	const approveRecipe = (rtitle, authid) => {
-		const data = JSON.stringify({
+		const body = JSON.stringify({
 			title: rtitle,
 			authid: authid
 		})
 
-		axios.post('/api/recipes/approve', data, { headers: {'Content-Type': 'application/json'} } )
-		.then(res => {
-			setRender(render + 1);
-		})
-		.catch(err => console.log(err));
+		axios.post('/api/recipes/approve', body, {cancelToken: source.token} )
+			.then(res => {
+				setRender(render + 1);
+			})
+			.catch(err => console.log(err));
 	}
 
 	const openEmail = (email, authorName, rtitle, authid) => {

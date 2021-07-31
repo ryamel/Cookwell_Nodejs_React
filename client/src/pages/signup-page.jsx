@@ -4,6 +4,7 @@ import './signup-page.sass';
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import axios from 'axios';
+let source;
 
 class Signuppage extends React.Component {
 	constructor(props) {
@@ -14,20 +15,20 @@ class Signuppage extends React.Component {
 			pwdRepeat: '',
 			errMsg: ''
 		}
-
+		source = axios.CancelToken.source();
 		this.registerUser = this.registerUser.bind(this);
 		this.handleInput = this.handleInput.bind(this);
 		this.handleError = this.handleError.bind(this);
 	}
 
 	registerUser() {
-	    const data = {
+	    const body = {
 	    	email: this.state.email,
 	        pwd: this.state.pwd,
 	        pwdRepeat: this.state.pwdRepeat
 	    }
 
-		axios.post('/api/users/register', JSON.stringify(data), { headers: { 'Content-Type': 'application/json' }  })
+		axios.post('/api/users/register', body, {cancelToken: source.token})
 			.then(res => {
 				localStorage['logged_in'] = true;
 				this.props.login();
@@ -52,6 +53,10 @@ class Signuppage extends React.Component {
 			}, 5500);
 			return <div className='logMsg'>{msg}</div>; // output msg
 		}
+	}
+
+	componentWillUnmount() {
+		if (source) source.cancel();
 	}
 
 	render () {

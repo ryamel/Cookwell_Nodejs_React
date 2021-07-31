@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import './change-password.sass';
 import axios from 'axios';
+let source;
 
 class changePassword extends Component {
 	constructor() {
@@ -12,6 +13,7 @@ class changePassword extends Component {
 			newPwdRepeat: '',
 			msg:''
 		}
+		source = axios.CancelToken.source();
 		this.handleInput = this.handleInput.bind(this);
 		this.changePassword = this.changePassword.bind(this);
 		this.handleError = this.handleError.bind(this);
@@ -29,15 +31,13 @@ class changePassword extends Component {
 	}
 
 	changePassword() {
-
-
-		let data = {
+		let body = {
 			oldPwd: this.state.oldPwd,
 			newPwd: this.state.newPwd,
 			newPwdRepeat: this.state.newPwdRepeat
 		}
 
-		axios.post('/api/users/changepassword', JSON.stringify(data), { headers: {'Content-Type': 'application/json'} })
+		axios.post('/api/users/changepassword', body, {cancelToken: source.token})
 		 	.then(res => {
 		 		this.setState({
 		 			oldPwd: '',
@@ -62,11 +62,15 @@ class changePassword extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+		if (source) source.cancel();
+	}
+
 
 	render() {
 		return (
 			<React.Fragment>
-				{ this.handleError(this.state.msg) }
+				{	this.handleError(this.state.msg)	}
 				<div className="accountContent minBodyHeight">
 					<div id="editLogin">
 						<div className='my-account-titles'>Change Password</div>

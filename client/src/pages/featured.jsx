@@ -4,6 +4,7 @@ import BrowseCard from '../components/browseCard';
 import './featured.sass';
 import Footer from '../components/footer';
 import axios from 'axios';
+let source;
 
 // featured titles need to be added inside the browseCard on the first of the line
 
@@ -16,36 +17,47 @@ class Featured extends Component {
 			randomCardData: [],
 			loadFooter: false
 		}
+		source = axios.CancelToken.source();
 		this.getFeatured = this.getFeatured.bind(this);
 		this.getLatest = this.getLatest.bind(this);
 		this.getMixItUp = this.getMixItUp.bind(this);
 	}
 
 	getFeatured() {
-		axios.get("/api/recipes/getfeatured/")
+		axios.get("/api/recipes/getfeatured/", {cancelToken: source.token})
 			.then(res => {
+				console.log('featured', res.data);
 				this.setState({featCardData: res.data});
 			})
+			.catch(err => console.log(err));
 	}
 
 	getLatest() {
-		axios.get("/api/recipes/getrecent/")
+		axios.get("/api/recipes/getrecent/", {cancelToken: source.token})
 			.then(res => {
+				console.log('recent', res.data);
 				this.setState({latestCardData: res.data});
 			})
+			.catch(err => console.log(err));
 	}
 
 	getMixItUp() {
-		axios.get("/api/recipes/getrandom/")
+		axios.get("/api/recipes/getrandom/", {cancelToken: source.token})
 			.then(res => {
+				console.log('random', res.data);
 				this.setState({randomCardData: res.data});
-			});
+			})
+			.catch(err => console.log(err));
 	}
 
 	componentDidMount() {
 		// no need to use relative file path for '/api/recipes' with fetch. Fetch will auto find server.js in root dir
 		Promise.all([this.getFeatured(), this.getLatest(), this.getMixItUp()])
 			.then(this.setState({loadFooter: true}));
+	}
+
+	componentWillUnmount() {
+		if (source) source.cancel();
 	}
 
 
@@ -72,7 +84,8 @@ class Featured extends Component {
 									key={index} 
 									img={cardData.img} 
 									description={cardData.description} 
-									author={cardData.authorName} 
+									author={cardData.authid.name} 
+									aId={cardData.authid._id} 
 									rtitle={cardData.title} 
 									index={index} 
 									edit={false}
@@ -89,7 +102,8 @@ class Featured extends Component {
 									key={index} 
 									img={cardData.img} 
 									description={cardData.description} 
-									author={cardData.authorName} 
+									author={cardData.authid.name} 
+									aId={cardData.authid._id} 
 									rtitle={cardData.title} 
 									index={index} 
 									edit={false}
@@ -106,7 +120,8 @@ class Featured extends Component {
 									key={index} 
 									img={cardData.img} 
 									description={cardData.description} 
-									author={cardData.authorName} 
+									author={cardData.authid.name} 
+									aId={cardData.authid._id} 
 									rtitle={cardData.title} 
 									index={index} 
 									edit={false}

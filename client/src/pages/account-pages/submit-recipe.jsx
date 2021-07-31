@@ -13,6 +13,8 @@ import Methods from '../../components/method';
 import Notes from '../../components/notes';
 import PhotoShow from './photoShow';
 import DeleteRecipe from '../../components/deleteRecipe';
+let source;
+
 
 
 class submitRecipe extends React.Component {
@@ -37,7 +39,7 @@ class submitRecipe extends React.Component {
 			errMsg: '',
 			redirect: false
 		};
-
+		source = axios.CancelToken.source();
 		this.fileRef = React.createRef();
 		this.handleInput = this.handleInput.bind(this);
 		this.removeField = this.removeField.bind(this);
@@ -53,7 +55,6 @@ class submitRecipe extends React.Component {
 		this.setState({redirect: true});
 	}
 
-	// put file into state variable
 	fileHandler(event) {
 		if (this.fileRef.current.files[0]) {
 	   		this.setState({
@@ -141,7 +142,7 @@ class submitRecipe extends React.Component {
 	componentDidMount() {
 		let editId = getURLparam('editId');
 		if (editId) {
-			axios.get('/api/recipes/getedit/' + encodeURIComponent(editId))			
+			axios.get('/api/recipes/getedit/' + encodeURIComponent(editId), {cancelToken: source.token})			
 				.then(res => {
 					this.setState({
 						rid: res.data._id,
@@ -179,7 +180,7 @@ class submitRecipe extends React.Component {
    		formData.append('notes', JSON.stringify(this.state.notes));
 
 
-		axios.post('/api/recipes/upload', formData)
+		axios.post('/api/recipes/upload', formData, {cancelToken: source.token})
 	 	.then(response => {
 	 		this.setState({redirect: true}) // redirect back to my-account page and display success msg on page})
 		})
@@ -210,11 +211,8 @@ class submitRecipe extends React.Component {
    		fdata.append('method', JSON.stringify(this.state.method));
    		fdata.append('notes', JSON.stringify(this.state.notes));
 
-  		// for (let [key, value] of fdata.entries()) { 
-		//   console.log(key, value);
-		// }
 
-   		axios.post('/api/recipes/saveEdit', fdata, { headers: {'Content-Type': 'application/json'} } )
+   		axios.post('/api/recipes/saveEdit', fdata, {cancelToken: source.token}, { headers: {'Content-Type': 'application/json'} } )
 		 	.then(res => {
 				this.setState({
 					redirect: true // redirect back to my-account page and display success msg on page
@@ -232,8 +230,9 @@ class submitRecipe extends React.Component {
 			});
 	}
 
-
-
+	componentWillUnmount() {
+		if (source) source.cancel();
+	}
 
 	
 	handleError(error, msg){
@@ -244,7 +243,7 @@ class submitRecipe extends React.Component {
 					errMsg: ''
 				});
 			}, 5500);
-			return <div className='bannerMsgBar'>{msg}</div>; // output msg
+			return <div className='bannerMsgBar'>{msg}</div>;
 		}
 	}
 

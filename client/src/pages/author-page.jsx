@@ -13,24 +13,37 @@ const AuthorPage = (props) => {
 	const [loadFooter, setLoadFooter] = useState(false);
 	
 	useEffect(() => {
-		const data = JSON.stringify({authid: props.location.state.authid});
+		let source = axios.CancelToken.source();
+		const body = {authid: props.location.state.authid};
 
-		axios.post('/api/users/getcookprofile', data, { headers: {'Content-Type': 'application/json'}})
-		.then(res => {
-			setUserData(res.data);
-		})
-		.catch(err => console.log(err));
+		axios.post('/api/users/getuserdata', body, {cancelToken: source.token})
+			.then(res => {
+				setUserData(res.data);
+			})
+			.catch(err => console.log(err));
 
-		axios.post('/api/recipes/getuserrecipespublic', data, { headers: {'Content-Type': 'application/json'}})
-		.then(res => {
-			setRecipeData(res.data);
-			setLoadFooter(true);
-		})
-		.catch(err => console.log(err));
+		axios.post('/api/recipes/getuserrecipespublic', body, {cancelToken: source.token})
+			.then(res => {
+				setRecipeData(res.data);
+				setLoadFooter(true);
+			})
+			.catch(err => console.log(err));
 
-	},[])
+		return () => source.cancel();
+	}, [])
 
 
+	const renderImg = (img) => {
+		if (img !== "") {
+			return (
+				<div id='img-wrapper'>
+					<img src={process.env.PUBLIC_URL + '/user_profile_img/' + userData.profileImg} />
+				</div>
+			);
+		} else {
+			return null;
+		}
+	}
 
 	if (!userData) {
 		return null;
@@ -38,9 +51,7 @@ const AuthorPage = (props) => {
 		return (
 			<div id="cookBody">
 				<div id='profile-container'>
-					<div id='img-wrapper'>
-						<img src={process.env.PUBLIC_URL + '/user_profile_img/' + userData.profileImg} />
-					</div>
+					{	renderImg(userData.profileImg)	}
 					<div id='profile-info-container'>
 						<div id='authName'>Name Here</div>
 						<div id='authAbout'>Lorem ipsum about serum norpy surnlimg tupe of</div>
@@ -55,6 +66,8 @@ const AuthorPage = (props) => {
 								img={cardData.img} 
 								description={cardData.description} 
 								author={cardData.authid.name} 
+								aId={cardData.authid._id} 
+								index={index} 
 								edit={false}
 								rtitle={cardData.title}
 								/>	

@@ -54,7 +54,6 @@ class App extends React.Component {
 
 	componentDidMount() {
 		localStorage['logged_in'] ? this.setState({logged_in: true}) : this.setState({logged_in: false})// check for jwt. then render appropriate log status
-
 	}
 
 	login() { 
@@ -62,7 +61,7 @@ class App extends React.Component {
 	}
 
 	logout() {
-		// 	localStorage.removeItem('logged_in'); // remove local Storage
+		localStorage.removeItem('logged_in'); // remove local Storage
 		this.setState({logged_in: false}); 
 	}
 
@@ -71,8 +70,8 @@ class App extends React.Component {
 	}
 
 
-	logBtn(logged_in) {
-		if (logged_in) {
+	logBtn() {
+		if (this.state.logged_in) {
 			return (
 				<Link to='/my-account'>
 					<div id='loginBtn' >
@@ -136,7 +135,7 @@ class App extends React.Component {
 					
 					
 					<div className="headerSearchBar" >
-						{ this.logBtn(this.state.logged_in) } 
+						{	this.logBtn()	} 
 						<input 
 							placeholder="Search" 
 							type="text" 

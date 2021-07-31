@@ -6,7 +6,7 @@ import CookBanner from '../components/cookBanner';
 import Notes from '../components/notes-recipe-page';
 import Authcard from '../components/authcard';
 import Dietbanner from '../components/dietBanner';
-
+let source;
 
 class Recipepage extends Component {
 	constructor() {
@@ -16,6 +16,7 @@ class Recipepage extends Component {
 			result: null,
 			rtitle: ''
 		}	
+		source = axios.CancelToken.source();
 		this.getParameterByName = this.getParameterByName.bind(this);
 		this.loadRecipe = this.loadRecipe.bind(this);
 	}
@@ -32,7 +33,7 @@ class Recipepage extends Component {
 	
 
 	loadRecipe(rtitle) {
-		axios.get('/api/recipes/getbytitle/' + rtitle)
+		axios.get('/api/recipes/getbytitle/' + rtitle, {cancelToken: source.token})
 			.then(res => {
 				this.setState({
 					result: res.data,
@@ -51,6 +52,10 @@ class Recipepage extends Component {
 	componentDidMount() {
 		let titleURL = this.getParameterByName('rtitle');
 		this.loadRecipe(titleURL);
+	}
+
+	componentWillUnmount() {
+		if (source) source.cancel();
 	}
 
 

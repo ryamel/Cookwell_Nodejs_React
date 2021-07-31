@@ -1,4 +1,4 @@
-
+const http = require('http');
 
 const express = require('express');
 const router = express.Router();
@@ -10,13 +10,15 @@ var path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 const mv = require('mv');
+const dayjs = require('dayjs');
+//const CryptoJS = require("crypto-js");
 
 const { validateEmail } = require('../serverFiles/validation');
 const { User } = require('../models/users');
 var { upload } = require('../middleware/upload');
 const verifyToken = require('../middleware/verifyToken');
 const { validatePwd } = require('../middleware/validatePwd');
-
+const { encrypt, decrypt } = require('../functions');
 
 
 
@@ -48,39 +50,39 @@ const { validatePwd } = require('../middleware/validatePwd');
 
 
 router.post('/register', async (req, res) => {
-    // check if email is already taken (i.e unique email)
-    let check = await User.findOne({email: req.body.email});
-    if ( check ) return res.status(400).send('That email is alredy being used');
-
-    // check email is valid
-    const valid = validateEmail(req.body.email);
-    if ( !valid ) return res.status(400).send('Invalid email');
-
-    // check valid password
-    let err = validatePwd(req.body.pwd, req.body.pwdRepeat);
-    if (err) return res.status(400).send(err);
-
-    // encypt pwd using bcrypt library
-    const salt = await bcrypt.genSalt(10);
-    const hashPwd = await bcrypt.hash(req.body.pwd, salt);
-
-    // save user
-    const user = new User({
-        email: req.body.email,
-        pwd: hashPwd
-    });
-
     try {
+        // check if email is already taken (i.e unique email)
+        let check = await User.findOne({email: req.body.email});
+        if (check) return res.status(400).send('That email is alredy being used');
+
+        // check email is valid
+        const valid = validateEmail(req.body.email);
+        if (!valid) return res.status(400).send('Invalid email');
+
+        // check valid password
+        let err = validatePwd(req.body.pwd, req.body.pwdRepeat);
+        if (err) return res.status(400).send(err);
+
+        // encypt pwd using bcrypt library
+        const salt = await bcrypt.genSalt(10);
+        const hashPwd = await bcrypt.hash(req.body.pwd, salt);
+
+        // save user
+        const user = new User({
+            email: req.body.email,
+            pwd: hashPwd
+        });
+
+        // register
     	await user.save();
+        // login user by setting jwt
+        const token = user.generateAuthToken();
+        return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send();  // only use this method to set cookies (cookie-parser)
     }
     catch(error) { 
     	console.log(error);
     	return res.status(500).send('Server Error'); 
     }
-    // login user (provide jwt)
-    const token = user.generateAuthToken();
-    return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send('User Registered'); 
-
 });
 
 
@@ -92,6 +94,7 @@ router.post('/register', async (req, res) => {
 
 
 router.post('/login', async (req, res) => {
+    console.log('login');
     try {
         // find user by email
         const user = await User.findOne({email: req.body.email});
@@ -101,9 +104,14 @@ router.post('/login', async (req, res) => {
         if (!pwdCheck) return res.status(400).send('Invalid email / password');
         // gen web token
         const token = user.generateAuthToken();
-        return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send(); // cookies res.setHeader('Set-cookie', <one string contains all attriubtes seperated by ; > )
+
+        // only use this method to set cookies (cookie-parser)
+        // cookies res.setHeader('Set-cookie', <one string contains all attriubtes seperated by ; > )
+        // *** cookies will not show up in chrome dev tools using this method ***
+        return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send();
     }
     catch (err) {
+        console.log(err);
         return res.status(500).send();
     }
 
@@ -116,7 +124,7 @@ router.post('/login', async (req, res) => {
 
 
 
-router.post('/change-password', verifyToken, async (req, res) => {
+router.post('/changepassword', verifyToken, async (req, res) => {
     //console.log(req.body);
 
     if (req.body.newPwd !== req.body.newPwdRepeat) return res.status(400).send('Passwords do not match');
@@ -141,7 +149,7 @@ router.post('/change-password', verifyToken, async (req, res) => {
 
 
 
-router.post('/update-profile', [verifyToken, upload.single('file')], async (req, res) => {
+router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, res) => {
     // upload photo file and update user profile to reflec new profileImg
     if (typeof req.file !== "undefined") {
         var extension = path.extname(req.file.originalname).toLowerCase();
@@ -171,8 +179,8 @@ router.post('/update-profile', [verifyToken, upload.single('file')], async (req,
         var oldProfileImg_path = "client/public/user_profile_img/" + user.profileImg;
         // update user data (new profileImg)
         await User.findOneAndUpdate(
-            {_id: req.tokenData._id}, 
-            {profileImg: profileImg_new}, 
+            { _id: req.tokenData._id }, 
+            { profileImg: profileImg_new }, 
             function (err) {
                 if (err) {
                     fs.unlink(targetPath, err => console.log(err));
@@ -214,25 +222,43 @@ router.post('/update-profile', [verifyToken, upload.single('file')], async (req,
 
 
 
-router.get('/get-profile-data', verifyToken, async (req, res) => {
+router.post('/getmyuserdata', verifyToken, async (req, res) => {
     try {
         const user = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin');
+        if (!user) return res.status(400).send();
         return res.status(200).json(user);
     }
     catch (error) {
-        res.status(500).send('Server Error');
+        return res.status(500).send('Server Error');
     }
 })
 
-router.post('/get-cook-profile', async (req, res) => {
+
+router.post('/getuserdata', async (req, res) => {
     try {
-        const user = await User.findOne({_id: req.body.authid}).select('about name profileImg -_id');
-        res.status(200).json(user);
+        // decrytp authid
+        var authid = decrypt(req.body.authid);
+        if (!authid) return res.status(500).send();
+
+        const user = await User.findOne({_id: authid}, '-pwd -_id -admin -email -__v');
+        if (!user) return res.status(400).send();
+        return res.status(200).json(user);
     }
-    catch (err) {
-        return res.status(500).send();
+    catch (error) {
+        console.log(err);
+        return res.status(500).send('Server Error');
     }
 })
+
+// router.post('/getcookprofile', async (req, res) => {
+//     try {
+//         const user = await User.findOne({_id: req.body.authid}).select('about name profileImg -_id');
+//         res.status(200).json(user);
+//     }
+//     catch (err) {
+//         return res.status(500).send();
+//     }
+// })
 
 
 
