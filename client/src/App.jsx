@@ -32,9 +32,9 @@ class App extends React.Component {
 		super();
 		this.state = {
 			logged_in: false,
-			search: '',
+			searchText: '',
 			redirect: false,
-			searchBtn: false,
+			search: false,
 			style: null
 		}
 
@@ -42,8 +42,7 @@ class App extends React.Component {
 		this.login = this.login.bind(this);
 		this.logBtn = this.logBtn.bind(this);
 		this.logout = this.logout.bind(this);
-		this.setSearchBtn = this.setSearchBtn.bind(this);
-		this.handleKeyUp = this.handleKeyUp.bind(this);
+		this.searchClick = this.searchClick.bind(this);
 	}
 
 	static propTypes = {
@@ -65,8 +64,9 @@ class App extends React.Component {
 		this.setState({logged_in: false}); 
 	}
 
-	setSearchBtn(){
-		this.setState({searchBtn: !this.state.searchBtn});
+	searchClick(){
+		this.setState({search: !this.state.search}); // let search-page component know search button was clicked
+		this.props.history.push('/search-page');
 	}
 
 
@@ -91,27 +91,16 @@ class App extends React.Component {
 	}
 
 
-	handleKeyUp(event) {
-		if (event.keyCode === 13) {
-			const { match, location, history } = this.props;
-			this.setSearchBtn();
-			history.push('/search-page');
-		}
-
-	}
-
 
 	render() {
 		let { featHeader, recipeHeader, stickyHeader } = '';
-		let showFooter = true;
 		let currentURL = window.location.pathname;
 		if (currentURL == '/') featHeader = 'underLine';
 		if (currentURL == '/recipes') {
 			recipeHeader = 'underLine';
 			stickyHeader = 'stickyHeader';
 		}
-		if (currentURL.includes('search-page') || currentURL.includes('login-page') || currentURL.includes('signup-page') || currentURL.includes('forgot-password') || currentURL.includes('reset-password') || currentURL.includes('review') || currentURL.includes('author') ) showFooter = false;
-
+		
 		return (
 			<div id='main'>
 
@@ -140,12 +129,12 @@ class App extends React.Component {
 							placeholder="Search" 
 							type="text" 
 							name="search" 
-							value={this.search}
-							onKeyUp={(e) => this.handleKeyUp(e)}
-							onChange={(e) => this.setState({search: e.target.value}, console.log(this.state.search))}
+							value={this.state.searchText}
+							onKeyUp={(e) => e.keyCode === 13 ? this.searchClick() : null }
+							onChange={(e) => this.setState({searchText: e.target.value})}
 							/>
 							<Link to='/search-page'>
-								<button className='searchBtn' type="submit" onClick={(e) => this.setSearchBtn()} >
+								<button className='searchBtn' type="submit" onClick={(e) => this.searchClick()} >
 									<img id="searchIcon" src={search_icon} alt='no-img' />
 								</button>
 							</Link>
@@ -186,9 +175,8 @@ class App extends React.Component {
 					<Route path="/author"> 				<Authorpage /> 											</Route>
 					<Route path="/recipe-page"> 		<Recipepage /> 											</Route>
 					<Route path="/search-page"> 		<Searchpage 
-															search={this.state.search} 
-															setSearchBtn={this.setSearchBtn} 
-															searchBtn={this.state.searchBtn}
+															searchText={this.state.searchText} 
+															searchClick={this.state.search}
 															/> 													</Route>
 					<Route path="/login-page"> 			<Loginpage login={this.login} /> 						</Route>
 					<Route path="/signup-page"> 		<Signuppage login={this.login}/> 						</Route>

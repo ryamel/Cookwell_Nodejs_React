@@ -121,23 +121,7 @@ class MyProfile extends Component {
 			        	<label className='std-field-label ph-label'>
 	            			Profile photo
 	         			</label>
-			        	{/*<PhotoShow profileImg={this.state.profileImg} imageType={'recipes'}/>*/}
 			        		
-						
-			           	
-					
-
-
-	{/*					<div className='fieldContainer clearfix'>
-							<label id='uploadInput-container'>
-								<input className='fileUploadInput' ref={this.fileInput} onChange={this.fileHandler} type='file' name='file' />
-								<img className='phIcon phIcon-profile'  src={photoIcon} />
-								<div className='uploadText-profile fileUpload'>
-									{ this.state.fileName ? this.state.fileName : 'Upload profile image ( .png or .jpg file type )'  }
-								</div> 
-							</label>
-						</div>*/}
-
 							
 						<div className='fieldContainer clearfix'>
 							<div id='pos-img'>
@@ -150,7 +134,6 @@ class MyProfile extends Component {
 									fileObjURL={this.state.fileObjURL}
 									/> 
 							</div>
-						
 						</div>
 
 
@@ -199,6 +182,7 @@ class MyProfile extends Component {
 							</textarea>	
 						</div>
 
+
 						<div id='pwdNotice'>
 							Confirm your account password to update your profile information
 						</div>
@@ -212,50 +196,8 @@ class MyProfile extends Component {
 								onChange={(e) => this.setState({password: e.target.value})}
 				            	/>
 						</div>
-
-				
-
-	{/*			            <div className="inlineContainer">
-								<label className='std-field-label'>Twitter</label>
-								<input 
-									defaultValue='test'
-									type='text' 
-									name='tw' 
-									defaultValue={this.state.defaultTw}
-									ref={this.tw}
-									/>
-								<label className='std-field-label'>Instagram</label>
-								<input 
-									type='text' 
-									name='insta' 
-									defaultValue={this.state.defaultInsta}
-									ref={this.insta}
-									/>
-								<label className='std-field-label'>YouTube</label>
-								<input 
-									type='text' 
-									name='yt' 
-									defaultValue={this.state.defaultYt}
-									ref={this.yt}
-									/>
-								<label className='std-field-label'>Facebook</label>
-								<input 
-									type='text' 
-									name='fb'
-									defaultValue={this.state.defaultFb}
-									ref={this.fb}
-									/>
-								<label className='std-field-label'>Website</label>
-								<input 
-									type='text' 
-									name='web'
-									defaultValue={this.state.defaultWeb}
-									ref={this.web}
-									/>
-							</div>*/}
-
-
 					
+
 						<div>
 							<button className='submitr-btn' type='submit' name='submit-accountUpdate' onClick={this.updateProfile} >
 								Update Account

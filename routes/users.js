@@ -1,9 +1,6 @@
-const http = require('http');
-
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var path = require('path');
@@ -11,7 +8,6 @@ const multer = require('multer');
 const fs = require('fs');
 const mv = require('mv');
 const dayjs = require('dayjs');
-//const CryptoJS = require("crypto-js");
 
 const { User } = require('../models/users');
 var { upload } = require('../middleware/upload');
@@ -20,30 +16,10 @@ const { encrypt, decrypt, saveUserImage, validFileProperties, validatePwd, valid
 
 
 
-// const cookieParser = require('cookie-parser');
-// const app = express();
-// app.use(cookieParser());
-//app.use(express.urlencoded({extended: true}));
-
-
-
-
-
-
-
-
-
-
-
-
-
-// API //
-//.  /api/users/register
-//.  /api/users/login
-
-
 // TASK
 // set jwt to expire after 24 hours. then redirect user to re login on authentication
+// send email to new user address when updated email
+
 
 
 router.post('/register', async (req, res) => {
@@ -216,6 +192,8 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
 
 
 
+
+
 router.get('/getmyuserdata', verifyToken, async (req, res) => {
     console.log('getmyuserdata');
     try {
@@ -227,6 +205,10 @@ router.get('/getmyuserdata', verifyToken, async (req, res) => {
         return res.status(500).send('Server Error');
     }
 })
+
+
+
+
 
 
 router.post('/getuserdata', async (req, res) => {
