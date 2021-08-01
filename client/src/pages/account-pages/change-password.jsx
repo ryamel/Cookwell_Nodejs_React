@@ -74,14 +74,16 @@ class changePassword extends Component {
 				<div className="accountContent minBodyHeight">
 					<div id="editLogin">
 						<div className='my-account-titles'>Change Password</div>
-						<div id="pwdNotice">Password must be at least 8 characters, and can contain letters, numbers, or the symbols (!@#$%.?)</div>
+						<div id="pwdNotice">
+							Password must be at least 8 characters, and can contain letters, numbers, or the symbols (!@#$%.?)
+						</div>
 							
 						<div className='inputDiv'>
 							<label className='std-field-label'>Old Password</label>
 							<input 
 								type='password' 
 								name='oldPwd'
-								value={this.oldPwd}
+								value={this.state.oldPwd}
 								onChange={this.handleInput}
 								/>
 						</div>
@@ -91,7 +93,7 @@ class changePassword extends Component {
 							<input 
 								type='password' 
 								name='newPwd'
-								value={this.newPwd}
+								value={this.state.newPwd}
 								onChange={this.handleInput}
 								/>
 						</div>
@@ -101,7 +103,7 @@ class changePassword extends Component {
 							<input 
 								type='password' 
 								name='newPwdRepeat'
-								value={this.newPwdRepeat}
+								value={this.state.newPwdRepeat}
 								onChange={this.handleInput}
 								/>
 						</div>

@@ -13,12 +13,10 @@ const mv = require('mv');
 const dayjs = require('dayjs');
 //const CryptoJS = require("crypto-js");
 
-const { validateEmail } = require('../serverFiles/validation');
 const { User } = require('../models/users');
 var { upload } = require('../middleware/upload');
 const verifyToken = require('../middleware/verifyToken');
-const { validatePwd } = require('../middleware/validatePwd');
-const { encrypt, decrypt, saveUserImage, validFileProperties } = require('../functions');
+const { encrypt, decrypt, saveUserImage, validFileProperties, validatePwd, validateEmail} = require('../functions');
 
 
 
@@ -151,6 +149,12 @@ router.post('/changepassword', verifyToken, async (req, res) => {
 router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, res) => {
     console.log('updateprofile');
     try {
+        // pwd check
+        const user = await User.findOne({_id: req.tokenData._id}).select('pwd');
+        if (!user) return res.status(400).send('Server Error');
+        const pwdCheck = await bcrypt.compare(req.body.password, user.pwd);
+        if (!pwdCheck) return res.status(400).send('Incorrect password');
+
         if (typeof req.file !== "undefined") {
             // valid file
             if (!validFileProperties(req.file.originalname, req.file.size)) { 

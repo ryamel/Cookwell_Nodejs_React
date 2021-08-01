@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const crypto = require("crypto");
 const { Token } = require('../models/tokens');
 const { User } = require('../models/users');
-const { validatePwd } = require('../middleware/validatePwd');
+const { validatePwd } = require('../functions');
 const Recipe = require('../models/recipes');
 //"use strict";
 

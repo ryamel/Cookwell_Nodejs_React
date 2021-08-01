@@ -13,6 +13,7 @@ class MyProfile extends Component {
 			defaultEmail: '',
 			defaultName: '',
 			defaultAbout: '',
+			password: '',
 			file: null,
 			fileName: '',
 			fileObjURL: '',
@@ -62,8 +63,9 @@ class MyProfile extends Component {
 		formData.append('email', this.email.current.value);
 		formData.append('name', this.name.current.value);
 		formData.append('about', this.about.current.value);
+		formData.append('password', this.state.password);
 		formData.append('file', this.state.file);
-		console.log(this.state.file);
+
 
 		axios.post('/api/users/updateprofile', formData, {cancelToken: source.token})
 		 	.then(res => {
@@ -72,11 +74,13 @@ class MyProfile extends Component {
 					defaultName: res.data.name,
 					defaultAbout: res.data.about,
 					fileName: res.data.profileImg,
-					errMsg: 'Profile Updated'
+					errMsg: 'Profile Updated',
+					password: ''
 				});
 			})
 			.catch(error => {
 				if (typeof error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
+				this.setState({password: ''});
 			});
 		
 	}
@@ -193,6 +197,20 @@ class MyProfile extends Component {
 								ref={this.about}
 								>
 							</textarea>	
+						</div>
+
+						<div id='pwdNotice'>
+							Confirm your account password to update your profile information
+						</div>
+						<div className='fieldContainer clearfix'>
+						
+							<input 
+								placeholder='Password'
+				            	type='password' 
+				            	name='pwd' 
+								value={this.state.password}
+								onChange={(e) => this.setState({password: e.target.value})}
+				            	/>
 						</div>
 
 				

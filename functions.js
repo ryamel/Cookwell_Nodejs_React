@@ -1,10 +1,13 @@
 
 const CryptoJS = require("crypto-js");
 const Recipe = require('./models/recipes');
+const User = require('./models/users');
 var path = require('path');
 const fs = require('fs');
 const fsProm = require('fs').promises;
 const sharp = require('sharp');
+
+
 
 const decrypt = function(string) {
 	try {
@@ -166,14 +169,36 @@ const getRandomRecipes = async function(ndocs, recipeName_ex = null) {
 }
 
 
+const validatePwd = function(pwd, pwdRepeat) {
+	if (pwd !== pwdRepeat) return 'Passwords do not match';
+	if (pwd.length < 8) return 'Password must be at least 8 characters';
+	return null;
+}
+
+
+
+function validateEmail(mail) {
+	if ( /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail) ) {
+		return (true);
+	} else {
+		return (false);
+	}
+}
+
+
+
+
+
+
+
 exports.getRandomRecipes = getRandomRecipes;
 exports.saveUserImage = saveUserImage;
 exports.saveRecipeImage = saveRecipeImage;
 exports.validFileProperties = validFileProperties;
 exports.encrypt = encrypt;
 exports.decrypt = decrypt;
-
-
+exports.validatePwd = validatePwd;
+exports.validateEmail = validateEmail;
 
 
 
