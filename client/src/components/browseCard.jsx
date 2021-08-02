@@ -21,7 +21,6 @@ class BrowseCard extends Component {
 			return (
 				<React.Fragment>
 						<div className='feature-titles'>{this.props.firstCardHeader}</div>
-						<div className='mediaTitle'>{this.props.firstCardHeader}</div>
 				</React.Fragment>
 			);
 		}

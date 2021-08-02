@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
-
+import './show-results.sass';
 
 function ShowResults(props) {
 
 	const displayDietSym = (diet) => {
-		if (diet.length < 1) return null;
+		if (diet.length == 0) return null;
 
 		if (diet.includes('Vegan') && diet.includes('Vegetarian')) {
 			const ind = diet.indexOf('Vegetarian');
@@ -35,7 +35,7 @@ function ShowResults(props) {
 							<div className='resultInfo-container'>					
 								<h4>{result.title}</h4>
 								<div className='description'>
-									{result.description}
+									{	result.description	}
 								</div>
 								{	displayDietSym(result.diet)	}
 								<div className='cooktime'>

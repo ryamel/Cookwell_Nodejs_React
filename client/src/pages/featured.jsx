@@ -131,9 +131,7 @@ class Featured extends Component {
 						}
 					</div>
 
-
 					<Footer isLoaded={this.state.loadFooter} />
-
 
 				</React.Fragment>
 			);

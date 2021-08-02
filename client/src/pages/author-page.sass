@@ -4,9 +4,11 @@
 $profile-height: 120px
 
 
+body
+	background-color: blue
+
+
 #cookBody
-	height: 100vh
-	background-color: white
 	padding-top: 30px
 
 #profile-container
@@ -16,6 +18,8 @@ $profile-height: 120px
 		height: $profile-height
 		width: $profile-height
 		display: inline-block
+		@include authPageFirstBreak
+			display: none
 		img
 			display: inline-block
 			height: 100%

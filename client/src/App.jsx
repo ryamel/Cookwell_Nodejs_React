@@ -103,28 +103,26 @@ class App extends React.Component {
 		
 		return (
 			<div id='main'>
-
 				<div id='headerBody' className={stickyHeader}>
 
 					<Link to="/" id="mast">
 						<img src={mastHead} alt='noimg' />
 					</Link>
 
-					<div id='navWrap'>
+					<div id='navDiv'>
 						<NavLink className='feat' to="/">
 							FEATURED
 							<div className={featHeader}></div>
 						</NavLink>
-
 					  	<NavLink className='rec' to="/recipes">
 					  		RECIPES
 					  		<div className={recipeHeader}></div>
 					  	</NavLink>
 					</div>
 					
-					
+					{	this.logBtn()	} 
+
 					<div className="headerSearchBar" >
-						{	this.logBtn()	} 
 						<input 
 							placeholder="Search" 
 							type="text" 
@@ -133,37 +131,12 @@ class App extends React.Component {
 							onKeyUp={(e) => e.keyCode === 13 ? this.searchClick() : null }
 							onChange={(e) => this.setState({searchText: e.target.value})}
 							/>
-							<Link to='/search-page'>
-								<button className='searchBtn' type="submit" onClick={(e) => this.searchClick()} >
-									<img id="searchIcon" src={search_icon} alt='no-img' />
-								</button>
-							</Link>
-				 	</div>
-
-				 	
-
-
-
-				 	{/*					
-					 	<Link to="/" id="mast-media">
-							<img src={mastHead_media} alt='no-img' />
-						</Link>
-					*/}
-
-			{/*		<div className="mediaSearchBar">
-				 		<input 
-				 			placeholder="Search" 
-				 			type="text" 
-				 			name="input" 
-				 			value={this.searchText}
-							onChange={(e) => this.handleInput(e.target.value)}
-				 		/>
-					 	<Link to="/search-page" >
-							<button className='searchBtn' type="submit" name="submit-search">
-								<img id="searchIcon-media" src={search_icon} alt='no-img' />
+						<Link to='/search-page'>
+							<button id='searchBtn' type="submit" onClick={(e) => this.searchClick()} >
+								<img id="searchIcon" src={search_icon} alt='no-img' />
 							</button>
 						</Link>
-			 		</div>*/}
+				 	</div>
 
 				</div>
 

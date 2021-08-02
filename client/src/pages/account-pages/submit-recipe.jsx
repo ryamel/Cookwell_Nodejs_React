@@ -13,6 +13,7 @@ import Methods from '../../components/method';
 import Notes from '../../components/notes';
 import PhotoShow from '../../components/photoShow';
 import DeleteRecipe from '../../components/deleteRecipe';
+import Footer from '../../components/footer';
 let source;
 
 
@@ -459,6 +460,7 @@ class submitRecipe extends React.Component {
 
 						</div>
 					</div>
+	{/*				<Footer isLoaded={true} />*/}
 				</React.Fragment>
 			);
 		}

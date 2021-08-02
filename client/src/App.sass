@@ -1,5 +1,12 @@
 @import './_App.sass'
 
+
+
+// SEACH BAR
+$searchbar-border-radius: 2px
+$searchBarHeight: 35px
+$searchBarWidth: 400px
+
 .stickyHeader
 	position: -webkit-sticky
 	position: sticky
@@ -11,8 +18,8 @@
 	padding: 28px 30px 0 20px
 	img
 		height: 25px
-	@include midBreakHeader
-		display: none
+	// @include midBreakHeader
+	// 	display: none
 #mast-media
 	display: none
 	position: absolute
@@ -20,31 +27,31 @@
 	left: 20px
 	img
 		height: 25px
-	@include midBreakHeader
-		display: block
-	@include lowBreakHeader
-		display: none
+	// @include midBreakHeader
+	// 	display: block
+	// @include lowBreakHeader
+	// 	display: none
 
 .textStyle
 	font-size: 0.8em
 
 #loginBtn
 	position: absolute
-	top: -19px
-	right: 0px
+	top: 2px
+	right: 20px
 	color: rgba(10,10,10, 0.5)
 	cursor: pointer
 	&:hover
 		color: black
-	@include midBreakHeader
-		position: absolute
-		right: 20px
-	@include lowBreakHeader
-		display: none
+	// @include midBreakHeader
+	// 	position: absolute
+	// 	right: 20px
+	// @include lowBreakHeader
+	// 	display: none
 	span
 		font-size: 0.7em
-		@include midBreakHeader
-			display: none
+		// @include midBreakHeader
+		// 	display: none
 	a, button
 		margin: 3px 0 0 5px
 		background-color: white
@@ -62,11 +69,17 @@
 	background-color: white
 	border-bottom: 1px solid $std-container-borderColour
 	height: $header-height
+	@include firstBreakHeader
+		margin-bottom: 35px
 	
 
-#navWrap
+#navDiv
 	display: inline-block
 	width: 240px // gives spacing to prevent searchBar overlap
+	position: absolute
+	top: 40px
+	left: 230px
+
 
 .underLine
 	border-bottom: 2px solid rgb(141,211,95)
@@ -99,11 +112,16 @@
 	border: 1px solid lightgrey
 	border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius
 	height: $searchBarHeight
-	position: relative
+	position: absolute
 	top: 23px
-	right: 30px
+	right: 20px
 	@include firstBreakHeader
-		display: none
+		width: 100vw
+		position: absolute
+		top: 80px
+		right: 0px
+		border: none
+		border-bottom: 1px solid $std-container-borderColour
 	input
 		padding: 0 0 0 12px
 		height: $searchBarHeight - 2px
@@ -118,13 +136,25 @@
 			padding-left: 3px
 			font-family: 'Lato', sans-serif
 			font-weight: 300
-	button
+		@include firstBreakHeader
+			width: 100vw
+	#searchBtn		
 		border-radius: none
 		border: none
 		height: $searchBarHeight - 2px
 		width: 35px
 		background-color: white
 		float: right
+		&:hover
+			cursor: pointer
+		@include firstBreakHeader
+			position: absolute
+			top: 0px
+			right: 0px
+			float: none
+
+
+
 
 // #navBar-container
 // 	padding-top: 32px
@@ -176,60 +206,57 @@ li:nth-child(2) a
 	height: 25px
 	padding-top: 4px
 
-.mediaSearchBar
-	width: 100vw
-	height: $searchBarHeight + 5px
-	border-bottom: 1px solid lightgrey
-	border-top: 1px solid lightgrey
-	border-radius: 0
-	margin: 0
-	padding: 0
-	display: none
-	position: relative
-	top: -1px
-	@include firstBreakHeader
-		display: block
-		width: 100vw
-		height: $searchBarHeight + 5px
-		background-color: white
-	input
-		height: $searchBarHeight - 2px
-		width: calc(100% - 55px)
-		margin: 0
-		padding: 0
-		border: none
-		border-radius: 0
-		&::placeholder
-			color: grey
-			font-size: 1.1em
-			letter-spacing: 0.03em
-			padding-left: 2px
-			font-family: 'Lato', sans-serif
-			font-weight: 300
-	input[type='text']
-		position: relative
-		left: 50px
-		top: 3px
-	button
-		border-radius: none
-		border: none
-		height: $searchBarHeight - 2px
-		width: 35px
-		background-color: white
-		float: left
-		position: absolute
-		z-index: 10
-		left: 10px
-		&:hover
-			cursor: pointer
-		.fa.fa-search
-			font-size: 16px
-			padding-top: 7px
+// .mediaSearchBar
+// 	width: 100vw
+// 	height: $searchBarHeight + 5px
+// 	border-bottom: 1px solid lightgrey
+// 	border-top: 1px solid lightgrey
+// 	border-radius: 0
+// 	margin: 0
+// 	padding: 0
+// 	display: none
+// 	position: relative
+// 	top: -1px
+// 	@include firstBreakHeader
+// 		display: block
+// 		width: 100vw
+// 		height: $searchBarHeight + 5px
+// 		background-color: white
+// 	input
+// 		height: $searchBarHeight - 2px
+// 		width: calc(100% - 55px)
+// 		margin: 0
+// 		padding: 0
+// 		border: none
+// 		border-radius: 0
+// 		&::placeholder
+// 			color: grey
+// 			font-size: 1.1em
+// 			letter-spacing: 0.03em
+// 			padding-left: 2px
+// 			font-family: 'Lato', sans-serif
+// 			font-weight: 300
+// 	input[type='text']
+// 		position: relative
+// 		left: 50px
+// 		top: 3px
+// 	button
+// 		border-radius: none
+// 		border: none
+// 		height: $searchBarHeight - 2px
+// 		width: 35px
+// 		background-color: white
+// 		float: left
+// 		position: absolute
+// 		z-index: 10
+// 		left: 10px
+// 		&:hover
+// 			cursor: pointer
+// 		.fa.fa-search
+// 			font-size: 16px
+// 			padding-top: 7px
 
 
-.searchBtn
-	&:hover
-		cursor: pointer
 
 
 

@@ -25,10 +25,6 @@ $std-container-border-radius: 15px
 $std-container-borderColour: rgb(226,230,233)
 $std-pageMinHeight: 650px
 
-// SEACH BAR
-$searchbar-border-radius: 2px
-$searchBarHeight: 35px
-$searchBarWidth: 500px
 
 $header-height: 80px
 
@@ -46,53 +42,53 @@ $left-ban-padding: 20px
 
 
 @mixin firstBreakHeader
-	@media (max-width: 1000px)
+	@media (max-width: 950px)
 		@content
 
-@mixin midBreakHeader
-	@media (max-width: 672px)
-		@content
+// @mixin midBreakHeader
+// 	@media (max-width: 672px)
+// 		@content
 
-@mixin lowBreakHeader
-	@media (max-width: 400px)
-		@content
+// @mixin lowBreakHeader
+// 	@media (max-width: 400px)
+// 		@content
 
-@mixin accountFirstBreak
-	@media (max-width: 1120px)
-		@content
+// @mixin accountFirstBreak
+// 	@media (max-width: 1120px)
+// 		@content
 
-@mixin accountSecondBreak
-	@media (max-width: 720px)
-		@content
+// @mixin accountSecondBreak
+// 	@media (max-width: 720px)
+// 		@content
 
 
-@mixin recipesSingleCardBreak
-	@media (max-width: 520px)
-		@content
+// @mixin recipesSingleCardBreak
+// 	@media (max-width: 520px)
+// 		@content
 
-@mixin resultsBodyBreak
-	@media (max-width: 475px)
+@mixin myAccountFirstBreak
+	@media (max-width: 1110px)
 		@content
 
 @mixin recipePageFirstBreak
-	@media (max-width: 930px)
+	@media (max-width: 820px)
 		@content
 
-@mixin recipePageSecondBreak
-	@media (max-width: 500px)
+@mixin authPageFirstBreak
+	@media (max-width: 540px)
 		@content
 
-@mixin uprofileSinglCardBreak
-	@media (max-width: 579px)
+@mixin featureFirstBreak
+	@media (max-width: 810px)
 		@content
 
-@mixin indexSingleCardBreak
-	@media (max-width: 539px)
-		@content
+// @mixin indexSingleCardBreak
+// 	@media (max-width: 539px)
+// 		@content
 
-@mixin filterSearchBox
-	@media (max-width: 650px)
-		@content
+// @mixin filterSearchBox
+// 	@media (max-width: 650px)
+// 		@content
 
 
 *
@@ -201,7 +197,7 @@ a
 
 // used to set min height of main body div, sets position of footer
 .minBodyHeight
-	min-height: 700px
+	min-height: 650px
 
 
 .AtagBtn

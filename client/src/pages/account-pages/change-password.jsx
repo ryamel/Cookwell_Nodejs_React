@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import './change-password.sass';
 import axios from 'axios';
+import Footer from '../../components/footer';
 let source;
 
 class changePassword extends Component {
@@ -114,6 +115,7 @@ class changePassword extends Component {
 					
 					</div>
 				</div>
+			{/*	<Footer isLoaded={true} />*/}
 			</React.Fragment>
 		);
 	}

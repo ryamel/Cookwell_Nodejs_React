@@ -68,7 +68,7 @@ class Recipepage extends Component {
 			return null;
 		} else {
 			return(
-				<div className="recipe-page-container">
+				<div id="recipe-page-container">
 					<div id="recipe-content-banner">
 
 						<div id="rec-container-1">

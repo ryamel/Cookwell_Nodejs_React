@@ -6,7 +6,7 @@
 $indexGrid-titleHeight: 40px
 
 .index-grid
-	width: 100%
+	width: 100vw
 	display: grid
 	height: $card-height + 50px
 	grid-template-columns: repeat(auto-fill, $card-width)
@@ -14,24 +14,52 @@ $indexGrid-titleHeight: 40px
 	grid-gap: 20px
 	justify-content: center
 	padding: $indexGrid-titleHeight 10px 0 10px
+	white-space: nowrap
 	overflow: hidden
-	@include indexSingleCardBreak
-		height: $card-height + 5px
-		width: 100vw
-		padding: 0 0 0 35px 
-		margin: 0 auto 
+	@include featureFirstBreak
 		display: block
-		white-space: nowrap
-		overflow: scroll
-		&::-webkit-scrollbar /* Chrome Safari Opera */
-			display: none
-		&
-			-ms-overflow-style: none /* IE EDGE Firefox */
-			scrollbar-width: none /* Firefox */
-		.browse-card
-			margin-right: 20px
+		overflow-x: scroll
+
+.browse-card
+	&:not(:last-of-type)
+		margin-right: 20px
+
+// Hide scrollbar for Chrome, Safari and Opera 
+.index-grid::-webkit-scrollbar 
+	display: none
+
+// Hide scrollbar for IE, Edge and Firefox 
+.index-grid 
+	-ms-overflow-style: none /* IE and Edge */
+	scrollbar-width: none  /* Firefox */
 
 
+	// 	height: $card-height + 5px
+	// 	width: 100vw
+	// 	padding: 0 0 0 35px 
+	// 	margin: 0 auto 
+	// 	display: block
+	// 	white-space: nowrap
+	// 	overflow: scroll
+	// 	&::-webkit-scrollbar /* Chrome Safari Opera */
+	// 		display: none
+	// 	&
+	// 		-ms-overflow-style: none /* IE EDGE Firefox */
+	// 		scrollbar-width: none /* Firefox */
+	// 	.browse-card
+	// 		margin-right: 20px
+
+// .index-grid
+// 	width: 90vw
+// 	height: $card-height + 50px
+// 	overflow-x: scroll
+// 	white-space: nowrap
+
+// .browse-card
+// 	width: $card-width
+// 	height $card-height
+// 	&:not(:last-of-type)
+// 		margin-right: 20px
 
 .feature-titles
 	position: absolute
@@ -45,24 +73,24 @@ $indexGrid-titleHeight: 40px
 	color: black
 	letter-spacing: 0.04em
 	font-family: 'Montserrat', sans-serif;
-	@include indexSingleCardBreak
-		display: none
+	// @include indexSingleCardBreak
+	// 	display: none
 
 
-.mediaTitle
-	display: none
-	font-weight: 700
-	height: 25px
-	font-size: 5vw
-	color: black
-	font-family: 'Lato', sans-serif
-	position: relative
-	top: 5px
-	left: 35px
-	@include indexSingleCardBreak
-		display: block
-		white-space: nowrap
-		margin-bottom: 3vw
+// .mediaTitle
+// 	display: none
+// 	font-weight: 700
+// 	height: 25px
+// 	font-size: 5vw
+// 	color: black
+// 	font-family: 'Lato', sans-serif
+// 	position: relative
+// 	top: 5px
+// 	left: 35px
+	// @include indexSingleCardBreak
+	// 	display: block
+	// 	white-space: nowrap
+	// 	margin-bottom: 3vw
 
 
 

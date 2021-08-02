@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import './my-profile.sass';
-// import photoIcon from '../../media/icons/photo45.png';
+import Footer from '../../components/footer';
 import PhotoShow from '../../components/photoShow';
 import axios from 'axios';
 let source;
@@ -213,6 +213,7 @@ class MyProfile extends Component {
 
 					</div>
 				</div>
+{/*				<Footer isLoaded={true} />*/}
 			</React.Fragment>
 		);		
 	}

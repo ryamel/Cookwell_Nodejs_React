@@ -11,10 +11,12 @@ $accountForm-width: 700px
 
 .account_sideMenu_container
 	display: table
-	margin: 10px auto
-	min-height: $std-pageMinHeight
+	margin: 10px auto 0px
 	width: fit-content
 	padding-right: $sideMenu-width
+	position: relative
+	@include myAccountFirstBreak
+		position: absolute
 	#newUserAccountMsg
 		width: 700px
 		white-space: normal
@@ -25,17 +27,17 @@ $accountForm-width: 700px
 		border-radius: 5px
 		font-size: 0.9em
 		text-align: center
-	@include accountSecondBreak
-		width: 100vw
-		border-left: none
-		border-right: none
+	// @include accountSecondBreak
+	// 	width: 100vw
+	// 	border-left: none
+	// 	border-right: none
 	.accountContent
 		display: inline-block
 		vertical-align: top
 		width: $accountForm-width
 		white-space: normal
-		@include accountSecondBreak
-			width: 100%
+		@include myAccountFirstBreak
+			position: absolute
 		#cardContainer
 			width: 700px
 			display: grid
@@ -44,8 +46,8 @@ $accountForm-width: 700px
 			grid-auto-rows: 290px
 			justify-content: left
 			grid-gap: 5px
-			@include accountSecondBreak
-				justify-content: center
+			// @include accountSecondBreak
+			// 	justify-content: center
 			.browse-card
 				height: 290px
 				width: 230px
@@ -79,8 +81,6 @@ $accountForm-width: 700px
 	margin: 0 10px 0 0
 	background-color: white
 	font-family: 'Lato', sans-serif
-	@include accountFirstBreak
-		display: none
 	.sideMenuOption
 		height: 55px
 		padding: 17px 0 0 20px

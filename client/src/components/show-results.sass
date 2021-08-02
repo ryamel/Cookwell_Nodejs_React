@@ -1,0 +1,83 @@
+
+
+#results-body
+	width: 650px
+	margin: 10px auto
+	min-height: 50px
+	// @include midBreakHeader
+	// 	width: 100vw
+	// 	border-radius: 0
+	// 	border: none
+	// 	border-bottom: 1px solid rgb(211,211,211)
+	// 	margin: 0
+	// 	padding: 20px
+	.result-container
+		display: flex
+		width: 655px
+		height: 200px
+		margin: 15px 0
+		background-color: white
+		border-radius: 5px
+		border: 1px solid rgb(226,230,233)
+		// @include resultsBodyBreak
+		// 	display: block
+		// 	height: auto
+		// 	margin-top: 0
+		.img-container
+			display: inline-block
+			width: 220px
+			height: 198px
+			border-radius: 5px 0 0 5px
+			img
+				object-fit: cover
+				height: 100%
+				width: 100%
+				border-radius: 5px 0 0 5px
+			// @include resultsBodyBreak
+			// 	height: 350px
+			// 	min-width: unset
+			// 	width: 100%
+		.resultInfo-container
+			display: inline-block
+			height: 200px
+			width: 435px
+			padding: 0 20px
+			position: relative
+			font-family: 'Lato', sans-serif 
+			// @include resultsBodyBreak
+			// 	height: 150px
+			// 	margin: 0
+			// 	padding: 5px 15px
+			// 	height: 180px
+			h4
+				font-family: 'Lato', sans-serif 
+				font-weight: 400
+				line-height: 1.1em
+				margin-bottom: 5px
+				max-height: 45px
+				overflow: hidden
+			.description	
+				font-size: 0.8em
+				font-weight: 300
+				line-height: 1.2em
+				max-height: 95px
+				overflow: hidden
+				// @include resultsBodyBreak
+				// 	max-height: 60px
+			.search-sym
+				height: 25px
+				margin-right: 3px
+			.sym-container
+				position: absolute
+				left: 0
+				bottom: 5px
+				// @include resultsBodyBreak
+				// 	left: 15px
+			.cooktime
+				font-weight: 300
+				font-size: 0.9em
+				position: absolute
+				right: 25px
+				bottom: 15px
+				// @include resultsBodyBreak
+				// 	right: 15px

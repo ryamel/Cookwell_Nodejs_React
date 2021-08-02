@@ -75,7 +75,6 @@ class accountRecipes extends React.Component {
 				</div>
 			);
 		} else {
-			console.log(this.state.recipes);
 			return (
 				<React.Fragment>
 					{/*{ this.handleMsg(this.state.msg) }*/}
@@ -96,6 +95,7 @@ class accountRecipes extends React.Component {
 							}
 						</div>
 					</div>
+					{/*<Footer isLoaded={this.state.isLoaded} />*/}
 				</React.Fragment>
 			);
 		}

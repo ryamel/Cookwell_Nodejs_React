@@ -13,6 +13,7 @@ const AuthorPage = (props) => {
 	const [loadFooter, setLoadFooter] = useState(false);
 	
 	useEffect(() => {
+		document.body.style.backgroundColor = "white";
 		let source = axios.CancelToken.source();
 		const body = {authid: props.location.state.authid};
 

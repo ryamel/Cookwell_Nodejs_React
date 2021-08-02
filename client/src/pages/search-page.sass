@@ -1,5 +1,9 @@
 @import '../_App.sass'
 
+$searchbar-border-radius: 2px
+$searchBarHeight: 35px
+$searchBarWidth: 500px
+
 .resultLink
 	color: inherit
 
@@ -34,20 +38,16 @@
 	border: 1px solid $std-container-borderColour
 	border-radius: 5px
 	width: 655px
-	@include midBreakHeader
-		width: 100vw
-		border-radius: 0
-		border: none
-		border-bottom: 1px solid lightgrey
-		margin-top: 0
+	@include firstBreakHeader
+		margin-top: 45px
 	#searchBar-filterContainer
 		margin: 0 0 15px 0
 		width: 100%
 		height: $searchBarHeight
 		border: 1px solid lightgrey
 		border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius
-		@include firstBreakHeader
-			display: none
+		// @include firstBreakHeader
+		// 	display: none
 		input
 			padding: 0 0 0 12px
 			height: $searchBarHeight - 2px
@@ -82,8 +82,8 @@
 		width: 100%
 		height: $searchBarHeight
 		border-radius: $searchbar-border-radius
-		@include firstBreakHeader
-			display: none
+		// @include firstBreakHeader
+		// 	display: none
 		input
 			padding: 0 0 0 12px
 			height: $searchBarHeight - 2px
@@ -118,97 +118,15 @@
 	display: inline-block
 	height: 135px
 	margin: 0 0 10px 15px
-	@include filterSearchBox
-		display: block
-		height: 55px
+	// @include filterSearchBox
+	// 	display: block
+	// 	height: 55px
 	input
 		width: unset
 		height: unset
 		border: 1px solid rgb(213, 213, 213)
 
 
-
-#results-body
-	width: 650px
-	margin: 10px auto
-	min-height: 50px
-	@include midBreakHeader
-		width: 100vw
-		border-radius: 0
-		border: none
-		border-bottom: 1px solid rgb(211,211,211)
-		margin: 0
-		padding: 20px
-	.result-container
-		display: flex
-		width: 655px
-		height: 200px
-		margin: 15px 0
-		background-color: white
-		border-radius: 5px
-		border: 1px solid rgb(226,230,233)
-		@include resultsBodyBreak
-			display: block
-			height: auto
-			margin-top: 0
-		.img-container
-			display: inline-block
-			width: 220px
-			height: 198px
-			border-radius: 5px 0 0 5px
-			img
-				object-fit: cover
-				height: 100%
-				width: 100%
-				border-radius: 5px 0 0 5px
-			@include resultsBodyBreak
-				height: 350px
-				min-width: unset
-				width: 100%
-		.resultInfo-container
-			display: inline-block
-			height: 200px
-			width: 435px
-			padding: 0 20px
-			position: relative
-			font-family: 'Lato', sans-serif 
-			@include resultsBodyBreak
-				height: 150px
-				margin: 0
-				padding: 5px 15px
-				height: 180px
-			h4
-				font-family: 'Lato', sans-serif 
-				font-weight: 400
-				line-height: 1.1em
-				margin-bottom: 5px
-				max-height: 45px
-				overflow: hidden
-			.description	
-				font-size: 0.8em
-				font-weight: 300
-				line-height: 1.2em
-				max-height: 95px
-				overflow: hidden
-				@include resultsBodyBreak
-					max-height: 60px
-			.search-sym
-				height: 25px
-				margin-right: 3px
-			.sym-container
-				position: absolute
-				left: 0
-				bottom: 5px
-				@include resultsBodyBreak
-					left: 15px
-			.cooktime
-				font-weight: 300
-				font-size: 0.9em
-				position: absolute
-				right: 25px
-				bottom: 15px
-				@include resultsBodyBreak
-					right: 15px
 
 
 .index-sym
@@ -221,29 +139,6 @@
 	display: block
 	font-size: 12px
 	margin-bottom: 10px
-
-
-#filterSearchBar-container
-	display: flex
-	margin-top: 10px
-	input
-		border-top: 1px solid black
-		border-left: 1px solid black
-		border-bottom: 1px solid black
-		border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius
-	form
-		padding-left: 15px
-	.fa.fa-search
-		padding: 5px 6px 0 0
-		position: relative
-		top: -1px
-		text-decoration: none
-		border-radius: 0 $searchbar-border-radius $searchbar-border-radius 0
-		border-top: 1px solid black
-		border-right: 1px solid black
-		border-bottom: 1px solid black
-		height: 26px
-
 
 
 /*checkbox*/
@@ -301,75 +196,24 @@
 	-ms-transform: rotate(45deg)
 	transform: rotate(45deg)
 
-// rest is loader icon
-$bg-color: #fff
-$basic-dark-color: #212121
-$border-width: 2px /* width of spinners border */
-$basic-spinner-dimensions: 30px /* width and height of spinner */
-$main-spinner-dimensions: ($basic-spinner-dimensions - $border-width * 2) /* width and height of bigger circle*/
-$small-spinner-dimensions: $main-spinner-dimensions * 0.6 /*  width and height of smaller circle*/
 
-
-#modal
-	display: none
-	position: fixed
-	z-index: 1000
-	bottom: 0
-	left: 50%
-	transform: translate(-50%, 0%)
-	height: 40px
-	width: 40px
-
-#modal.loading
-	display: block
-
-/* spinner style */
-.spinner
-	position: relative
-	width: $basic-spinner-dimensions
-	height: $basic-spinner-dimensions
-	&:before,
-	&:after
-		content: ""
-		display: block
-		position: absolute
-		bottom: 0
-		left: 0
-		border-width: $border-width
-		border-style: solid
-		border-radius: 50%
-
-
-/* spinner styles */
-.spinner.spinner-1
-	@keyframes rotate-animation
-		0%
-			transform: rotate(0deg)
-		100%
-			transform: rotate(360deg)
-	@keyframes anti-rotate-animation
-		0%
-			transform: rotate(0deg)
-		100%
-			transform: rotate(-360deg)
-	&:before
-		width: $main-spinner-dimensions
-		height: $main-spinner-dimensions
-		border-bottom-color: $basic-dark-color
-		border-right-color: $basic-dark-color
-		border-top-color: rgba($basic-dark-color, 0)
-		border-left-color: rgba($basic-dark-color, 0)
-		bottom: 4px
-		left: 0
-		animation: rotate-animation 0.5s linear 0s infinite
-	&:after
-		width: $small-spinner-dimensions
-		height: $small-spinner-dimensions
-		border-bottom-color: $basic-dark-color
-		border-right-color: $basic-dark-color
-		border-top-color: rgba($basic-dark-color, 0)
-		border-left-color: rgba($basic-dark-color, 0)
-		top: ($main-spinner-dimensions - $small-spinner-dimensions) / 2
-		left: ($main-spinner-dimensions - $small-spinner-dimensions) / 2
-		animation: anti-rotate-animation 0.35s linear 0s infinite
-
+// #filterSearchBar-container
+// 	display: flex
+// 	margin-top: 10px
+// 	input
+// 		border-top: 1px solid black
+// 		border-left: 1px solid black
+// 		border-bottom: 1px solid black
+// 		border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius
+// 	form
+// 		padding-left: 15px
+// 	.fa.fa-search
+// 		padding: 5px 6px 0 0
+// 		position: relative
+// 		top: -1px
+// 		text-decoration: none
+// 		border-radius: 0 $searchbar-border-radius $searchbar-border-radius 0
+// 		border-top: 1px solid black
+// 		border-right: 1px solid black
+// 		border-bottom: 1px solid black
+// 		height: 26px
