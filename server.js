@@ -41,7 +41,7 @@ const db = mongoose.connect(process.env.DB_connection, {
 // load production middleware
  // require('./middleware/prod')(app); 
 
-// Serve the static files from the React app
+// Have Nodejs serve the static files from the React app (needed for production build)
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 
