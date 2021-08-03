@@ -2,7 +2,6 @@
 # folders
 node_modules/
 client/node_modules/
-client/public/diet/*
 client/public/user_recipes_img/*
 client/public/user_profile_img/*
 client/src/media/*
@@ -11,7 +10,6 @@ format_control/
 old_serverFiles/
 
 # keeps an empty file
-!client/public/diet/.gitkeep
 !client/public/user_recipes_img/.gitkeep 
 !client/public/user_profile_img/.gitkeep
 !client/src/media/.gitkeep
