@@ -8,7 +8,7 @@ function verifyToken(req, res, next) {
 		const token = req.cookies['jwt'];
 		if (!token) return res.status(401).send('Access denied. No valid token provided.');
 
-		req.tokenData = jwt.verify(token, config.get('jwtPrivateKey')); // returns payload. Because we pass this to the next end point or route. We modify the request object to append data for the next route
+		req.tokenData = jwt.verify(token, process.env.private_key); // returns payload. Because we pass this to the next end point or route. We modify the request object to append data for the next route
 		next();
 	}
 	catch (error) {

@@ -1,7 +1,7 @@
 {
   "name": "reactexpress",
   "version": "1.0.0",
-  "description": "Starter kit for creating React and Express apps",
+  "description": "Cookwell",
   "main": "server.js",
   "scripts": {
     "client-install": "cd client && npm install",
@@ -50,14 +50,5 @@
     "sanitize-filename": "^1.6.3",
     "sharp": "^0.28.3",
     "valid-url": "^1.0.9"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bradtraversy/react_express_starter.git"
-  },
-  "keywords": [],
-  "bugs": {
-    "url": "https://github.com/bradtraversy/react_express_starter/issues"
-  },
-  "homepage": "https://github.com/bradtraversy/react_express_starter#readme"
+  }
 }
