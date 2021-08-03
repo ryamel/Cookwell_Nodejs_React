@@ -6,6 +6,9 @@ const mongo = require('mongodb');
 const assert = require('assert');
 const cors = require('cors'); 
 
+
+
+
 // mongoose, plus depreciated settings to remove error msg's
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -36,7 +39,8 @@ const db = mongoose.connect(process.env.DB_connection, {
 
 
 
-
+// load production middleware
+require('./middleware/prod')(app); 
 
 
 

@@ -23,7 +23,6 @@ import './App.sass';
 import mastHead from './media/brand/cookwell.png';
 import mastHead_media from './media/brand/masthead_small.png';
 import search_icon from './media/icons/search_icon.svg';
-import login_icon from './media/icons/login.svg';
 
 
 
