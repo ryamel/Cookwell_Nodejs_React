@@ -5,6 +5,7 @@ const app = express();
 const mongo = require('mongodb');
 const assert = require('assert');
 const cors = require('cors'); 
+const path = require('path');
 
 
 
@@ -34,13 +35,14 @@ const db = mongoose.connect(process.env.DB_connection, {
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 }, () => {
-	console.log('connected to mongooseDB');
+	console.log('Server connected to mongoDB Atlas');
 });
 
-
-
 // load production middleware
-require('./middleware/prod')(app); 
+ // require('./middleware/prod')(app); 
+
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 
 
@@ -64,11 +66,19 @@ app.use('/api/mail', mail);
 
 
 
+// Handles any requests that don't match the ones above
+// app.get('*', (req,res) => {
+//     res.sendFile(path.join(__dirname + '/client/build/index.html'));
+// });
+
+
 
 
 // const port = process.env.PORT || 5000; // 5000
-const port = 8080; 
-app.listen(port, () => `Server running on port ${port}`);
+const port = 4000; 
+// const host = '0.0.0.0'; 
+// app.listen(port, host, () => `Server running on port ${port}`);
+app.listen(port, () => console.log(`Server running on port ${port}`));
 
 
 
