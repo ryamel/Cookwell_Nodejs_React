@@ -73,8 +73,7 @@ app.use('/api/mail', mail);
 
 
 
-// const port = process.env.PORT || 5000; // 5000
-const port = 4000; 
+const port = process.env.PORT || 4000; 
 // const host = '0.0.0.0'; 
 // app.listen(port, host, () => `Server running on port ${port}`);
 app.listen(port, () => console.log(`Server running on port ${port}`));
