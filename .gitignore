@@ -1,15 +1,15 @@
 
 # folders
-client/public/user_recipes_img/*
-client/public/user_profile_img/*
-client/tmp_upload/*
+# client/public/user_recipes_img/*
+# client/public/user_profile_img/*
+# client/tmp_upload/*
 format_control/
 old_serverFiles/
 
 # keeps an empty file
-!client/public/user_recipes_img/.gitkeep 
-!client/public/user_profile_img/.gitkeep
-!client/tmp_upload/.gitkeep
+# !client/public/user_recipes_img/.gitkeep 
+# !client/public/user_profile_img/.gitkeep
+# !client/tmp_upload/.gitkeep
 
 
 # files anywhere
