@@ -20,7 +20,7 @@ old_serverFiles/
 /coverage
 
 # production
-/build
+#/build
 
 # misc
 .DS_Store
