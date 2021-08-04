@@ -12,7 +12,7 @@ old_serverFiles/
 # !client/tmp_upload/.gitkeep
 
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.js
 
