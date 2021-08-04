@@ -11,12 +11,27 @@ old_serverFiles/
 # !client/public/user_profile_img/.gitkeep
 # !client/tmp_upload/.gitkeep
 
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# files anywhere
+# testing
+/coverage
+
+# production
+/build
+
+# misc
 .DS_Store
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
 .env
 README.md
 setupTests.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
