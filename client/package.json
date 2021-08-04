@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "axios": "^0.21.1",
-    "browserslist": "^4.16.6",
+    "browserslist": "^4.16.7",
     "jquery": "^3.6.0",
     "js-cookie": "^2.2.1",
-    "node-sass": "^6.0.0",
-    "postcss": "^8.3.0",
+    "node-sass": "^6.0.1",
+    "postcss": "^8.3.6",
     "react": "^16.2.0",
     "react-dom": "^16.14.0",
     "react-onclickoutside": "^6.11.2",
@@ -35,6 +35,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.14.3"
+    "@babel/core": "^7.15.0"
   }
 }
