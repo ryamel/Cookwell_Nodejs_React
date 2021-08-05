@@ -12,7 +12,9 @@
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "devDependencies": {
-    "nodemon": "^1.14.6"
+    "@babel/core": "^7.15.0",
+    "nodemon": "^1.14.6",
+    "webpack": "^5.48.0"
   },
   "dependencies": {
     "axios": "^0.21.1",
