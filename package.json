@@ -13,8 +13,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
-    "nodemon": "^1.14.6",
-    "webpack": "^5.48.0"
+    "nodemon": "^1.14.6"
   },
   "dependencies": {
     "axios": "^0.21.1",
