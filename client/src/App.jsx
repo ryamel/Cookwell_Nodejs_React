@@ -138,8 +138,6 @@ class App extends React.Component {
 
 				</div>
 
-
-				{/*All pages to be used need to be listed under <Switch> as seen here. Import each page as a component and place under a <Route> tag */}
 				<Switch>
 					<Route exact path="/"> 				<Featured /> 											</Route>
 					<Route exact path="/recipes"> 		<Recipes /> 											</Route>
