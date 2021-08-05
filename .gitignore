@@ -1,21 +1,21 @@
 
 # folders
-client/public/user_recipes_img/card*
-client/public/user_recipes_img/display*
-client/public/user_recipes_img/original*
-client/public/user_profile_img/card*
-client/public/user_profile_img/thumb*
-client/public/user_profile_img/original*
-client/tmp_upload/*
+#client/public/user_recipes_img/card/*
+#client/public/user_recipes_img/display/*
+#client/public/user_recipes_img/original/*
+#client/public/user_profile_img/card/*
+#client/public/user_profile_img/thumb/*
+#client/public/user_profile_img/original/*
+#client/tmp_upload/*
 
 # keeps an empty file
-!client/public/user_recipes_img/card/.gitkeep*
-!client/public/user_recipes_img/display/.gitkeep*
-!client/public/user_recipes_img/original/.gitkeep*
-!client/public/user_profile_img/card/.gitkeep*
-!client/public/user_profile_img/thumb/.gitkeep*
-!client/public/user_profile_img/original/.gitkeep*
-!client/tmp_upload/.gitkeep
+#!client/public/user_recipes_img/card/.gitkeep*
+#!client/public/user_recipes_img/display/.gitkeep*
+#!client/public/user_recipes_img/original/.gitkeep*
+#!client/public/user_profile_img/card/.gitkeep*
+#!client/public/user_profile_img/thumb/.gitkeep*
+#!client/public/user_profile_img/original/.gitkeep*
+#!client/tmp_upload/.gitkeep
 
 # other folders
 /format_control
