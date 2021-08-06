@@ -41,14 +41,16 @@ const db = mongoose.connect(process.env.DB_connection, {
 // load production middleware
  // require('./middleware/prod')(app); 
 
-//if (process.env.NODE_ENV === 'production') {
-// Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
-app.use(express.static('client/build'));
-// A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
-app.get('/*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client','build','index.html'));
-});
-//}
+
+if (process.env.NODE_ENV === 'production') {
+	console.log(process.env.NODE_ENV);
+	// Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
+	app.use(express.static('client/build'));
+	// A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
+	app.get('/*', (req, res) => {
+	    res.sendFile(path.resolve(__dirname,'client','build','index.html'));
+	});
+}
 
 
 
