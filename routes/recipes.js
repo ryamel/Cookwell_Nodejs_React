@@ -188,7 +188,7 @@ router.get('/getrecent/', async (req, res) => {
 
 
 
-router.get('/getfeatured/', async (req, res) => {
+router.get('/getfeatured', async (req, res) => {
     console.log('getfeatured');
     try {
         // use ref and populate to link author data to recipe doc. This will prevent haveing to perform additional queries
@@ -204,7 +204,7 @@ router.get('/getfeatured/', async (req, res) => {
             recipes[index].authid._id = encrypt(recipe.authid._id.toString());
         })
         console.log(recipes);
-        return res.status(200).json(recipes);
+        return res.status(200).send(); //json(recipes);
     }
     catch (err) {
         console.log(err);
