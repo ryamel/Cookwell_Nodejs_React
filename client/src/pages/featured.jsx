@@ -27,7 +27,7 @@ class Featured extends Component {
 		axios.get("/api/recipes/getfeatured/", {cancelToken: source.token}, {'Content-Type': 'application/json'})
 			.then(res => {
 				//console.log('featured', res.data);
-				this.setState({featCardData: res.data}, console.log(this.state));
+				this.setState({featCardData: res.data});
 			})
 			.catch(err => console.log(err));
 	}
@@ -36,7 +36,7 @@ class Featured extends Component {
 		axios.get("/api/recipes/getrecent/", {cancelToken: source.token})
 			.then(res => {
 				//console.log('recent', res.data);
-				this.setState({latestCardData: res.data}, console.log(this.state));
+				this.setState({latestCardData: res.data});
 			})
 			.catch(err => console.log(err));
 	}
@@ -45,7 +45,7 @@ class Featured extends Component {
 		axios.get("/api/recipes/getrandom/", {cancelToken: source.token})
 			.then(res => {
 				//console.log('random', res.data);
-				this.setState({randomCardData: res.data}, console.log(this.state));
+				this.setState({randomCardData: res.data});
 			})
 			.catch(err => console.log(err));
 	}
@@ -53,7 +53,7 @@ class Featured extends Component {
 	componentDidMount() {
 		// no need to use relative file path for '/api/recipes' with fetch. Fetch will auto find server.js in root dir
 		Promise.all([this.getFeatured(), this.getLatest(), this.getMixItUp()])
-			.then(this.setState({loadFooter: true}, console.log(this.state)));
+			.then(this.setState({loadFooter: true}));
 	}
 
 	componentWillUnmount() {
@@ -67,10 +67,8 @@ class Featured extends Component {
 		if ( this.state.latestCardData.length < 1 || this.state.featCardData.length < 1 || this.state.randomCardData.length < 1 ) {
 			return null;
 		} else {
-			//const { featCardData, latestCardData, randomCardData } = this.state;
-			console.log(this.state.latestCardData.length);
-			console.log(this.state.featCardData.length);
-			console.log(this.state.randomCardData.length);
+			const { featCardData, latestCardData, randomCardData } = this.state;
+			console.log(featCardData, latestCardData, randomCardData);
 			return (
 				// index and firstCardHeader propeties are used to conditionally render the featured and latest headers inside the first BrowseCard component. 
 				// this is because the headers must be rendered inside the first BrowseCard components in order for the headers to have the same behaviour as the grid cards. Oulined by the css grid attributes.
@@ -78,7 +76,7 @@ class Featured extends Component {
 
 					<div className='index-grid'>
 						{
-							this.state.featCardData.map((cardData, index) => 
+							featCardData.map((cardData, index) => 
 								<BrowseCard 
 									key={index} 
 									img={cardData.img} 
@@ -96,7 +94,7 @@ class Featured extends Component {
 
 					<div className='index-grid'>
 						{
-							this.state.latestCardData.map((cardData, index) => 
+							latestCardData.map((cardData, index) => 
 								<BrowseCard 
 									key={index} 
 									img={cardData.img} 
@@ -114,7 +112,7 @@ class Featured extends Component {
 
 					<div className='index-grid'>
 						{
-							this.state.randomCardData.map((cardData, index) => 
+							randomCardData.map((cardData, index) => 
 								<BrowseCard 
 									key={index} 
 									img={cardData.img} 

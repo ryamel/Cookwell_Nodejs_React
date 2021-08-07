@@ -203,7 +203,6 @@ router.get('/getfeatured', async (req, res) => {
         recipes.forEach((recipe, index, recipes) => {
             recipes[index].authid._id = encrypt(recipe.authid._id.toString());
         })
-        console.log(recipes);
         return res.status(200).send(); //json(recipes);
     }
     catch (err) {
