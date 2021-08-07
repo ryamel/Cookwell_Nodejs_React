@@ -6,6 +6,7 @@ import Footer from '../components/footer';
 import axios from 'axios';
 let source;
 
+
 // featured titles need to be added inside the browseCard on the first of the line
 
 class Featured extends Component {

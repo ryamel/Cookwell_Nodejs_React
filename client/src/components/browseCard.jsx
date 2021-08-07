@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import './browseCard.sass';
 import { Link, useParams } from 'react-router-dom';
 
-//process.env.PUBLIC_URL works for folders in the public directory
+if (process.env.production == 1) {
+	const recipeDir = '/mnt/volume1/user_recipes_img/card/';
+} else {
+	const recipeDir = '/user_recipes_img/card/';
+}
+
 
 class BrowseCard extends Component {
 	constructor(props) {
@@ -64,7 +69,7 @@ class BrowseCard extends Component {
 				</Link>
 
 				<div className='browse-imgContainer'>
-					<img src={process.env.PUBLIC_URL + '/user_recipes_img/display/' + this.props.img} alt=' '/>
+					<img src={process.env.PUBLIC_URL + '/user_recipes_img/card/' + this.props.img} alt=' '/>
 				</div>
 
 				{ this.renderEditBtn() }

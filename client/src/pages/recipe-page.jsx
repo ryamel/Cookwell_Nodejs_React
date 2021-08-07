@@ -8,6 +8,12 @@ import Authcard from '../components/authcard';
 import Dietbanner from '../components/dietBanner';
 let source;
 
+// if (process.env.production == 1) {
+// 	const recipeDir = '/mnt/volume1/user_recipes_img/card/';
+// } else {
+// 	const recipeDir = '/user_recipes_img/card/';
+// }
+
 class Recipepage extends Component {
 	constructor() {
 		super();
@@ -74,7 +80,7 @@ class Recipepage extends Component {
 						<div id="rec-container-1">
 
 							<div id='recipe-img-container'>
-								<img src={process.env.PUBLIC_URL + '/user_recipes_img/display/' + this.state.result.img} />
+								<img src={process.env.PUBLIC_URL + '/user_recipes_img/card/' + this.state.result.img} />
 							</div>
 
 							<div id="rec-container-1-title">{this.state.result.title}</div>

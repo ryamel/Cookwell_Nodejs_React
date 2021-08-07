@@ -36,6 +36,7 @@
 /client/build
 
 # misc
+webServerHowToSetup.md
 .DS_Store
 .env.local
 .env.development.local

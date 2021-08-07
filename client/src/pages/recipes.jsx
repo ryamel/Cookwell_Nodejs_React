@@ -76,7 +76,7 @@ class Recipes extends Component {
 			return null;
 		} else {
 			const { cardData } = this.state;
-			console.log(cardData)
+			console.log(cardData);
 			return (
 				<div className='browse-body'>
 					<div className='recipe-grid-container' >
