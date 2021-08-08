@@ -25,7 +25,7 @@ class Featured extends Component {
 	}
 
 	getFeatured() {
-		axios.get("/api/recipes/getfeatured/", {cancelToken: source.token}, {'Content-Type': 'application/json'})
+		axios.get("/api/recipes/getfeatured/", {cancelToken: source.token})
 			.then(res => {
 				//console.log('featured', res.data);
 				this.setState({featCardData: res.data});
