@@ -21,6 +21,13 @@ const { featList } = require('../featuredRecipeList');
 // dont use - within route names. Causes incorret/partial route name matching.
 
 
+if (process.env.production == 1) {
+    const imgDir = "/mnt/volume1/";
+} else {
+    const imgDir = "/client/public/";
+}
+
+
 router.get('/page/:skip/:limit', async (req, res) => {
     console.log('recipePage');
 
@@ -291,9 +298,9 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
     catch (err) {
         console.log(err);
         try {
-            fs.unlinkSync("client/public/user_recipes_img/card/" + fileName);
-            fs.unlinkSync("client/public/user_recipes_img/display/" + fileName);
-            fs.unlinkSync("client/public/user_recipes_img/original/" + fileName);
+            fs.unlinkSync(imgDir + "user_recipes_img/card/" + fileName);
+            fs.unlinkSync(imgDir + "user_recipes_img/display/" + fileName);
+            fs.unlinkSync(imgDir + "user_recipes_img/original/" + fileName);
         } catch (err) { console.log(err) }
         return res.status(400).send('Server Error');
     }
@@ -344,9 +351,9 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
         // delete old img files (if req.files was uploaded)
         if (typeof req.file !== "undefined") {
             try {
-                fs.unlinkSync("client/public/user_recipes_img/card/" + oldRecipe.img);
-                fs.unlinkSync("client/public/user_recipes_img/display/" + oldRecipe.img);
-                fs.unlinkSync("client/public/user_recipes_img/original/" + oldRecipe.img);
+                fs.unlinkSync(imgDir + "user_recipes_img/card/" + oldRecipe.img);
+                fs.unlinkSync(imgDir + "user_recipes_img/display/" + oldRecipe.img);
+                fs.unlinkSync(imgDir + "user_recipes_img/original/" + oldRecipe.img);
             } catch (e) { console.log(e)}
         }
 
@@ -355,9 +362,9 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
     catch (err) {
         console.log(err);
         try {
-            fs.unlinkSync("client/public/user_recipes_img/card/" + fileName);
-            fs.unlinkSync("client/public/user_recipes_img/display/" + fileName);
-            fs.unlinkSync("client/public/user_recipes_img/original/" + fileName);
+            fs.unlinkSync(imgDir + "user_recipes_img/card/" + fileName);
+            fs.unlinkSync(imgDir + "user_recipes_img/display/" + fileName);
+            fs.unlinkSync(imgDir + "user_recipes_img/original/" + fileName);
         } catch (e) { console.log(e) }
 
         return res.status(500).send('Server Error');

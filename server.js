@@ -45,12 +45,13 @@ const db = mongoose.connect(process.env.DB_connection, {
 // app.use(bodyParser.json());
 
 
-// image assests available by url... https://dominaName.com/images.jpg
+// allow use of assests available by url... https://dominaName.com/images.jpg
 app.use(express.static('/mnt/volume1'));
 
 //Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
 app.use(express.static(path.join(__dirname,'client','build')));
 
+console.log(process.env);
 
 
 

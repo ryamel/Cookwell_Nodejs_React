@@ -1,12 +1,8 @@
 
 # folders
-#client/public/user_recipes_img/card/*
-#client/public/user_recipes_img/display/*
-#client/public/user_recipes_img/original/*
-#client/public/user_profile_img/card/*
-#client/public/user_profile_img/thumb/*
-#client/public/user_profile_img/original/*
-#client/tmp_upload/*
+client/tmp_upload
+client/public/user_recipes_img/
+client/public/user_profile_img/
 
 # keeps an empty file
 #!client/public/user_recipes_img/card/.gitkeep*
