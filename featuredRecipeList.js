@@ -2,7 +2,7 @@
 
 // edit this list of recipe id's to populate the featured section on the home page
 
-exports.featList = [
+const featList = [
 	'60f793c7d5cca10484326d6f',
 	'60f793c7d5cca10484326d70',
 	'60f793c7d5cca10484326d75',
@@ -14,3 +14,4 @@ exports.featList = [
 ];
 
 
+exports.featList = featList;
