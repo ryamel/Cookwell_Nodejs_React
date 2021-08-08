@@ -186,6 +186,7 @@ router.get('/getrecent/', async (req, res) => {
 router.get('/getfeatured', async (req, res) => {
     console.log('getfeatured');
     try {
+        console.log(featList);
         // use ref and populate to link author data to recipe doc. This will prevent haveing to perform additional queries
         var recipes = await Recipe.find({
             '_id': { $in: featList }
