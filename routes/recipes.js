@@ -5,14 +5,9 @@ const router = express.Router();
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
 const multer = require('multer');
-// const path = require('path');
 const fs = require('fs');
 const fsProm = require('fs').promises;
-// const mv = require('mv');
-// const sharp = require('sharp');
-//const CryptoJS = require("crypto-js");
 
 const { User, validateUser } = require('../models/users');
 const Recipe = require('../models/recipes');
@@ -21,9 +16,9 @@ const verifyToken = require('../middleware/verifyToken');
 const validate_RecipeData = require('../middleware/validate_RecipeData');
 const { encrypt, decrypt, validFileProperties, saveRecipeImage, getRandomRecipes } = require('../functions');
 const { featList } = require('../featuredRecipeList');
+
+
 // dont use - within route names. Causes incorret/partial route name matching.
-
-
 
 
 router.get('/page/:skip/:limit', async (req, res) => {
@@ -195,6 +190,7 @@ router.get('/getfeatured', async (req, res) => {
         var recipes = await Recipe.find({
             '_id': { $in: featList }
             }).select('-__v').populate('authid', 'name profileImg'); 
+        console.log(recipes);
         if (!recipes) return res.status(400).send();
 
         // convert recipe to proper "object"
