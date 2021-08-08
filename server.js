@@ -7,11 +7,7 @@ const assert = require('assert');
 const cors = require('cors'); 
 const path = require('path');
 
-
-
-
-// mongoose, plus depreciated settings to remove error msg's
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');// mongoose, plus depreciated settings to remove error msg's
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true)
 
@@ -41,18 +37,21 @@ const db = mongoose.connect(process.env.DB_connection, {
 // load production middleware
  // require('./middleware/prod')(app); 
 
-
-
-//Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
-app.use(express.static(path.join(__dirname,'client','build')));
-
-
-// app.use(express.urlencoded({extended: true}));
+ // app.use(express.urlencoded({extended: true}));
 
 // body parser
 // const bodyParser = require("body-parser");
 // app.use(bodyParser.urlencoded({extended: true}));
 // app.use(bodyParser.json());
+
+
+// image assests available by url... https://dominaName.com/images.jpg
+app.use(express.static('/mnt/volume1'));
+
+//Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
+app.use(express.static(path.join(__dirname,'client','build')));
+
+
 
 
 const users = require('./routes/users');

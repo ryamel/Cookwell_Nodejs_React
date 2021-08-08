@@ -80,7 +80,7 @@ class Recipepage extends Component {
 						<div id="rec-container-1">
 
 							<div id='recipe-img-container'>
-								<img src={process.env.PUBLIC_URL + '/user_recipes_img/card/' + this.state.result.img} />
+								<img src={process.env.PUBLIC_URL + '/user_recipes_img/display/' + this.state.result.img} />
 							</div>
 
 							<div id="rec-container-1-title">{this.state.result.title}</div>
