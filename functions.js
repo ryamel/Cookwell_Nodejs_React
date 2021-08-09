@@ -45,9 +45,17 @@ const saveRecipeImage = async function(giveName, filePath) {
     try {
         let extension = path.extname(filePath).toLowerCase();
         var fileName = giveName.replace(/\s/g,"_").replace(/[\\\.\+\*\?\^\$\,\[\]\{\}\|<>#%!`&'"=:@~;()]/g, '') + '_' + Date.now() + extension;
-        var savePath_orig = process.env.imgDir + "user_recipes_img/original/" + fileName;
-        var savePath_card = process.env.imgDir + "user_recipes_img/card/" + fileName;
-        var savePath_disp = process.env.imgDir + "user_recipes_img/display/" + fileName;
+
+        if (process.env.production) {
+            var savePath_orig = "../../mnt/volume1/user_recipes_img/original/" + fileName;
+            var savePath_card = "../../mnt/volume1/user_recipes_img/card/" + fileName;
+            var savePath_disp = "../../mnt/volume1/user_recipes_img/display/" + fileName;
+        } else {
+            var savePath_orig = "client/public/user_recipes_img/original/" + fileName;
+            var savePath_card = "client/public/user_recipes_img/card/" + fileName;
+            var savePath_disp = "client/public/user_recipes_img/display/" + fileName;
+        }
+
 
         // save original
         await fsProm.copyFile(filePath, savePath_orig);
@@ -86,9 +94,16 @@ const saveUserImage = async function(giveName, filePath) {
     try {
         let extension = path.extname(filePath).toLowerCase();
         var fileName = giveName.replace(/\s/g,"_").replace(/[\\\.\+\*\?\^\$\,\[\]\{\}\|<>#%!`&'"=:@~;()]/g, '') + '_' + Date.now() + extension;
-        var savePath_orig = path.join("client", "public", "user_profile_img", "original", fileName);
-        var savePath_card = path.join("client", "public", "user_profile_img", "card", fileName);
-        var savePath_thumb = path.join("client", "public", "user_profile_img", "thumb", fileName);
+
+        if (process.env.production) {
+            var savePath_orig = "../../mnt/volume1/user_profile_img/original/" + fileName;
+            var savePath_card = "../../mnt/volume1/user_profile_img/card/" + fileName;
+            var savePath_thumb = "../../mnt/volume1/user_profile_img/thumb/" + fileName;
+        } else {
+            var savePath_orig = path.join("client", "public", "user_profile_img", "original", fileName);
+            var savePath_card = path.join("client", "public", "user_profile_img", "card", fileName);
+            var savePath_thumb = path.join("client", "public", "user_profile_img", "thumb", fileName);
+        }
 
         // save original
         await fsProm.copyFile(filePath, savePath_orig);
