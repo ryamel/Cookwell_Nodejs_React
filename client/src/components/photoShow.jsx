@@ -5,7 +5,8 @@ import photoIcon from '../media/icons/photo45.png';
 
 // need to use require context because usualy url reference will only work when the directory is inside the public folder. 
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.production == true) {
+   //'/mnt/volume1/user_recipes_img/display/';
    const imagesRecipe = require.context(process.env.PUBLIC_URL + '/user_recipes_img/card/', true);
    const imagesProfile = require.context(process.env.PUBLIC_URL + '/user_profile_img/card/', true);
 } else {
