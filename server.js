@@ -57,21 +57,22 @@ if (process.env.production) {
 	console.log('PRODUCTION BUILD');
 	//app.use(express.static('/mnt/volume1'));
 	//app.use(express.static('../mnt/volume1'));
-	//app.use(express.static('/mnt/volume1'));
+
+
+	app.use(express.static('../../mnt/volume1'));
+
+	// needed to server production build static assests
+	app.use(express.static(path.join(__dirname,'client','build')));
+
+	// A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
+	if (process.env.production == true) {
+		app.get('/*', (req, res) => {
+		    res.sendFile(path.resolve(__dirname,'client','build','index.html'));
+		});
+	}
+
 } else {
 	console.log('DEV BUILD');
-	app.use(express.static(path.join(__dirname,'client','build')));
-}
-
-
-
-app.use(express.static(path.join(__dirname,'client','build')));
-
-// A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
-if (process.env.production == true) {
-	app.get('/*', (req, res) => {
-	    res.sendFile(path.resolve(__dirname,'client','build','index.html'));
-	});
 }
 
 
