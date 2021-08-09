@@ -57,7 +57,7 @@ if (process.env.production) {
 	console.log('PRODUCTION BUILD');
 	//app.use(express.static('/mnt/volume1'));
 	//app.use(express.static('../mnt/volume1'));
-	app.use(express.static('../../mnt/volume1'));
+	app.use(express.static('/mnt/volume1'));
 } else {
 	console.log('DEV BUILD');
 	app.use(express.static(path.join(__dirname,'client','build')));
