@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import './photoShow.sass';
 import photoIcon from '../media/icons/photo45.png';
-
+let recipeDirectory;
 // if (process.env.NODE_ENV == 'production') {
 //    const imagesRecipe = require.context(process.env.PUBLIC_URL + '/user_recipes_img/card/', true);
 //    const imagesProfile = require.context(process.env.PUBLIC_URL + '/user_profile_img/card/', true);

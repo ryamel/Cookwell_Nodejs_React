@@ -63,7 +63,9 @@ class BrowseCard extends Component {
 
 	render() {
 
-
+		if (!recipeDirectory) {
+			return null;
+		}
 		return (
 			<div className='browse-card'>
 
