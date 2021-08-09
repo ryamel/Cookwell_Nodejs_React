@@ -113,10 +113,6 @@ class MyProfile extends Component {
 							Profile
 						</div>
 
-	{/*					<div id="emailChangeNotice">
-			            	 To change your email, respond to the verification link sent to the new email. Be sure to check your spam folder.
-			            </div>*/}
-
 
 			        	<label className='std-field-label ph-label'>
 	            			Profile photo
@@ -125,14 +121,14 @@ class MyProfile extends Component {
 							
 						<div className='fieldContainer clearfix'>
 							<div id='pos-img'>
-								<PhotoShow 
+{/*								<PhotoShow 
 									imageType='user'
 									ref={this.fileRef} 
 									onChange={this.fileHandler}
 									file={this.state.file}
 									fileName={this.state.fileName}
 									fileObjURL={this.state.fileObjURL}
-									/> 
+									/> */}
 							</div>
 						</div>
 
@@ -213,7 +209,6 @@ class MyProfile extends Component {
 
 					</div>
 				</div>
-{/*				<Footer isLoaded={true} />*/}
 			</React.Fragment>
 		);		
 	}
