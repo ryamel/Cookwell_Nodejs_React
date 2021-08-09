@@ -15,13 +15,13 @@ import photoIcon from '../media/icons/photo45.png';
 // }
 
 
-var recipeDirectory;
-if (process.env.NODE_ENV == ) {
-   //recipeDirectory = '/mnt/volume1/user_recipes_img/display/';
-   recipeDirectory = '/user_recipes_img/display/';
-} else {
-   recipeDirectory = '/user_recipes_img/display/'; // dont use relative (or absolute) path for imgs URL. The root directory is public folder!
-}
+// var recipeDirectory;
+// if (process.env.NODE_ENV) {
+//    //recipeDirectory = '/mnt/volume1/user_recipes_img/display/';
+//    recipeDirectory = '/user_recipes_img/display/';
+// } else {
+//    recipeDirectory = '/user_recipes_img/display/'; // dont use relative (or absolute) path for imgs URL. The root directory is public folder!
+// }
 
 
 
