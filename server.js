@@ -55,10 +55,8 @@ app.use('/api/mail', mail);
 //Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
 if (process.env.production) {
 	console.log('PRODUCTION BUILD');
-	//app.use(express.static('/mnt/volume1'));
-	//app.use(express.static('../mnt/volume1'));
 
-
+	// get access to mounted volume from Digital Oceans for serving static images. Directory is relative to server.js file location
 	app.use(express.static('../../mnt/volume1'));
 
 	// needed to server production build static assests

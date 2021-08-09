@@ -15,29 +15,30 @@ import photoIcon from '../media/icons/photo45.png';
 // }
 
 
-// var recipeDirectory;
-// if (process.env.production == true) {
-//    //recipeDirectory = '/mnt/volume1/user_recipes_img/display/';
-//    recipeDirectory = '/user_recipes_img/display/';
-// } else {
-//    recipeDirectory = '/user_recipes_img/display/'; // dont use relative (or absolute) path for imgs URL. The root directory is public folder!
-// }
+var recipeDirectory;
+if (process.env.NODE_ENV == ) {
+   //recipeDirectory = '/mnt/volume1/user_recipes_img/display/';
+   recipeDirectory = '/user_recipes_img/display/';
+} else {
+   recipeDirectory = '/user_recipes_img/display/'; // dont use relative (or absolute) path for imgs URL. The root directory is public folder!
+}
 
-  
 
 
 const PhotoShow = React.forwardRef((props, ref) => {
 
-   const displayImg = (file, fileName, fileObjURL, imageType) => {
+   const displayImg = () => {
       try {
          if (!props.file && !props.fileName && !props.fileObjURL) return null;
 
          if (!props.file && props.fileName && !props.fileObjURL) {
-            //if (imageType == 'recipe') var img = <img src={imagesRecipe(`./${props.fileName}`).default} />; // case of download from sever --> fileName only
-            //if (imageType == 'user') var img = <img src={imagesProfile(`./${props.fileName}`).default} />;
+            // if (props.imageType == 'recipe') var img = <img src={imagesRecipe(`./${props.fileName}`).default} />; // case of download from sever --> fileName only
+            // if (props.imageType == 'user') var img = <img src={imagesProfile(`./${props.fileName}`).default} />;
+            if (props.imageType == 'recipe') var img = <img src={'/user_recipes_img/display/' + props.fileName} />; // case of download from sever --> fileName only
+            if (props.imageType == 'user') var img = <img src={'/user_profile_img/display/' + props.fileName} />;
          }
 
-         //if (props.fileObjURL) var img = <img src={props.fileObjURL} />;// case of upload on client --> file fileName fileObjURL
+         if (props.fileObjURL) var img = <img src={props.fileObjURL} />;// case of upload on client --> file fileName fileObjURL
 
          return <div id='photo-container' className='clearfix'> {img} </div>;
       }
@@ -48,18 +49,18 @@ const PhotoShow = React.forwardRef((props, ref) => {
    }
 
 
-    return (
-       <React.Fragment>
-          {  displayImg(props.file, props.fileName, props.fileObjURL, props.imageType)  }
-          <label className='img-upload-btn'>
-             <input className='fileUploadInput' ref={ref} onChange={props.onChange} type='file' name='file' />
-             <img className='phIcon' src={photoIcon} />
-             <div className='uploadText fileUpload'>
-                Upload Image ( .png or .jpg file type )
-             </div> 
-          </label>
-       </React.Fragment>
-    );
+   return (
+      <React.Fragment>
+         {  displayImg()  }
+         <label className='img-upload-btn'>
+            <input className='fileUploadInput' ref={ref} onChange={props.onChange} type='file' name='file' />
+            <img className='phIcon' src={photoIcon} />
+            <div className='uploadText fileUpload'>
+               Upload Image ( .png or .jpg file type )
+            </div> 
+         </label>
+      </React.Fragment>
+   );
 })
 
 
