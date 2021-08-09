@@ -5,14 +5,14 @@ import photoIcon from '../media/icons/photo45.png';
 
 // need to use require context because usualy url reference will only work when the directory is inside the public folder. 
 
-if (process.env.NODE_ENV == 'production') {
-   //'/mnt/volume1/user_recipes_img/display/';
-   const imagesRecipe = require.context(process.env.PUBLIC_URL + '/user_recipes_img/card/', true);
-   const imagesProfile = require.context(process.env.PUBLIC_URL + '/user_profile_img/card/', true);
-} else {
-   const imagesRecipe = require.context('../../public/user_recipes_img/card/', true);
-   const imagesProfile = require.context('../../public/user_profile_img/card/', true);
-}
+// if (process.env.NODE_ENV == 'production') {
+//    //'/mnt/volume1/user_recipes_img/display/';
+//    const imagesRecipe = require.context(path.join(process.env.PUBLIC_URL, 'user_recipes_img', 'card'), true);
+//    const imagesProfile = require.context(process.env.PUBLIC_URL + '/user_profile_img/card/', true);
+// } else {
+//    const imagesRecipe = require.context('../../public/user_recipes_img/card/', true);
+//    const imagesProfile = require.context('../../public/user_profile_img/card/', true);
+// }
 
 
 // var recipeDirectory;
@@ -33,11 +33,11 @@ const PhotoShow = React.forwardRef((props, ref) => {
          if (!props.file && !props.fileName && !props.fileObjURL) return null;
 
          if (!props.file && props.fileName && !props.fileObjURL) {
-            if (imageType == 'recipe') var img = <img src={imagesRecipe(`./${props.fileName}`).default} />; // case of download from sever --> fileName only
-            if (imageType == 'user') var img = <img src={imagesProfile(`./${props.fileName}`).default} />;
+            //if (imageType == 'recipe') var img = <img src={imagesRecipe(`./${props.fileName}`).default} />; // case of download from sever --> fileName only
+            //if (imageType == 'user') var img = <img src={imagesProfile(`./${props.fileName}`).default} />;
          }
 
-         if (props.fileObjURL) var img = <img src={props.fileObjURL} />;// case of upload on client --> file fileName fileObjURL
+         //if (props.fileObjURL) var img = <img src={props.fileObjURL} />;// case of upload on client --> file fileName fileObjURL
 
          return <div id='photo-container' className='clearfix'> {img} </div>;
       }
