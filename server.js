@@ -53,11 +53,17 @@ app.use('/api/mail', mail);
 
 // allow use of assests available by url... https://dominaName.com/images.jpg
 //Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
-if (process.env.production == true) {
-	app.use(express.static('/mnt/volume1'));
+if (process.env.production) {
+	console.log('PRODUCTION BUILD');
+	//app.use(express.static('/mnt/volume1'));
+	//app.use(express.static('../mnt/volume1'));
+	app.use(express.static('../../mnt/volume1'));
 } else {
+	console.log('DEV BUILD');
 	app.use(express.static(path.join(__dirname,'client','build')));
 }
+
+
 
 
 // A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
