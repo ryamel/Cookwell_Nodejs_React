@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 import './browseCard.sass';
 import { Link, useParams } from 'react-router-dom';
 
-if (process.env.NODE_ENV == 'production') {
-	let recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
-} else {
-	let recipeDirectory = '../../public/user_recipes_img/card/';
-}
 
 
 class BrowseCard extends Component {
@@ -59,6 +54,14 @@ class BrowseCard extends Component {
 	}	
 
 	render() {
+		if (process.env.NODE_ENV == 'production') {
+			let recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
+			console.log(recipeDirectory);
+		} else {
+			let recipeDirectory = '../../public/user_recipes_img/card/';
+			console.log(recipeDirectory);
+		}
+
 		return (
 			<div className='browse-card'>
 
