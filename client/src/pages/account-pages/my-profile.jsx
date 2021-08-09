@@ -121,14 +121,14 @@ class MyProfile extends Component {
 							
 						<div className='fieldContainer clearfix'>
 							<div id='pos-img'>
-{/*								<PhotoShow 
+								<PhotoShow 
 									imageType='user'
 									ref={this.fileRef} 
 									onChange={this.fileHandler}
 									file={this.state.file}
 									fileName={this.state.fileName}
 									fileObjURL={this.state.fileObjURL}
-									/> */}
+									/>
 							</div>
 						</div>
 
