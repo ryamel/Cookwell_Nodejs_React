@@ -138,22 +138,6 @@ router.get('/search/auto', async (req, res) => {
 
 
 
-// router.get('/getbyuserid/:id', async (req, res) => {
-
-//     const query = await Recipe.find({authid: req.params.id});
-
-//     if (!query) {
-//         res.status(404).json({msg: 'The course with given id was not found'});
-//     } else {
-//         res.status(200).json(query);
-//     }
-
-// });
-
-
-
-
-
 
 router.get('/getrecent/', async (req, res) => {
     console.log('getrecent');
@@ -225,32 +209,32 @@ router.get('/getrandom/', async (req, res) => {
 
 
 
-router.post('/addnew', async (req, res) => {
-    const rec = new Recipe({
-        title:  req.body.title,
-        authid:  req.body.authid,
-        description:  req.body.description,
-        mealType: req.body.mealType,
-        diet: req.body.diet,
-        cusine: req.body.cuisine,
-        servings: req.body.servings,
-        img:  req.body.img,
-        cookTime: req.body.cookTime,
-        ingredients: req.body.ingredients,
-        method: req.body.method,
-        notes: req.body.notes
-    });
+// router.post('/addnew', async (req, res) => {
+//     const rec = new Recipe({
+//         title:  req.body.title,
+//         authid:  req.body.authid,
+//         description:  req.body.description,
+//         mealType: req.body.mealType,
+//         diet: req.body.diet,
+//         cusine: req.body.cuisine,
+//         servings: req.body.servings,
+//         img:  req.body.img,
+//         cookTime: req.body.cookTime,
+//         ingredients: req.body.ingredients,
+//         method: req.body.method,
+//         notes: req.body.notes
+//     });
 
-    try {
-        const saveRec = await rec.save();
-        return res.status(201).json(saveRec);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(400).json({message: err.message}); 
-    }
+//     try {
+//         const saveRec = await rec.save();
+//         return res.status(201).json(saveRec);
+//     }
+//     catch (err) {
+//         console.log(err);
+//         return res.status(400).json({message: err.message}); 
+//     }
 
-});
+// });
 
 
 
@@ -272,7 +256,7 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
         return res.status(400).send('Image file must be a .png or .jpg under 8MB');
     }
 
-    // save file
+    // save file to directory folder
     let fileName = await saveRecipeImage(req.body.title, req.file.path);
     if (fileName === false) return res.status(500).send('Server Error');
 
@@ -291,9 +275,15 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
     catch (err) {
         console.log(err);
         try {
-            fs.unlinkSync(process.env.imgDir + "user_recipes_img/card/" + fileName);
-            fs.unlinkSync(process.env.imgDir + "user_recipes_img/display/" + fileName);
-            fs.unlinkSync(process.env.imgDir + "user_recipes_img/original/" + fileName);
+            if (process.env.production) {
+                fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + fileName);
+                fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + fileName);
+                fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + fileName);
+            } else {
+                fs.unlinkSync("../client/public/user_recipes_img/card/" + fileName);
+                fs.unlinkSync("../client/public/user_recipes_img/display/" + fileName);
+                fs.unlinkSync("../client/public/user_recipes_img/original/" + fileName);
+            }
         } catch (err) { console.log(err) }
         return res.status(400).send('Server Error');
     }
@@ -344,9 +334,15 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
         // delete old img files (if req.files was uploaded)
         if (typeof req.file !== "undefined") {
             try {
-                fs.unlinkSync(process.env.imgDir + "user_recipes_img/card/" + oldRecipe.img);
-                fs.unlinkSync(process.env.imgDir + "user_recipes_img/display/" + oldRecipe.img);
-                fs.unlinkSync(process.env.imgDir + "user_recipes_img/original/" + oldRecipe.img);
+                if (process.env.production) {
+                    fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + oldRecipe.img);
+                    fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + oldRecipe.img);
+                    fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + oldRecipe.img);
+                } else {
+                    fs.unlinkSync("../client/public/user_recipes_img/card/" + oldRecipe.img);
+                    fs.unlinkSync("../client/public/user_recipes_img/display/" + oldRecipe.img);
+                    fs.unlinkSync("../client/public/user_recipes_img/original/" + oldRecipe.img);
+                }
             } catch (e) { console.log(e)}
         }
 
@@ -355,9 +351,15 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
     catch (err) {
         console.log(err);
         try {
-            fs.unlinkSync(process.env.imgDir + "user_recipes_img/card/" + fileName);
-            fs.unlinkSync(process.env.imgDir + "user_recipes_img/display/" + fileName);
-            fs.unlinkSync(process.env.imgDir + "user_recipes_img/original/" + fileName);
+            if (process.env.production) {
+                fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + filename);
+                fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + filename);
+                fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + filename);
+            } else {
+                fs.unlinkSync("../client/public/user_recipes_img/card/" + filename);
+                fs.unlinkSync("../client/public/user_recipes_img/display/" + filename);
+                fs.unlinkSync("../client/public/user_recipes_img/original/" + filename);
+            }
         } catch (e) { console.log(e) }
 
         return res.status(500).send('Server Error');
@@ -422,7 +424,21 @@ router.post('/getuserrecipespublic', async (req, res) => {
 router.post('/deleterecipe', [verifyToken], async (req, res) => {
     console.log('deleterecipe');
     try {
+        //get ID
+        let recipe = await Recipe.findOne({_id: req.body.rid}).select('img');
+        // remove from mongoDB
         await Recipe.deleteOne({_id: req.body.rid})
+        // remove file image (using ID)
+        if (process.env.production) {
+            fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + recipe.img);
+            fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + recipe.img);
+            fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + recipe.img);
+        } else {
+            fs.unlinkSync("../client/public/user_recipes_img/card/" + recipe.img);
+            fs.unlinkSync("../client/public/user_recipes_img/display/" + recipe.img);
+            fs.unlinkSync("../client/public/user_recipes_img/original/" + recipe.img);
+        }
+
         return res.status(200).send('');
     }
     catch (err) {
