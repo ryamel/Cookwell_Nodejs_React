@@ -65,6 +65,7 @@ if (process.env.production) {
 
 
 
+app.use(express.static(path.join(__dirname,'client','build')));
 
 // A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
 if (process.env.production == true) {
