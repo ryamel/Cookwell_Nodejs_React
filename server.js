@@ -11,15 +11,12 @@ const mongoose = require('mongoose');// mongoose, plus depreciated settings to r
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true)
 
-// allows use of .env files
-require('dotenv').config();
+require('dotenv').config();// allows use of .env files
 
-// allows reading of cookies on front end (verifyToken middleware)
-const cookieParser = require('cookie-parser'); 
+const cookieParser = require('cookie-parser'); // allows reading of cookies on front end (verifyToken middleware)
 app.use(cookieParser()); 
 
-// * required to parse any http json data --> places json data into req.body
-app.use(express.json()); 
+app.use(express.json()); // * required to parse any http json data --> places json data into req.body
 
 
 if (!process.env.private_key) {
@@ -34,6 +31,15 @@ const db = mongoose.connect(process.env.DB_connection, {
 	console.log('Server connected to mongoDB Atlas');
 });
 
+
+const users = require('./routes/users');
+const recipes = require('./routes/recipes');
+const mail = require('./routes/mail');
+app.use('/api/users', users);
+app.use('/api/recipes', recipes);
+app.use('/api/mail', mail);
+
+
 // load production middleware
  // require('./middleware/prod')(app); 
 
@@ -46,36 +52,25 @@ const db = mongoose.connect(process.env.DB_connection, {
 
 
 // allow use of assests available by url... https://dominaName.com/images.jpg
-app.use(express.static('/mnt/volume1'));
-
 //Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
-app.use(express.static(path.join(__dirname,'client','build')));
-
-console.log(process.env);
-
-
-
-const users = require('./routes/users');
-const recipes = require('./routes/recipes');
-const mail = require('./routes/mail');
-app.use('/api/users', users);
-app.use('/api/recipes', recipes);
-app.use('/api/mail', mail);
+if (process.env.production == true) {
+	app.use(express.static('/mnt/volume1'));
+} else {
+	app.use(express.static(path.join(__dirname,'client','build')));
+}
 
 
-
-
-// // A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
-app.get('/*', (req, res) => {
-    res.sendFile(path.resolve(__dirname,'client','build','index.html'));
-});
+// A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
+if (process.env.production == true) {
+	app.get('/*', (req, res) => {
+	    res.sendFile(path.resolve(__dirname,'client','build','index.html'));
+	});
+}
 
 
 
 
 const port = process.env.PORT || 4000; 
-// const host = '0.0.0.0'; 
-// app.listen(port, host, () => `Server running on port ${port}`);
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
 

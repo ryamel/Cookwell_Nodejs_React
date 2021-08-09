@@ -4,6 +4,13 @@ import axios from 'axios';
 import './cookBanner.sass';
 //import photoIcon from '../../public/user_profile_img/CHange_Name_16246155695775.jpeg';
 
+if (process.env.NODE_ENV == 'production') {
+	let recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
+} else {
+	let recipeDirectory = '../../public/user_recipes_img/card/';
+}
+
+
 const CookBanner = (props) => {
 	const [recipeData, setRecipeData] = useState([]);
 
@@ -30,7 +37,7 @@ const CookBanner = (props) => {
 						recipeData.map((recipe, index) => 
 							<div className='more-banner-cardN' key={index}>
 								<Link to={{pathname: process.env.PUBLIC_URL + '/recipe-page/?rtitle=' + encodeURIComponent(recipe.title)}}>
-									<img src={process.env.PUBLIC_URL + '/user_recipes_img/card/' + recipe.img} />
+									<img src={recipeDirectory + recipe.img} />
 									<div className='titleInfo'>
 										{recipe.title}
 									</div>
