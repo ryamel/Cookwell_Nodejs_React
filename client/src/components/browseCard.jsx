@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
 import './browseCard.sass';
 import { Link, useParams } from 'react-router-dom';
-let recipeDirectory;
+var recipeDirectory;
 
-if (process.env.NODE_ENV == 'production') {
-	let recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
-	console.log(recipeDirectory);
+// if (process.env.NODE_ENV == 'production') {
+// 	// recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
+// 	// console.log(recipeDirectory);
+// } else {
+// 	var images = require.context('../../public/user_recipes_img/card/', false);
+// 	// recipeDirectory = '../../public/user_recipes_img/card/';
+// 	// console.log(recipeDirectory);
+// }
+
+var recipeDirectory;
+if (process.env.production == true) {
+	//recipeDirectory = '/mnt/volume1/user_recipes_img/display/';
+	recipeDirectory = '/user_recipes_img/display/';
 } else {
-	let recipeDirectory = '../../public/user_recipes_img/card/';
-	console.log(recipeDirectory);
+	recipeDirectory = '/user_recipes_img/display/'; // dont use relative (or absolute) path for imgs URL. The root directory is public folder!
 }
 
 
@@ -62,10 +71,7 @@ class BrowseCard extends Component {
 	}	
 
 	render() {
-
-		if (!recipeDirectory) {
-			return null;
-		}
+		// let img_node= images(`./${this.props.img}`);
 		return (
 			<div className='browse-card'>
 

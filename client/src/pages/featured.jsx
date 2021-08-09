@@ -7,8 +7,6 @@ import axios from 'axios';
 let source;
 
 
-// featured titles need to be added inside the browseCard on the first of the line
-
 class Featured extends Component {
 	constructor(props) {
 		super();
@@ -69,7 +67,7 @@ class Featured extends Component {
 			return null;
 		} else {
 			const { featCardData, latestCardData, randomCardData } = this.state;
-			console.log(featCardData, latestCardData, randomCardData);
+			//console.log(featCardData, latestCardData, randomCardData);
 			return (
 				// index and firstCardHeader propeties are used to conditionally render the featured and latest headers inside the first BrowseCard component. 
 				// this is because the headers must be rendered inside the first BrowseCard components in order for the headers to have the same behaviour as the grid cards. Oulined by the css grid attributes.

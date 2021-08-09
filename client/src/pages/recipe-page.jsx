@@ -7,12 +7,13 @@ import Notes from '../components/notes-recipe-page';
 import Authcard from '../components/authcard';
 import Dietbanner from '../components/dietBanner';
 let source;
+var recipeDirectory;
 
-// if (process.env.production == 1) {
-// 	const recipeDir = '/mnt/volume1/user_recipes_img/card/';
-// } else {
-// 	const recipeDir = '/user_recipes_img/card/';
-// }
+if (process.env.production == true) {
+	recipeDirectory = '/mnt/volume1/user_recipes_img/display/';
+} else {
+	recipeDirectory = '/user_recipes_img/display/';
+}
 
 class Recipepage extends Component {
 	constructor() {
@@ -80,7 +81,7 @@ class Recipepage extends Component {
 						<div id="rec-container-1">
 
 							<div id='recipe-img-container'>
-								<img src={process.env.PUBLIC_URL + '/user_recipes_img/display/' + this.state.result.img} />
+								<img src={process.env.PUBLIC_URL + recipeDirectory + this.state.result.img} />
 							</div>
 
 							<div id="rec-container-1-title">{this.state.result.title}</div>

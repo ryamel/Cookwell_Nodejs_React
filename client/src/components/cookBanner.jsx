@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './cookBanner.sass';
 //import photoIcon from '../../public/user_profile_img/CHange_Name_16246155695775.jpeg';
-let recipeDirectory;
-if (process.env.NODE_ENV == 'production') {
-	let recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
+var recipeDirectory;
+
+if (process.env.production == true) {
+	recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
 } else {
-	let recipeDirectory = '../../public/user_recipes_img/card/';
+	recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
 }
 
 
