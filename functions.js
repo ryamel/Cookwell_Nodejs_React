@@ -70,6 +70,7 @@ const saveRecipeImage = async function(giveName, filePath) {
             .jpeg({ quality: 100 })
             .toFile(savePath_disp);
 
+        fs.unlinkSync(filePath);
         return fileName;
     }
     catch (err) { 
