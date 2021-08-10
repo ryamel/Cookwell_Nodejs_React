@@ -246,7 +246,7 @@ router.get('/getrandom/', async (req, res) => {
 
 router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
     console.log('upload');
-
+    console.log(req.file.path);
     // check for file
     if (typeof req.file == "undefined") return res.status(400).send('No recipe image');
 
@@ -279,10 +279,12 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + fileName);
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + fileName);
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + fileName);
+                fs.unlinkSync("../../mnt/volume1/tmp_upload/" + fileName);
             } else {
                 fs.unlinkSync("../client/public/user_recipes_img/card/" + fileName);
                 fs.unlinkSync("../client/public/user_recipes_img/display/" + fileName);
                 fs.unlinkSync("../client/public/user_recipes_img/original/" + fileName);
+                fs.unlinkSync("../client/tmp_upload/" + fileName);
             }
         } catch (err) { console.log(err) }
         return res.status(400).send('Server Error');
