@@ -290,6 +290,9 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
         return res.status(400).send('Server Error');
     }
 
+    try { fs.unlinkSync(req.file.path); }
+    catch (err) { console.log(err); }
+
     return res.status(200).send();
 });
 
