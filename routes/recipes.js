@@ -246,7 +246,6 @@ router.get('/getrandom/', async (req, res) => {
 
 router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
     console.log('upload');
-    console.log(req.file.path);
     // check for file
     if (typeof req.file == "undefined") return res.status(400).send('No recipe image');
 
@@ -290,6 +289,7 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
         return res.status(400).send('Server Error');
     }
 
+    // check that file tmp_upload was removed
     try { fs.unlinkSync(req.file.path); }
     catch (err) { console.log(err); }
 

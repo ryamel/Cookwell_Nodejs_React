@@ -41,6 +41,8 @@ class submitRecipe extends React.Component {
 			redirect: false
 		};
 		source = axios.CancelToken.source();
+		this.saveBtn = React.createRef();
+		this.editBtn = React.createRef();
 		this.fileRef = React.createRef();
 		this.handleInput = this.handleInput.bind(this);
 		this.removeField = this.removeField.bind(this);
@@ -166,6 +168,7 @@ class submitRecipe extends React.Component {
 	}
 
 	uploadRecipe() {
+		this.saveBtn.setAttribute("disabled", "disabled");
 		// formData does not suport nested objects, only key/value pairs. So any nested data was turned into json strings. And then converted into objects on the server side
 		var formData = new FormData();
    		formData.append('file', this.state.file);
@@ -180,24 +183,25 @@ class submitRecipe extends React.Component {
    		formData.append('method', JSON.stringify(this.state.method));
    		formData.append('notes', JSON.stringify(this.state.notes));
 
-
 		axios.post('/api/recipes/upload', formData, {cancelToken: source.token})
-	 	.then(response => {
-	 		this.setState({redirect: true}) // redirect back to my-account page and display success msg on page})
-		})
-		.catch(error => {
-			console.log(error.response.data); 
-			if (error.response.data !== 'undefined') {
-				this.setState({
-					error: true,
-					errMsg: error.response.data
-				});
-			}
-		});
+		 	.then(response => {
+		 		this.setState({redirect: true}) // redirect back to my-account page and display success msg on page})
+		 		this.saveBtn.removeAttribute("disabled");
+			})
+			.catch(error => {
+				this.saveBtn.removeAttribute("disabled");
+				if (error.response.data !== 'undefined') {
+					this.setState({
+						error: true,
+						errMsg: error.response.data
+					});
+				}
+			});
 	}
 
 	saveEdit() {
-		console.log('attempt');
+		this.editBtn.setAttribute("disabled", "disabled");
+
 		var fdata = new FormData();
 		fdata.append('file', this.state.file);
    		fdata.append('title', this.state.title);
@@ -218,8 +222,10 @@ class submitRecipe extends React.Component {
 				this.setState({
 					redirect: true // redirect back to my-account page and display success msg on page
 				})
+				this.editBtn.removeAttribute("disabled");
 			})
 			.catch(error => {
+				this.editBtn.removeAttribute("disabled");
 				if (typeof error.response.data !== 'undefined') {
 					this.setState({
 						error: true,
@@ -445,9 +451,9 @@ class submitRecipe extends React.Component {
 
 
 				   			{	this.props.edit
-				            	? <button className="submitr-btn" type="submit" name="submit_edit" onClick={this.saveEdit}>Save Changes</button>
+				            	? <button className="submitr-btn" type="submit" name="submit_edit" ref={this.editBtn} onClick={this.saveEdit}>Save Changes</button>
 				            	: <React.Fragment>
-				            		<button className="submitr-btn" type="submit" name="submit" onClick={this.uploadRecipe}>Submit Recipe</button>
+				            		<button className="submitr-btn" type="submit" name="submit" ref={this.saveBtn} onClick={this.uploadRecipe}>Submit Recipe</button>
 				            		<div id="submit-note">
 				            			<div>
 				            				Once submitted, recipes are reviewed for grammar and clarity.
