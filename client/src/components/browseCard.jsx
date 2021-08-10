@@ -1,24 +1,7 @@
 import React, { Component } from 'react';
 import './browseCard.sass';
 import { Link, useParams } from 'react-router-dom';
-var recipeDirectory;
 
-// if (process.env.NODE_ENV == 'production') {
-// 	// recipeDirectory = process.env.PUBLIC_URL + '/user_recipes_img/card/';
-// 	// console.log(recipeDirectory);
-// } else {
-// 	var images = require.context('../../public/user_recipes_img/card/', false);
-// 	// recipeDirectory = '../../public/user_recipes_img/card/';
-// 	// console.log(recipeDirectory);
-// }
-
-var recipeDirectory;
-if (process.env.production == true) {
-	//recipeDirectory = '/mnt/volume1/user_recipes_img/display/';
-	recipeDirectory = '/user_recipes_img/display/';
-} else {
-	recipeDirectory = '/user_recipes_img/display/'; // dont use relative (or absolute) path for imgs URL. The root directory is public folder!
-}
 
 
 class BrowseCard extends Component {
@@ -28,6 +11,8 @@ class BrowseCard extends Component {
 		this.renderHeader = this.renderHeader.bind(this);
 		this.renderEditBtn = this.renderEditBtn.bind(this);
 		this.renderLink = this.renderLink.bind(this);
+		this.checkImg = this.checkImg.bind(this);
+		this.bcard = React.createRef();
 	}
 
 
@@ -70,10 +55,15 @@ class BrowseCard extends Component {
 		}
 	}	
 
+	// if the img loader has an error, dont display that browse card. Unless its on the user account page.
+	checkImg() {
+		if (!this.props.edit) this.bcard.current.style.display = "none";
+	}
+
+
 	render() {
-		// let img_node= images(`./${this.props.img}`);
 		return (
-			<div className='browse-card'>
+			<div className='browse-card' ref={this.bcard}>
 
 				{ this.renderHeader() }
 
@@ -82,7 +72,7 @@ class BrowseCard extends Component {
 				</Link>
 
 				<div className='browse-imgContainer'>
-					<img src={recipeDirectory + this.props.img} alt=' '/>
+					<img src={'/user_recipes_img/card/' + this.props.img} onError={() => this.checkImg()} alt=' '/>
 				</div>
 
 				{ this.renderEditBtn() }

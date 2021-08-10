@@ -29,7 +29,7 @@ function Loginpage(props) {
 			.then(response => {
 				localStorage['logged_in'] = true; // used to prevent logout on refresh
 				props.login();
-				props.history.push('/'); // redirect using withRouter and prototypes import
+				props.history.push('/my-account'); // redirect using withRouter and prototypes import
 			})
 			.catch(error => {
 				if (typeof error.response.data !== 'undefined') setMsg(error.response.data);
