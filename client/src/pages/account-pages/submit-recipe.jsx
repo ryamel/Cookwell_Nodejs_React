@@ -168,7 +168,7 @@ class submitRecipe extends React.Component {
 	}
 
 	uploadRecipe() {
-		this.saveBtn.setAttribute("disabled", "disabled");
+		this.refs.saveBtn.setAttribute("disabled", "disabled");
 		// formData does not suport nested objects, only key/value pairs. So any nested data was turned into json strings. And then converted into objects on the server side
 		var formData = new FormData();
    		formData.append('file', this.state.file);
@@ -186,10 +186,10 @@ class submitRecipe extends React.Component {
 		axios.post('/api/recipes/upload', formData, {cancelToken: source.token})
 		 	.then(response => {
 		 		this.setState({redirect: true}) // redirect back to my-account page and display success msg on page})
-		 		this.saveBtn.removeAttribute("disabled");
+		 		this.refs.saveBtn.removeAttribute("disabled");
 			})
 			.catch(error => {
-				this.saveBtn.removeAttribute("disabled");
+				this.refs.saveBtn.removeAttribute("disabled");
 				if (error.response.data !== 'undefined') {
 					this.setState({
 						error: true,
@@ -200,7 +200,7 @@ class submitRecipe extends React.Component {
 	}
 
 	saveEdit() {
-		this.editBtn.setAttribute("disabled", "disabled");
+		this.refs.editBtn.setAttribute("disabled", "disabled");
 
 		var fdata = new FormData();
 		fdata.append('file', this.state.file);
@@ -222,10 +222,10 @@ class submitRecipe extends React.Component {
 				this.setState({
 					redirect: true // redirect back to my-account page and display success msg on page
 				})
-				this.editBtn.removeAttribute("disabled");
+				this.refs.editBtn.removeAttribute("disabled");
 			})
 			.catch(error => {
-				this.editBtn.removeAttribute("disabled");
+				this.refs.editBtn.removeAttribute("disabled");
 				if (typeof error.response.data !== 'undefined') {
 					this.setState({
 						error: true,
