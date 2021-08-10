@@ -38,7 +38,8 @@ class submitRecipe extends React.Component {
 			fileObjURL: '',
 			error: null,
 			errMsg: '',
-			redirect: false
+			redirect: false,
+			saveBtn: 'off'
 		};
 		source = axios.CancelToken.source();
 		this.saveBtn = React.createRef();
@@ -52,6 +53,9 @@ class submitRecipe extends React.Component {
 		this.saveEdit = this.saveEdit.bind(this);
 		this.handleError = this.handleError.bind(this);
 		this.redirect = this.redirect.bind(this);
+		this.renderSaveBtn = this.renderSaveBtn.bind(this);
+		this.resetSaveBtn = this.resetSaveBtn.bind(this);
+		this.btnSaving = this.btnSaving.bind(this);
 	}
 
 	redirect() {
@@ -167,8 +171,21 @@ class submitRecipe extends React.Component {
 		}
 	}
 
-	uploadRecipe() {
+	resetSaveBtn() {
+		let btnHtml;
+		this.props.edit == true ? btnHtml = 'Save Changes' : btnHtml = 'Submit Recipe';
+		this.saveBtn.current.removeAttribute("disabled");
+		document.querySelector(".submitr-btn").innerHTML = btnHtml;
+	}
+
+	btnSaving() {
+		// disable submit button
 		this.saveBtn.current.setAttribute("disabled", "disabled");
+		document.querySelector(".submitr-btn").innerHTML = "Saving...";
+	}
+
+	uploadRecipe() {
+		this.btnSaving();
 		// formData does not suport nested objects, only key/value pairs. So any nested data was turned into json strings. And then converted into objects on the server side
 		var formData = new FormData();
    		formData.append('file', this.state.file);
@@ -186,21 +203,22 @@ class submitRecipe extends React.Component {
 		axios.post('/api/recipes/upload', formData, {cancelToken: source.token})
 		 	.then(response => {
 		 		this.setState({redirect: true}) // redirect back to my-account page and display success msg on page})
-		 		this.saveBtn.current.removeAttribute("disabled");
+		 		this.resetSaveBtn();
 			})
 			.catch(error => {
-				this.saveBtn.current.removeAttribute("disabled");
 				if (error.response.data !== 'undefined') {
 					this.setState({
 						error: true,
 						errMsg: error.response.data
 					});
 				}
+				this.resetSaveBtn();
 			});
 	}
 
+
 	saveEdit() {
-		this.editBtn.current.setAttribute("disabled", "disabled");
+		this.btnSaving();
 
 		var fdata = new FormData();
 		fdata.append('file', this.state.file);
@@ -222,10 +240,9 @@ class submitRecipe extends React.Component {
 				this.setState({
 					redirect: true // redirect back to my-account page and display success msg on page
 				})
-				this.editBtn.current.removeAttribute("disabled");
+				this.resetSaveBtn();
 			})
 			.catch(error => {
-				this.editBtn.current.removeAttribute("disabled");
 				if (typeof error.response.data !== 'undefined') {
 					this.setState({
 						error: true,
@@ -234,6 +251,7 @@ class submitRecipe extends React.Component {
 				} else {
 					console.log(error);
 				}
+				this.resetSaveBtn();
 			});
 	}
 
@@ -242,7 +260,7 @@ class submitRecipe extends React.Component {
 	}
 
 	
-	handleError(error, msg){
+	handleError(error, msg) {
 		if (error) {
 			const timer = setTimeout(() => {
 				this.setState({	// remove error msg
@@ -251,6 +269,30 @@ class submitRecipe extends React.Component {
 				});
 			}, 5500);
 			return <div className='bannerMsgBar'>{msg}</div>;
+		}
+	}
+
+	renderSaveBtn() {
+   		if (this.props.edit) {
+   			return (
+   				<button className="submitr-btn" type="submit" name="submit_edit" ref={this.saveBtn} onClick={this.saveEdit}>
+   					Save Changes
+   				</button> 
+   			)
+   		} else {
+   			return (
+   				<React.Fragment>
+		    		<button className="submitr-btn" type="submit" name="submit" ref={this.saveBtn} onClick={this.uploadRecipe}>
+		    			Submit Recipe
+		    		</button>
+		    		<div id="submit-note">
+		    			<div>
+		    				Once submitted, recipes are reviewed for grammar and clarity.
+		    				<br/>Please be patient while recipies upload.
+		    			</div>
+		    		</div>  
+	    		</React.Fragment>
+    		)
 		}
 	}
 
@@ -450,23 +492,11 @@ class submitRecipe extends React.Component {
 
 
 
-				   			{	this.props.edit
-				            	? <button className="submitr-btn" type="submit" name="submit_edit" ref={this.editBtn} onClick={this.saveEdit}>Save Changes</button>
-				            	: <React.Fragment>
-				            		<button className="submitr-btn" type="submit" name="submit" ref={this.saveBtn} onClick={this.uploadRecipe}>Submit Recipe</button>
-				            		<div id="submit-note">
-				            			<div>
-				            				Once submitted, recipes are reviewed for grammar and clarity.
-				            				<br/>Please be patient while recipies upload.
-				            			</div>
-				            		</div>  
-				            	  </React.Fragment> 
-				            }
+							{ this.renderSaveBtn() }
 
 
 						</div>
 					</div>
-	{/*				<Footer isLoaded={true} />*/}
 				</React.Fragment>
 			);
 		}
