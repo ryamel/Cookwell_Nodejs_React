@@ -23,7 +23,7 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 		secure: false, // true for 465, false for other ports
 		auth: {
 			//user: testAccount.user, // generated ethereal user
-			user: 'contact@cookwell.co', // generated ethereal user
+			user: process.env.mailAccount, // generated ethereal user
 			//pass: testAccount.pass, // generated ethereal password
 			pass: process.env.mailPwd, // generated ethereal password
 		},
@@ -93,7 +93,7 @@ router.post('/pwdReset', async (req, res) => {
 			},
 		});
 		let info = await transporter.sendMail({
-			from: '"Fred Foo 👻" <foo@example.com>', // sender address
+			from: 'ff',
 			to: "rya_mel@hotmail.com", // list of receivers
 			subject: "Hello ✔", // Subject line
 			text: `A password reset was requested for Cookwell.co. Click the following to reset your password. If you did not request an email reset, please ignore this email. ${link}`, // plain text body
@@ -166,6 +166,7 @@ router.post('/contactAuthor', async (req, res) => {
 		// check bddy length
 		if (req.body.emailBody.length < 5) return res.status(400).send('Email body too short, message not sent');
 
+		// decrypt authid
 		var authid = decrypt(req.body.authid);
 	    if (!authid) return res.status(500).send();
 
@@ -174,7 +175,7 @@ router.post('/contactAuthor', async (req, res) => {
 
 		// email details
 		const subject = 'Cookwell - Edit Recipe';
-		const from = 'foo@example.com';
+		const from = process.env.mailAccount;
 		const to = user.email;
 		const html = 
 			`<html>
