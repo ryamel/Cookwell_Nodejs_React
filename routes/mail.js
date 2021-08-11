@@ -13,11 +13,13 @@ const Recipe = require('../models/recipes');
 const nodemailer = require("nodemailer");
 //const clientURL = "http://localhost:3000";
 const clientURL = "http://147.182.213.40:4000/";
+// needed for hostgator (possible others smtp)
+const smtpTransport = require('nodemailer-smtp-transport');
 
 
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 	//let testAccount = await nodemailer.createTestAccount();
-	let transporter = nodemailer.createTransport({
+	let transporter = nodemailer.createTransport(smtpTransport({
 		name: 'hostgator',
 		host: "ns6323.hostgator.com",
 		port: 465,
@@ -28,7 +30,7 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 			//pass: testAccount.pass, // generated ethereal password
 			pass: process.env.mailPwd, // generated ethereal password
 		},
-	});
+	}));
 
 	// verify connection configuration
 	transporter.verify(function (error, success) {
