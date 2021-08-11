@@ -5,9 +5,8 @@ const bcrypt = require('bcrypt');
 const crypto = require("crypto");
 const { Token } = require('../models/tokens');
 const { User } = require('../models/users');
-const { validatePwd } = require('../functions');
+const { validatePwd, decrypt} = require('../functions');
 const Recipe = require('../models/recipes');
-//"use strict";
 
 
 // email function
@@ -38,7 +37,7 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 
 
 
-router.post('/pwd-reset', async (req, res) => {
+router.post('/pwdReset', async (req, res) => {
 	// check user exists
 	let user = await User.findOne({email: req.body.email});
 	if (!user) return res.status(200).send('No account found');
@@ -102,7 +101,11 @@ router.post('/pwd-reset', async (req, res) => {
 
 
 
-router.post('/pwd-reset-update', async (req, res) => {
+
+
+
+
+router.post('/pwdResetUpdate', async (req, res) => {
 	console.log(req.body);
 	// valid pwd
 	let err = validatePwd(req.body.pwd, req.body.pwdRepeat);
@@ -132,45 +135,64 @@ router.post('/pwd-reset-update', async (req, res) => {
 
 
 
-router.post('/edit-contact-author', async (req, res) => {
-	// check bddy length
-	if (req.body.emailBody.length < 5) return res.status(400).send('Email body too short, message not sent');
 
-	// email details
-	const subject = 'Cookwell - Edit Recipe';
-	const from = 'foo@example.com';
-	const to = req.body.userEmail;
-	const html = 
-		`<html>
-			<head>
-			    <style>
-			    </style>
-			</head>
-			<body>
-			    <p>Hello ${req.body.authorName},</p>
-			    <p>
-			    	At Cookwell we peform a quick review of all recipes uploaded for content, spelling/grammar, and photo quality. Sometimes we ask for corrections before we publish a recipe. 
-			    	Please make the following corrections to '${req.body.rtitle}', detailed below. Then reply to this email, notifying us the corrections were made, and we will publish your recipe.
-			    </p>
-			    <p>${req.body.emailBody}</p>
-			</body>
-		</html>`;
 
-	// send Email
-	sendEmail(from, to, subject, html).catch(err => {
+
+
+
+router.post('/contactAuthor', async (req, res) => {
+	console.log('contactAuthor', req.body);
+	try {
+		// check bddy length
+		if (req.body.emailBody.length < 5) return res.status(400).send('Email body too short, message not sent');
+
+		var authid = decrypt(req.body.authid);
+	    if (!authid) return res.status(500).send();
+
+		// get auth email
+		let user = await User.findOne({_id: authid}).select('email name');
+		console.log(user);
+
+		// email details
+		const subject = 'Cookwell - Edit Recipe';
+		const from = 'foo@example.com';
+		const to = user.email;
+		const html = 
+			`<html>
+				<head>
+				    <style>
+				    </style>
+				</head>
+				<body>
+				    <p>Hello ${user.name},</p>
+				    <p>
+				    	At Cookwell we peform a quick review of all recipes uploaded for content, spelling/grammar, and photo quality. Sometimes we ask for corrections before we publish a recipe. 
+				    	Please make the following corrections detailed at the end of this email for </br></br> ${req.body.rtitle} </br></br> Please reply to this email, notifying us of the corrections, and we will publish your recipe.</br></br>
+				    </p>
+				    <p>${req.body.emailBody}</p>
+				</body>
+			</html>`;
+
+		// send Email
+		sendEmail(from, to, subject, html).catch(err => {
+			console.log(err);
+			return res.status(500).send('Server error, Email not sent');
+		});
+
+		// set status of Sent Email
+		await Recipe.findOneAndUpdate(
+			{_id: req.body.rid},
+			{contactedAuthor: true},
+			function (err) {
+	            if (err) return res.status(500).send('Email Sent, with server error');
+	        })
+
+		return res.status(200).send('Email sent!');
+	}
+	catch (err) {
 		console.log(err);
-		return res.status(500).send('Server error, Email not sent');
-	});
-
-	// set status of Sent Email
-	await Recipe.findOneAndUpdate(
-		{title: req.body.rtitle, authid: req.body.authid},
-		{contactedAuthor: true},
-		function (err) {
-            if (err) return res.status(500).send('Email Sent, with server error');
-        })
-
-	res.status(200).send('Email sent!');
+		return res.status(400).send();
+	}
 })
 
 

@@ -13,7 +13,9 @@ const CookBanner = (props) => {
 		const data = JSON.stringify({currentRecipe: props.currentRecipe});
 
 		axios.post('/api/recipes/getcookbanner', data, {cancelToken: source.token}, { headers: {'Content-Type': 'application/json'} })
-			.then((res) => { setRecipeData(res.data) })
+			.then((res) => { 
+				setRecipeData(res.data);
+			})
 			.catch((err) => { console.log(err) });
 
 		return () => source.cancel();

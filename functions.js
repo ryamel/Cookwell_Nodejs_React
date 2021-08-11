@@ -141,17 +141,20 @@ const getRandomRecipes = async function(ndocs, recipeName_ex = null) {
     // recipeName_ex: exclude any recipes from search
     try {
         const date = Date.now() - 1210000000; // ignore recipes made in the last 2 weeks ( 1,210,000,000ms ) // uploadDate: { $lt: date } bug
-        if (typeof recipeName_ex === null) {
-            var recipes = await Recipe.find({})
-                .select('-__v -_id')
-                .populate('authid', 'name profileImg'); 
+        if (recipeName_ex === null) {
+            var recipes = await Recipe.find({'reviewed': true })
+                .select('authid description img title -_id')
+                .populate('authid', 'name profileImg _id'); 
             if (recipes.length < 1) return [];
         } else {
-            var recipes = await Recipe.find({title: {$ne: recipeName_ex} })
-                .select('-__v -_id')
-                .populate('authid', 'name profileImg'); 
+            var recipes = await Recipe.find({
+                    title: {$ne: recipeName_ex},
+                    reviewed: true
+                })
+                .select('img title -_id');
             if (recipes.length < 1) return [];
         }
+        //console.log(recipes);
 
         // generate array of #ndoc random, unique, numbers. Ranging between 1 - recipe.count
         let count = recipes.length;
@@ -168,10 +171,13 @@ const getRandomRecipes = async function(ndocs, recipeName_ex = null) {
 
         // convert ranRecipes to proper "object"
         ranRecipes = JSON.parse(JSON.stringify(ranRecipes));
-        // encrypt authid
-        ranRecipes.forEach((recipe, index, ranRecipes) => {
-            ranRecipes[index].authid._id = encrypt(recipe.authid._id.toString());
-        })
+
+        if (recipeName_ex === null) {
+            // encrypt authid
+            ranRecipes.forEach((recipe, index, ranRecipes) => {
+                ranRecipes[index].authid._id = encrypt(recipe.authid._id.toString());
+            })
+        }
 
         // return recipes
         return ranRecipes;

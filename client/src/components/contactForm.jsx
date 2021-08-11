@@ -8,15 +8,14 @@ const ContactForm = (props) => {
 	const [emailBody, setEmailBody] = useState('');
 
 	const sendEmail = () => {
-		const data = JSON.stringify({
+		const body = {
 			emailBody: emailBody,
-			authorName: props.authName,
 			authid: props.authid,
-			userEmail: props.authorEmail,
-			rtitle: props.rtitle
-		});
+			rtitle: props.rtitle,
+			rid: props.rid
+		};
 
-		axios.post('/api/mail/editcontactauthor', data, { headers: {'Content-Type': 'application/json'} } )
+		axios.post('/api/mail/contactAuthor', body)
 			.then(res => {
 				props.handleError(res.data);
 			})
@@ -31,9 +30,16 @@ const ContactForm = (props) => {
 
 	return(
 		<div id='contactForm'>
-			<div id='authName'>To: {props.authName}</div>
-			<button id='emailBtn' onClick={() => sendEmail()}>Send</button>
-			<button id='closeMailBtn' onClick={() => props.setOpenMail(false) }> Close X </button>
+			<div id='authName'><b>Email Author of:</b> <i>{props.rtitle}</i></div>
+
+			<button id='emailBtn' onClick={() => sendEmail()}>
+				Send
+			</button>
+
+			<button id='closeMailBtn' onClick={() => props.setOpenMail(false) }> 
+				Close X 
+			</button>
+
 			<textarea 
 				value={emailBody}
 				onChange={(e) => setEmailBody(e.target.value)}

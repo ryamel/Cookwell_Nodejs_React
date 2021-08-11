@@ -12,6 +12,7 @@ class BrowseCard extends Component {
 		this.renderEditBtn = this.renderEditBtn.bind(this);
 		this.renderLink = this.renderLink.bind(this);
 		this.checkImg = this.checkImg.bind(this);
+		this.renderReviewTag = this.renderReviewTag.bind(this);
 		this.bcard = React.createRef();
 	}
 
@@ -37,6 +38,16 @@ class BrowseCard extends Component {
 					</div>
 				</Link>
 			);
+		}
+	}
+
+	renderReviewTag() {
+		if (this.props.edit && this.props.reviewed == false) {
+			return (
+				<div className='reviewTag'>
+					IN REVIEW
+				</div>
+			)
 		}
 	}
 
@@ -66,6 +77,8 @@ class BrowseCard extends Component {
 			<div className='browse-card' ref={this.bcard}>
 
 				{ this.renderHeader() }
+
+				{ this.renderReviewTag() }
 
 				<Link to={{pathname: process.env.PUBLIC_URL + '/recipe-page/?rtitle=' + encodeURIComponent(this.props.rtitle)}}>
 					<span className='card-link'></span>

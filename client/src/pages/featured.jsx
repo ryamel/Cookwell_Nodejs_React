@@ -25,7 +25,7 @@ class Featured extends Component {
 	getFeatured() {
 		axios.get("/api/recipes/getfeatured/", {cancelToken: source.token})
 			.then(res => {
-				//console.log('featured', res.data);
+				console.log('featured', res.data);
 				this.setState({featCardData: res.data});
 			})
 			.catch(err => console.log(err));
@@ -34,7 +34,7 @@ class Featured extends Component {
 	getLatest() {
 		axios.get("/api/recipes/getrecent/", {cancelToken: source.token})
 			.then(res => {
-				//console.log('recent', res.data);
+				console.log('recent', res.data);
 				this.setState({latestCardData: res.data});
 			})
 			.catch(err => console.log(err));
@@ -43,7 +43,7 @@ class Featured extends Component {
 	getMixItUp() {
 		axios.get("/api/recipes/getrandom/", {cancelToken: source.token})
 			.then(res => {
-				//console.log('random', res.data);
+				console.log('random', res.data);
 				this.setState({randomCardData: res.data});
 			})
 			.catch(err => console.log(err));

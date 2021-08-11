@@ -15,7 +15,6 @@ class accountRecipes extends React.Component {
 			isLoaded: false,
 			msg: ''
 		};
-		// this.handleMsg = this.handleMsg.bind(this);
 		source = axios.CancelToken.source();
 	}
 
@@ -30,32 +29,8 @@ class accountRecipes extends React.Component {
 				});
 			})
 			.catch(err => console.log(err));
-
-		// read url params message, then place message into state so it can be displayed on screen
-		// var url = window.location.href;
-		// var urlParam = 'msg';
-		// urlParam = urlParam.replace(/[\[\]]/g, '\\$&');
-	 //    var regex = new RegExp('[?&]' + urlParam + '(=([^&#]*)|&|#|$)'), 
-	 //    	results = regex.exec(url);
-	 //    if (!results || !results[2]) {
-	 //    	return null;
-	 //    } else {
-	 //    	let m = decodeURIComponent(results[2].replace(/\+/g, ' '));
-	 //    	m = m.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-	 //    	this.setState({msg: m});
-	 //    }
 		    
 	}
-
-
-	// handleMsg(msg){
-	// 	if (msg && msg.length > 0) {
-	// 		const timer = setTimeout(() => {
-	// 			this.setState({msg: ''});
-	// 		}, 8000);
-	// 		return <div className='bannerMsgBar'>{msg}</div>;
-	// 	}
-	// }
 
 	componentWillUnmount() {
 		if (source) {
@@ -90,12 +65,12 @@ class accountRecipes extends React.Component {
 										edit={true}
 										rtitle={cardData.title}
 										rid={cardData._id}
+										reviewed={cardData.reviewed}
 										/>	
 								)
 							}
 						</div>
 					</div>
-					{/*<Footer isLoaded={this.state.isLoaded} />*/}
 				</React.Fragment>
 			);
 		}

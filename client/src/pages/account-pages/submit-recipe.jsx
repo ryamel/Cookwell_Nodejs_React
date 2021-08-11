@@ -206,12 +206,7 @@ class submitRecipe extends React.Component {
 		 		this.resetSaveBtn();
 			})
 			.catch(error => {
-				if (error.response.data !== 'undefined') {
-					this.setState({
-						error: true,
-						errMsg: error.response.data
-					});
-				}
+				console.log(error);
 				this.resetSaveBtn();
 			});
 	}

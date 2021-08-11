@@ -29,6 +29,7 @@ class Recipes extends Component {
 		
 		axios.get("/api/recipes/page/0/" + this.state.limit, {cancelToken: source.token})
 			.then(res => {
+					console.log(res.data);
 					this.setState(prevState => ({
 						cardData: res.data,
 						isLoaded: true,

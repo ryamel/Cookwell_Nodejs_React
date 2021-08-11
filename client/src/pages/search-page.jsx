@@ -39,6 +39,7 @@ class Searchpage extends React.Component {
 
 		axios.post("/api/recipes/search", body, {cancelToken: source.token})
 			.then(res => {
+				console.log(res.data);
 				this.setState({
 					searchResult: res.data,
 					isLoaded: true

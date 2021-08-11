@@ -4,17 +4,16 @@ import './review-page.sass';
 import axios from 'axios';
 import { Link, useHistory } from "react-router-dom";
 import ContactForm from '../components/contactForm';
-
+let source;
 
 
 const ReviewPage = () => {
 	const [data, setData] = useState(null);
 	const [render, setRender] = useState(1);
 	const [openMail, setOpenMail] = useState(false);
-	const [openMail_email, setOpenMail_email] = useState(false);
-	const [openMail_authName, setOpenMail_authName] = useState(false);
-	const [openMail_rtitle, setOpenMail_rtitle] = useState(false);
+	const [openMail_rid, setOpenMail_rid] = useState(false);
 	const [openMail_authid, setOpenMail_authid] = useState(false);
+	const [openMail_rtitle, setOpenMail_rtitle] = useState(false);
 	const [errMsg, setErrMsg] = useState('');
 	let history = useHistory();
 
@@ -23,6 +22,7 @@ const ReviewPage = () => {
 
 		axios.get('/api/recipes/getreview', {cancelToken: source.token})
 			.then(res => {
+				console.log(res.data);
 				setData(res.data);
 			})
 			.catch(err => {
@@ -33,25 +33,23 @@ const ReviewPage = () => {
 	}, [render])
 
 
-	const approveRecipe = (rtitle, authid) => {
-		const body = JSON.stringify({
-			title: rtitle,
-			authid: authid
-		})
+	const approveRecipe = (rid) => {
 
-		axios.post('/api/recipes/approve', body, {cancelToken: source.token} )
+		const body = { rid: rid };
+
+		axios.post('/api/recipes/approve', body)
 			.then(res => {
+				console.log('return');
 				setRender(render + 1);
 			})
 			.catch(err => console.log(err));
 	}
 
-	const openEmail = (email, authorName, rtitle, authid) => {
+	const openEmail = (rid, authid, rtitle) => {
 		setOpenMail(true);
-		setOpenMail_email(email);
-		setOpenMail_authName(authorName);
-		setOpenMail_rtitle(rtitle);
+		setOpenMail_rid(rid);
 		setOpenMail_authid(authid);
+		setOpenMail_rtitle(rtitle);
 	}
 
 	const handleError = (errMsg) => {
@@ -89,8 +87,8 @@ const ReviewPage = () => {
 											<td> {recipe.authid.name}</td>
 											<td> <Link to={{pathname: process.env.PUBLIC_URL + '/recipe-page/?rtitle=' + recipe.title}}>{recipe.title}</Link> </td>
 											<td> {recipe.uploadDate.slice(0, 10)} </td>
-											<td> <button onClick={() => approveRecipe(recipe.title, recipe.authid._id) }>Approve</button> </td>
-											<td> <button onClick={() => openEmail(recipe.authid.email, recipe.authid.name, recipe.title, recipe.authid._id) }>Send Email</button> </td>
+											<td> <button onClick={() => approveRecipe(recipe._id) }>Approve</button> </td>
+											<td> <button onClick={() => openEmail(recipe._id, recipe.authid, recipe.title) }>Send Email</button> </td>
 											<td> {recipe.contactedAuthor ?  'Awaiting response' : 'No message sent'} </td>
 										</tr>
 									);
@@ -102,9 +100,8 @@ const ReviewPage = () => {
 				</div>
 					{	openMail && 
 							<ContactForm 
-								authName={openMail_authName} 
-								authorEmail={openMail_email} 
 								authid={openMail_authid}
+								rid={openMail_rid}
 								rtitle={openMail_rtitle}
 								handleError={handleError}
 								setOpenMail={setOpenMail} 
