@@ -24,6 +24,14 @@ const { encrypt, decrypt, saveUserImage, validFileProperties, validatePwd, valid
 
 router.post('/register', async (req, res) => {
     try {
+
+
+        // encypt pwd using bcrypt library
+        // const saltu = await bcrypt.genSalt(10);
+        // const hashPwdu = await bcrypt.hash('Europe2010', saltu);
+        // console.log(hashPwdu);
+
+
         // check if email is already taken (i.e unique email)
         let check = await User.findOne({email: req.body.email});
         if (check) return res.status(400).send('That email is alredy being used');
