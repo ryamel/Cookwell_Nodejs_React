@@ -14,10 +14,10 @@ const nodemailer = require("nodemailer");
 //const clientURL = "http://localhost:3000";
 const clientURL = "http://147.182.213.40:4000/";
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
-	let testAccount = await nodemailer.createTestAccount();
+	//let testAccount = await nodemailer.createTestAccount();
 	let transporter = nodemailer.createTransport({
-		host: "mail.cookwell.co",
-		port: 587,
+		host: "ns6323.hostgator.com",
+		port: 25,
 		secure: false, // true for 465, false for other ports
 		auth: {
 			//user: testAccount.user, // generated ethereal user
@@ -26,6 +26,17 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 			pass: process.env.mailPwd, // generated ethereal password
 		},
 	});
+
+	// verify connection configuration
+	transporter.verify(function (error, success) {
+		if (error) {
+			console.log(error);
+			return false;
+		} else {
+			console.log("Server is ready to take our messages");
+		}
+	});
+
 	let info = await transporter.sendMail({
 		from: fromEmail, // sender address
 		to: toEmail, // list of receivers
@@ -33,8 +44,10 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 		text: ``, // plain text body
 		html:  htmlBody
 	});
-	console.log("Message sent: %s", info.messageId);
-	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+	return true;
+	//console.log("Message sent: %s", info.messageId);
+	//console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }
 
 
@@ -154,7 +167,6 @@ router.post('/contactAuthor', async (req, res) => {
 
 		// get auth email
 		let user = await User.findOne({_id: authid}).select('email name');
-		console.log(user);
 
 		// email details
 		const subject = 'Cookwell - Edit Recipe';
@@ -177,10 +189,8 @@ router.post('/contactAuthor', async (req, res) => {
 			</html>`;
 
 		// send Email
-		sendEmail(from, to, subject, html).catch(err => {
-			console.log(err);
-			return res.status(500).send('Server error, Email not sent');
-		});
+		let sent = await sendEmail(from, to, subject, html);
+		if (!sent) return res.status(500).send('SMTP Connection Error');
 
 		// set status of Sent Email
 		await Recipe.findOneAndUpdate(
