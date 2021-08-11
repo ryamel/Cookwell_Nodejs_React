@@ -16,12 +16,12 @@ const clientURL = "http://147.182.213.40:4000/";
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 	let testAccount = await nodemailer.createTestAccount();
 	let transporter = nodemailer.createTransport({
-		host: "smtp.gmail.com",
+		host: "mail.cookwell.co",
 		port: 587,
 		secure: false, // true for 465, false for other ports
 		auth: {
 			//user: testAccount.user, // generated ethereal user
-			user: 'ryamel70@gmail.co', // generated ethereal user
+			user: 'contact@cookwell.co', // generated ethereal user
 			//pass: testAccount.pass, // generated ethereal password
 			pass: process.env.mailPwd, // generated ethereal password
 		},
