@@ -53,8 +53,8 @@ app.use('/api/mail', mail);
 
 // allow use of assests available by url... https://dominaName.com/images.jpg
 //Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
-console.log('env.production: ', process.env.production);
-if (process.env.production == true) {
+console.log('env.production:', process.env.production);
+if (process.env.production == 'true') {
 	console.log('PRODUCTION BUILD');
 
 	// get access to mounted volume from Digital Oceans for serving static images. Directory is relative to server.js file location
