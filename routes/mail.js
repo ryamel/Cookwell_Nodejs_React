@@ -18,9 +18,10 @@ const clientURL = "http://147.182.213.40:4000/";
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 	//let testAccount = await nodemailer.createTestAccount();
 	let transporter = nodemailer.createTransport({
+		name: 'hostgator',
 		host: "ns6323.hostgator.com",
-		port: 25,
-		secure: false, // true for 465, false for other ports
+		port: 465,
+		secure: true, // true for 465, false for other ports
 		auth: {
 			//user: testAccount.user, // generated ethereal user
 			user: process.env.mailAccount, // generated ethereal user
