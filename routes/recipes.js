@@ -484,7 +484,7 @@ router.get('/getreview', verifyToken, async (req, res) => {
 
     try {
         let recipes = await Recipe.find({reviewed: false})
-            .select('authid title _id uploadDate');
+            .select('authid title _id uploadDate contactedAuthor');
 
         // convert recipe to proper "object"
         recipes = JSON.parse(JSON.stringify(recipes));
@@ -517,6 +517,9 @@ router.post('/approve', verifyToken, async (req, res) => {
 
    return res.status(200).send();
 })
+
+
+
 
 
 router.post('/getcookbanner', async (req,res) => {
