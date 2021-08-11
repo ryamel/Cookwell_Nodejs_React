@@ -13,6 +13,8 @@ const Recipe = require('../models/recipes');
 const nodemailer = require("nodemailer");
 //const clientURL = "http://localhost:3000";
 const clientURL = "http://147.182.213.40:4000/";
+
+
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 	//let testAccount = await nodemailer.createTestAccount();
 	let transporter = nodemailer.createTransport({
@@ -44,6 +46,8 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 		text: ``, // plain text body
 		html:  htmlBody
 	});
+
+	console.log(info);
 
 	return true;
 	//console.log("Message sent: %s", info.messageId);
