@@ -86,8 +86,8 @@ router.post('/pwdReset', async (req, res) => {
 router.post('/pwdResetUpdate', async (req, res) => {
 	console.log(req.body);
 	// valid pwd
-	let err = validatePwd(req.body.pwd, req.body.pwdRepeat);
-	if (err) return res.status(400).send(err)
+	let errMsg = validatePwd(req.body.pwd, req.body.pwdRepeat);
+	if (errMsg) return res.status(400).send(errMsg);
 	// check for token (dont have to compare expiry as mongoDB mongoose expires field controlls this. See Token model expiry field.)
 	let tokenDoc = await Token.findOne({userId: req.body.uid});
 	if (!tokenDoc) return res.status(400).send('Invalid or expired token, try requsting password reset again.')

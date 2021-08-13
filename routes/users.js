@@ -41,8 +41,8 @@ router.post('/register', async (req, res) => {
         if (!valid) return res.status(400).send('Invalid email');
 
         // check valid password
-        let err = validatePwd(req.body.pwd, req.body.pwdRepeat);
-        if (err) return res.status(400).send(err);
+        let errMsg = validatePwd(req.body.pwd, req.body.pwdRepeat);
+        if (errMsg) return res.status(400).send(errMsg);
 
         // encypt pwd using bcrypt library
         const salt = await bcrypt.genSalt(10);
@@ -111,7 +111,7 @@ router.post('/changepassword', verifyToken, async (req, res) => {
     if (req.body.newPwd !== req.body.newPwdRepeat) return res.status(400).send('Passwords do not match');
     // find user
     const user = await User.findOne({_id: req.tokenData._id});
-    if (!user) return res.status(500).send('error');
+    if (!user) return res.status(500).send('Server Error');
     // validate password
     const pwdCheck = await bcrypt.compare(req.body.oldPwd, user.pwd);
     if (!pwdCheck) return res.status(400).send('Old password is incorrect');
@@ -120,7 +120,7 @@ router.post('/changepassword', verifyToken, async (req, res) => {
     const hashPwd = await bcrypt.hash(req.body.newPwd, salt);
     // update
     User.findOneAndUpdate({_id: req.tokenData._id}, {pwd: hashPwd}, (err) => {
-        if (err) return res.status(500).send('server error');
+        if (err) return res.status(500).send('Server Error');
         return res.status(200).send('User password updated!');
     });
 
@@ -235,16 +235,6 @@ router.post('/getuserdata', async (req, res) => {
         return res.status(500).send('Server Error');
     }
 })
-
-// router.post('/getcookprofile', async (req, res) => {
-//     try {
-//         const user = await User.findOne({_id: req.body.authid}).select('about name profileImg -_id');
-//         res.status(200).json(user);
-//     }
-//     catch (err) {
-//         return res.status(500).send();
-//     }
-// })
 
 
 

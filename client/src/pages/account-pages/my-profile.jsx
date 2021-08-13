@@ -23,10 +23,24 @@ class MyProfile extends Component {
 		this.updateProfile = this.updateProfile.bind(this);
 		this.fileHandler = this.fileHandler.bind(this);
 		this.handleError = this.handleError.bind(this);
+		this.resetSaveBtn = this.resetSaveBtn.bind(this);
+		this.btnSaving = this.btnSaving.bind(this);
+		this.saveBtn = React.createRef();
 		this.email = React.createRef();
 		this.name = React.createRef();
 		this.about = React.createRef();
 		this.fileRef = React.createRef();
+	}
+
+	resetSaveBtn() {
+		let btnHtml = 'Save';
+		this.saveBtn.current.removeAttribute("disabled");
+		document.querySelector(".submitr-btn").innerHTML = btnHtml;
+	}
+
+	btnSaving() {// disable submit button
+		this.saveBtn.current.setAttribute("disabled", "disabled");
+		document.querySelector(".submitr-btn").innerHTML = "Saving...";
 	}
 
 	fileHandler(event) {
@@ -59,6 +73,8 @@ class MyProfile extends Component {
 
 
 	updateProfile() {
+		this.btnSaving();
+
 		const formData = new FormData();
 		formData.append('email', this.email.current.value);
 		formData.append('name', this.name.current.value);
@@ -77,12 +93,14 @@ class MyProfile extends Component {
 					errMsg: 'Profile Updated',
 					password: ''
 				});
+				this.resetSaveBtn();
 			})
 			.catch(error => {
 				this.setState({
 					errMsg: error.response.data,
 					password: ''
 				});
+				this.resetSaveBtn();
 			});
 		
 	}
@@ -197,8 +215,8 @@ class MyProfile extends Component {
 					
 
 						<div>
-							<button className='submitr-btn' type='submit' name='submit-accountUpdate' onClick={this.updateProfile} >
-								Update Account
+							<button className='submitr-btn' type='submit' name='submit-accountUpdate' ref={this.saveBtn} onClick={this.updateProfile} >
+								Save
 							</button>
 						</div>
 

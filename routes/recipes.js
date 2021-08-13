@@ -118,7 +118,7 @@ router.post('/search', async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        return res.status(400).send(err.message); 
+        return res.status(400).send('Server Error'); 
     }
 
 });
@@ -461,7 +461,7 @@ router.post('/deleterecipe', [verifyToken], async (req, res) => {
             fs.unlinkSync("../client/public/user_recipes_img/original/" + recipe.img);
         }
 
-        return res.status(200).send('');
+        return res.status(200).send();
     }
     catch (err) {
         console.log(err);

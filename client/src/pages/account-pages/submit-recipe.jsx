@@ -38,8 +38,7 @@ class submitRecipe extends React.Component {
 			fileObjURL: '',
 			error: null,
 			errMsg: '',
-			redirect: false,
-			saveBtn: 'off'
+			redirect: false
 		};
 		source = axios.CancelToken.source();
 		this.saveBtn = React.createRef();
