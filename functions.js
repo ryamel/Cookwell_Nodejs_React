@@ -46,7 +46,7 @@ const saveRecipeImage = async function(giveName, filePath) {
         let extension = path.extname(filePath).toLowerCase();
         var fileName = giveName.replace(/\s/g,"_").replace(/[\\\.\+\*\?\^\$\,\[\]\{\}\|<>#%!`&'"=:@~;()]/g, '') + '_' + Date.now() + extension;
 
-        if (process.env.production) {
+        if (process.env.production = 'true') {
             var savePath_orig = "../../mnt/volume1/user_recipes_img/original/" + fileName;
             var savePath_card = "../../mnt/volume1/user_recipes_img/card/" + fileName;
             var savePath_disp = "../../mnt/volume1/user_recipes_img/display/" + fileName;
@@ -95,7 +95,7 @@ const saveUserImage = async function(giveName, filePath) {
         let extension = path.extname(filePath).toLowerCase();
         var fileName = giveName.replace(/\s/g,"_").replace(/[\\\.\+\*\?\^\$\,\[\]\{\}\|<>#%!`&'"=:@~;()]/g, '') + '_' + Date.now() + extension;
 
-        if (process.env.production) {
+        if (process.env.production == 'true') {
             var savePath_orig = "../../mnt/volume1/user_profile_img/original/" + fileName;
             var savePath_card = "../../mnt/volume1/user_profile_img/card/" + fileName;
             var savePath_thumb = "../../mnt/volume1/user_profile_img/thumb/" + fileName;

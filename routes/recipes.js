@@ -290,7 +290,7 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
     catch (err) {
         console.log(err);
         try {
-            if (process.env.production) {
+            if (process.env.production == 'true') {
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + fileName);
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + fileName);
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + fileName);
@@ -355,7 +355,7 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
         // delete old img files (if req.files was uploaded)
         if (typeof req.file !== "undefined") {
             try {
-                if (process.env.production) {
+                if (process.env.production == 'true') {
                     fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + oldRecipe.img);
                     fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + oldRecipe.img);
                     fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + oldRecipe.img);
@@ -372,7 +372,7 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
     catch (err) {
         console.log(err);
         try {
-            if (process.env.production) {
+            if (process.env.production == 'true') {
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + filename);
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + filename);
                 fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + filename);
@@ -451,7 +451,7 @@ router.post('/deleterecipe', [verifyToken], async (req, res) => {
         // remove from mongoDB
         await Recipe.deleteOne({_id: req.body.rid})
         // remove file image (using ID)
-        if (process.env.production) {
+        if (process.env.production == 'true') {
             fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + recipe.img);
             fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + recipe.img);
             fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + recipe.img);
