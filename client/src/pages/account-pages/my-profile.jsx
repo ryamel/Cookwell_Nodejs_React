@@ -97,11 +97,17 @@ class MyProfile extends Component {
 				this.resetSaveBtn();
 			})
 			.catch(error => {
-				console.log(error.response);
-				this.setState({
-					errMsg: error.response.data,
-					password: ''
-				});
+				if (error.response.length > 100) { 
+					this.setState({
+						errMsg: 'Server Error',
+						password: ''
+					});
+				} else {
+					this.setState({
+						errMsg: error.response.data,
+						password: ''
+					});
+				}
 				this.resetSaveBtn();
 			});
 		

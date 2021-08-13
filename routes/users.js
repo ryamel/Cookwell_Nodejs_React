@@ -146,6 +146,7 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
                 catch (err) { console.log(err) }
                 return res.status(400).send('Image file must be a .png or .jpg under 8MB');
             }
+            console.log('updateprofile: 1');
             // save file
             let fileName = await saveUserImage(req.body.name, req.file.path);
             if (fileName === false) return res.status(500).send('Server Error');
@@ -165,8 +166,6 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
         if (req.body.name.length < 3) return res.status(400).send('Username must be at least 3 characters');
         if (req.body.about.length >= 500) return res.status(400).send('About section must be less than 500 characters');
 
-        // send email to new user address
-        // ****
 
         // update document 
         await User.findOneAndUpdate({ _id: req.tokenData._id }, req.body, { runValidators: true });
@@ -174,9 +173,15 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
         // delete old img files (if req.files was uploaded)
         if (typeof req.file !== "undefined") {
             try {
-                fs.unlinkSync("client/public/user_profile_img/card/" + oldUser.profileImg);
-                fs.unlinkSync("client/public/user_profile_img/thumb/" + oldUser.profileImg);
-                fs.unlinkSync("client/public/user_profile_img/original/" + oldUser.profileImg);
+                if (process.env.production == 'true') {
+                    fs.unlinkSync("../../mnt/volume1/user_profile_img/card/" + oldUser.profileImg);
+                    fs.unlinkSync("../../mnt/volume1/user_profile_img/thumb/" + oldUser.profileImg);
+                    fs.unlinkSync("../../mnt/volume1/user_profile_img/original/" + oldUser.profileImg);
+                } else {
+                    fs.unlinkSync("client/public/user_profile_img/card/" + oldUser.profileImg);
+                    fs.unlinkSync("client/public/user_profile_img/thumb/" + oldUser.profileImg);
+                    fs.unlinkSync("client/public/user_profile_img/original/" + oldUser.profileImg);
+                }
             } catch (e) { console.log(e) }
         }
     }
