@@ -68,7 +68,7 @@ class MyProfile extends Component {
 			})
 			.catch(error => {
 				//if (error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
-				console.log(error);
+				console.log(error.response);
 			});	
 	}
 
@@ -97,7 +97,7 @@ class MyProfile extends Component {
 				this.resetSaveBtn();
 			})
 			.catch(error => {
-				console.log(error);
+				console.log(error.response);
 				this.setState({
 					errMsg: error.response.data,
 					password: ''
