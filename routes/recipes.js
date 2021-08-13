@@ -340,6 +340,7 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
 
             // append new img filename for doc
             req.body.img = fileName;
+            req.body.reviewed = false; // require review on img change
 
             // grab old img file name for deletion
             var oldRecipe = await Recipe.findOne({ _id: req.body.rid }).select('img');

@@ -107,7 +107,6 @@ router.post('/login', async (req, res) => {
 
 router.post('/changepassword', verifyToken, async (req, res) => {
     console.log('change-password');
-    console.log(req.body);
     try {
         if (req.body.newPwd !== req.body.newPwdRepeat) return res.status(400).send('Passwords do not match');
         // find user
