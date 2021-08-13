@@ -106,23 +106,26 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/changepassword', verifyToken, async (req, res) => {
-    //console.log(req.body);
-
-    if (req.body.newPwd !== req.body.newPwdRepeat) return res.status(400).send('Passwords do not match');
-    // find user
-    const user = await User.findOne({_id: req.tokenData._id});
-    if (!user) return res.status(500).send('Server Error');
-    // validate password
-    const pwdCheck = await bcrypt.compare(req.body.oldPwd, user.pwd);
-    if (!pwdCheck) return res.status(400).send('Old password is incorrect');
-    // encypt pwd using bcrypt library
-    const salt = await bcrypt.genSalt(10);
-    const hashPwd = await bcrypt.hash(req.body.newPwd, salt);
-    // update
-    User.findOneAndUpdate({_id: req.tokenData._id}, {pwd: hashPwd}, (err) => {
-        if (err) return res.status(500).send('Server Error');
+    console.log('change-password');
+    try {
+        if (req.body.newPwd !== req.body.newPwdRepeat) return res.status(400).send('Passwords do not match');
+        // find user
+        const user = await User.findOne({_id: req.tokenData._id});
+        if (!user) return res.status(500).send('Server Error');
+        // validate password
+        const pwdCheck = await bcrypt.compare(req.body.oldPwd, user.pwd);
+        if (!pwdCheck) return res.status(400).send('Old password is incorrect');
+        // encypt pwd using bcrypt library
+        const salt = await bcrypt.genSalt(10);
+        const hashPwd = await bcrypt.hash(req.body.newPwd, salt);
+        // update
+        await User.findOneAndUpdate({_id: req.tokenData._id}, {pwd: hashPwd});
         return res.status(200).send('User password updated!');
-    });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).send("Server Error");
+    }
 
 })
 
@@ -146,7 +149,7 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
                 catch (err) { console.log(err) }
                 return res.status(400).send('Image file must be a .png or .jpg under 8MB');
             }
-            console.log('updateprofile: 1');
+
             // save file
             let fileName = await saveUserImage(req.body.name, req.file.path);
             if (fileName === false) return res.status(500).send('Server Error');
@@ -186,11 +189,16 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
         }
     }
     catch (err) {
-        console.log(err);
-        try {
-            fs.unlinkSync("client/public/user_profile_img/card/" + fileName);
-            fs.unlinkSync("client/public/user_profile_img/thumb/" + fileName);
-            fs.unlinkSync("client/public/user_profile_img/original/" + fileName);
+        try {     
+            if (process.env.production == 'true') {
+                fs.unlinkSync("../../mnt/volume1/user_profile_img/card/" + filename);
+                fs.unlinkSync("../../mnt/volume1/user_profile_img/thumb/" + filename);
+                fs.unlinkSync("../../mnt/volume1/user_profile_img/original/" + filename);
+            } else {
+                fs.unlinkSync("client/public/user_profile_img/card/" + filename);
+                fs.unlinkSync("client/public/user_profile_img/thumb/" + filename);
+                fs.unlinkSync("client/public/user_profile_img/original/" + filename);
+            }
         } catch (e) { console.log(e) }
     }
 
