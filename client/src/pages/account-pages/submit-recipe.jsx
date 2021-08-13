@@ -205,10 +205,18 @@ class submitRecipe extends React.Component {
 		 		this.resetSaveBtn();
 			})
 			.catch(error => {
-				this.setState({
+				console.log(error);
+				if (error.response.data.length > 100) {
+					this.setState({
+						error: true,
+						errMsg: "Server Error"
+					});
+				} else {
+					this.setState({
 						error: true,
 						errMsg: error.response.data
 					});
+				}
 				this.resetSaveBtn();
 			});
 	}
