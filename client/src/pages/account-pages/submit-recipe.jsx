@@ -15,6 +15,7 @@ import PhotoShow from '../../components/photoShow';
 import DeleteRecipe from '../../components/deleteRecipe';
 import Footer from '../../components/footer';
 let source;
+let timer;
 
 
 
@@ -177,8 +178,7 @@ class submitRecipe extends React.Component {
 		document.querySelector(".submitr-btn").innerHTML = btnHtml;
 	}
 
-	btnSaving() {
-		// disable submit button
+	btnSaving() {// disable submit button
 		this.saveBtn.current.setAttribute("disabled", "disabled");
 		document.querySelector(".submitr-btn").innerHTML = "Saving...";
 	}
@@ -205,7 +205,10 @@ class submitRecipe extends React.Component {
 		 		this.resetSaveBtn();
 			})
 			.catch(error => {
-				console.log(error);
+				this.setState({
+						error: true,
+						errMsg: error.response.data
+					});
 				this.resetSaveBtn();
 			});
 	}
@@ -237,27 +240,24 @@ class submitRecipe extends React.Component {
 				this.resetSaveBtn();
 			})
 			.catch(error => {
-				if (typeof error.response.data !== 'undefined') {
 					this.setState({
 						error: true,
 						errMsg: error.response.data
 					});
-				} else {
-					console.log(error);
-				}
 				this.resetSaveBtn();
 			});
 	}
 
 	componentWillUnmount() {
 		if (source) source.cancel();
+		if (timer) clearTimeout(timer);
 	}
 
 	
 	handleError(error, msg) {
 		if (error) {
 			const timer = setTimeout(() => {
-				this.setState({	// remove error msg
+				this.setState({	// reset error msg
 					error: false,
 					errMsg: ''
 				});

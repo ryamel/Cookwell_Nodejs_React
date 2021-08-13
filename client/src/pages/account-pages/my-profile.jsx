@@ -5,6 +5,7 @@ import Footer from '../../components/footer';
 import PhotoShow from '../../components/photoShow';
 import axios from 'axios';
 let source;
+let timer;
 
 class MyProfile extends Component {
 	constructor() {
@@ -107,12 +108,13 @@ class MyProfile extends Component {
 
 	componentWillUnmount() {
 		if (source) source.cancel();
+		if (timer) clearTimeout(timer);
 	}
 
 
 	handleError(errMsg){
 		if (errMsg.length > 0) {
-			const timer = setTimeout(() => {
+			timer = setTimeout(() => {
 				this.setState({errMsg: ''});
 			}, 5500);
 			return <div className='bannerMsgBar'>{errMsg}</div>;

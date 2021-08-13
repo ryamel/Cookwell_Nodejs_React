@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import './change-password.sass';
 import axios from 'axios';
 import Footer from '../../components/footer';
-let source;
+var source;
+var timer;
 
 class changePassword extends Component {
 	constructor() {
@@ -74,7 +75,7 @@ class changePassword extends Component {
 
 	handleError(msg) {
 		if (msg.length > 0) {
-			const timer = setTimeout(() => {
+			timer = setTimeout(() => {
 				this.setState({msg: ''});
 			}, 5500);
 			return <div className='bannerMsgBar'>{msg}</div>;
@@ -83,6 +84,7 @@ class changePassword extends Component {
 
 	componentWillUnmount() {
 		if (source) source.cancel();
+		if (timer) clearTimeout(timer);
 	}
 
 
