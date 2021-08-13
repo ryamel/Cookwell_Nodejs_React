@@ -1,6 +1,7 @@
 @import '../_App.sass'
 $sideMenu-width: 200px
 $accountForm-width: 700px
+$mod-browse-card-height: 300px
 
 .borderRight
 	border-right: 4px solid rgb(142,211,95)
@@ -43,13 +44,13 @@ $accountForm-width: 700px
 			display: grid
 			margin-top: 10px 0 0 0
 			grid-template-columns: repeat(auto-fit, 229px)
-			grid-auto-rows: 290px
+			grid-auto-rows: $mod-browse-card-height
 			justify-content: left
 			grid-gap: 5px
 			// @include accountSecondBreak
 			// 	justify-content: center
 			.browse-card
-				height: 290px
+				height: $mod-browse-card-height
 				width: 230px
 				box-shadow: 1px 1px 2px rgb(35,35,35)
 				font-size: 0.92em

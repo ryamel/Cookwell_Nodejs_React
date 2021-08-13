@@ -79,8 +79,10 @@ class MyProfile extends Component {
 				});
 			})
 			.catch(error => {
-				if (typeof error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
-				this.setState({password: ''});
+				this.setState({
+					errMsg: error.response.data,
+					password: ''
+				});
 			});
 		
 	}

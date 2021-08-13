@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 
-if (process.env.production) {
+if (process.env.production == 'true') {
 	var tmpLocation = '../../../mnt/volume1/tmp_upload';
 } else {
 	var tmpLocation = 'client/tmp_upload/';
