@@ -154,12 +154,11 @@ const getRandomRecipes = async function(ndocs, recipeName_ex = null) {
                 .select('img title -_id');
             if (recipes.length < 1) return [];
         }
-        //console.log(recipes);
 
         // generate array of #ndoc random, unique, numbers. Ranging between 1 - recipe.count
-        let count = recipes.length;
-        let ranRecipes = [];
-        let num = Math.floor(Math.random() * count);
+        var count = recipes.length;
+        var ranRecipes = [];
+        var num = Math.floor(Math.random() * count);
         for (var i = 0; i < ndocs; i++) {
             while (ranRecipes.includes(num)) num = Math.floor(Math.random() * count);
             ranRecipes[i] = num;
@@ -169,10 +168,11 @@ const getRandomRecipes = async function(ndocs, recipeName_ex = null) {
             ranRecipes[i] = recipes[ranRecipes[i]];
         }
 
-        // convert ranRecipes to proper "object"
-        ranRecipes = JSON.parse(JSON.stringify(ranRecipes));
 
+        // encrypt authid
         if (recipeName_ex === null) {
+            // convert ranRecipes to proper "object"
+            ranRecipes = JSON.parse(JSON.stringify(ranRecipes));
             // encrypt authid
             ranRecipes.forEach((recipe, index, ranRecipes) => {
                 ranRecipes[index].authid._id = encrypt(recipe.authid._id.toString());

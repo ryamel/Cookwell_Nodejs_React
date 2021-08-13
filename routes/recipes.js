@@ -46,7 +46,7 @@ router.get('/page/:skip/:limit', async (req, res) => {
             recipes[index].authid._id = encrypt(recipe.authid._id.toString());
         })
 
-        return res.json(recipes);
+        return res.status(200).json(recipes);
     }
     catch (err) {
         console.log(err);
@@ -183,18 +183,21 @@ router.get('/getrecent/', async (req, res) => {
 router.get('/getfeatured', async (req, res) => {
     console.log('getfeatured');
     try {
-        // use ref and populate to link author data to recipe doc. This will prevent haveing to perform additional queries
-        var recipes = await Recipe.find({'_id': {$in: featList}})
+        var recipes = await Recipe
+            .find({'_id': {$in: featList}})
             .select('authid description img title -_id')
-            .populate('authid', 'name profileImg'); 
+            .populate('authid', '_id name');
+
+
         if (!recipes) return res.status(400).send();
 
         // convert recipe to proper "object"
-        var recipes = JSON.parse(JSON.stringify(recipes));
+        recipes = JSON.parse(JSON.stringify(recipes));
         // encrypt authid
         recipes.forEach((recipe, index, recipes) => {
             recipes[index].authid._id = encrypt(recipe.authid._id.toString());
         })
+
         return res.status(200).json(recipes);
     }
     catch (err) {
