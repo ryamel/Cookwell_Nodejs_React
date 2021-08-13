@@ -19,8 +19,8 @@ const PhotoShow = React.forwardRef((props, ref) => {
          if (!props.file && props.fileName && !props.fileObjURL) {
             // if (props.imageType == 'recipe') var img = <img src={imagesRecipe(`./${props.fileName}`).default} />; // case of download from sever --> fileName only
             // if (props.imageType == 'user') var img = <img src={imagesProfile(`./${props.fileName}`).default} />;
-            if (props.imageType == 'recipe') var img = <img src={'/user_recipes_img/display/' + props.fileName} />; // case of download from sever --> fileName only
-            if (props.imageType == 'user') var img = <img src={'/user_profile_img/display/' + props.fileName} />;
+            if (props.imageType == 'recipe') var img = <img src={'/user_recipes_img/card/' + props.fileName} />; // case of download from sever --> fileName only
+            if (props.imageType == 'user') var img = <img src={'/user_profile_img/card/' + props.fileName} />;
          }
 
          if (props.fileObjURL) var img = <img src={props.fileObjURL} />;// case of upload on client --> file fileName fileObjURL
