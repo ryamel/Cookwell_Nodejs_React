@@ -16,8 +16,8 @@ require('dotenv').config();// allows use of .env files
 const cookieParser = require('cookie-parser'); // allows reading of cookies on front end (verifyToken middleware)
 app.use(cookieParser()); 
 
-app.use(express.json()); // * required to parse any http json data --> places json data into req.body
-
+app.use(express.json({limit: '50mb'})); // * required to parse any http json data --> places json data into req.body
+//app.use(express.urlencoded({limit: '50mb'}));
 
 if (!process.env.private_key) {
     console.log('FATAL ERROR: jwtPrivateKey is not defined');
