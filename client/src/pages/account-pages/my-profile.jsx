@@ -97,6 +97,7 @@ class MyProfile extends Component {
 				this.resetSaveBtn();
 			})
 			.catch(error => {
+				console.log(error);
 				this.setState({
 					errMsg: error.response.data,
 					password: ''
