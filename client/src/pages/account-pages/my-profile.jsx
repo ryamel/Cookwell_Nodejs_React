@@ -58,7 +58,7 @@ class MyProfile extends Component {
 	componentDidMount() {
 		axios.get('/api/users/getmyuserdata', {cancelToken: source.token})
 		 	.then(res => {
-		 		console.log(res.data);
+		 		//console.log(res.data);
 		 		this.setState({
 					defaultEmail: res.data.email,
 					defaultName: res.data.name,
@@ -68,7 +68,7 @@ class MyProfile extends Component {
 			})
 			.catch(error => {
 				//if (error.response.data !== 'undefined') this.setState({errMsg: error.response.data});
-				console.log(error.response);
+				//console.log(error.response);
 			});	
 	}
 

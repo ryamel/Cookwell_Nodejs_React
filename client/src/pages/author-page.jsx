@@ -18,18 +18,20 @@ const AuthorPage = (props) => {
 
 		axios.post('/api/users/getuserdata', body, {cancelToken: source.token})
 			.then(res => {
-				console.log(res.data);
+				//console.log(res.data);
 				setUserData(res.data);
 			})
 			.catch(err => console.log(err));
 
 		axios.post('/api/recipes/getuserrecipespublic', body, {cancelToken: source.token})
 			.then(res => {
-				console.log(res.data);
+				//console.log(res.data);
 				setRecipeData(res.data);
 				setLoadFooter(true);
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 
 		return () => source.cancel();
 	}, [])

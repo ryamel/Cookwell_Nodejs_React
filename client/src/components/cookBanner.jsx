@@ -16,7 +16,9 @@ const CookBanner = (props) => {
 			.then((res) => { 
 				setRecipeData(res.data);
 			})
-			.catch((err) => { console.log(err) });
+			.catch((err) => { 
+				//console.log(err) 
+			});
 
 		return () => source.cancel();
 	}, [props.currentRecipe])

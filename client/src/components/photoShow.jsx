@@ -28,7 +28,7 @@ const PhotoShow = React.forwardRef((props, ref) => {
          return <div id='photo-container' className='clearfix'> {img} </div>;
       }
       catch(err) {
-         console.log(err);
+         //console.log(err);
          return null;
       }
    }

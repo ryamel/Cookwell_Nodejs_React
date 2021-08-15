@@ -39,13 +39,15 @@ class Searchpage extends React.Component {
 
 		axios.post("/api/recipes/search", body, {cancelToken: source.token})
 			.then(res => {
-				console.log(res.data);
+				//console.log(res.data);
 				this.setState({
 					searchResult: res.data,
 					isLoaded: true
 				})
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -66,7 +68,9 @@ class Searchpage extends React.Component {
 						isLoaded: true
 					})
 				})
-				.catch(err => console.log(err));
+				.catch(err => {
+					//console.log(err)
+				});
 		}
 	}
 

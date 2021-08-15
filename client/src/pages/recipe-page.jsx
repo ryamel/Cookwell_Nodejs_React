@@ -46,7 +46,7 @@ class Recipepage extends Component {
 				this.setState({
 					isLoaded: false
 				});
-				console.log(error);
+				//console.log(error);
 			})	
 	}
 

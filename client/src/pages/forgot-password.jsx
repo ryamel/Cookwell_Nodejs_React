@@ -23,7 +23,7 @@ function Forgotpassword() {
 				setMsg(res.data);
 			})
 			.catch(error => {
-				if (typeof error.response.data !== 'undefined') console.log(error.response.data);
+				// if (typeof error.response.data !== 'undefined') console.log(error.response.data);
 			})
 	}
 

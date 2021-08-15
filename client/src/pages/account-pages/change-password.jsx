@@ -66,7 +66,7 @@ class changePassword extends Component {
 		 		this.resetSaveBtn();
 			})
 			.catch(error => {
-				console.log(error);
+				//console.log(error);
 				this.setState({msg: error.response.data});
 				this.resetSaveBtn();
 			});

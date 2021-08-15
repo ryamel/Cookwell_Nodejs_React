@@ -25,28 +25,34 @@ class Featured extends Component {
 	getFeatured() {
 		axios.get("/api/recipes/getfeatured/", {cancelToken: source.token})
 			.then(res => {
-				console.log('featured', res.data);
+				//console.log('featured', res.data);
 				this.setState({featCardData: res.data});
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 	}
 
 	getLatest() {
 		axios.get("/api/recipes/getrecent/", {cancelToken: source.token})
 			.then(res => {
-				console.log('recent', res.data);
+				//console.log('recent', res.data);
 				this.setState({latestCardData: res.data});
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 	}
 
 	getMixItUp() {
 		axios.get("/api/recipes/getrandom/", {cancelToken: source.token})
 			.then(res => {
-				console.log('random', res.data);
+				//console.log('random', res.data);
 				this.setState({randomCardData: res.data});
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 	}
 
 	componentDidMount() {
@@ -67,7 +73,6 @@ class Featured extends Component {
 			return null;
 		} else {
 			const { featCardData, latestCardData, randomCardData } = this.state;
-			//console.log(featCardData, latestCardData, randomCardData);
 			return (
 				// index and firstCardHeader propeties are used to conditionally render the featured and latest headers inside the first BrowseCard component. 
 				// this is because the headers must be rendered inside the first BrowseCard components in order for the headers to have the same behaviour as the grid cards. Oulined by the css grid attributes.

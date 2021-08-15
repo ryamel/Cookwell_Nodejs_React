@@ -22,7 +22,7 @@ const ReviewPage = () => {
 
 		axios.get('/api/recipes/getreview', {cancelToken: source.token})
 			.then(res => {
-				console.log(res.data);
+				//console.log(res.data);
 				setData(res.data);
 			})
 			.catch(err => {
@@ -39,10 +39,12 @@ const ReviewPage = () => {
 
 		axios.post('/api/recipes/approve', body)
 			.then(res => {
-				console.log('return');
+				//console.log('return');
 				setRender(render + 1);
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 	}
 
 	const openEmail = (rid, authid, rtitle) => {

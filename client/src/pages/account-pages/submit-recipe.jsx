@@ -166,7 +166,9 @@ class submitRecipe extends React.Component {
 						fileName: res.data.img
 					})
 				})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 
 		}
 	}
@@ -205,7 +207,7 @@ class submitRecipe extends React.Component {
 		 		this.resetSaveBtn();
 			})
 			.catch(error => {
-				console.log(error);
+				//console.log(error);
 				if (error.response.data.length > 100) {
 					this.setState({
 						error: true,
@@ -248,10 +250,6 @@ class submitRecipe extends React.Component {
 				this.resetSaveBtn();
 			})
 			.catch(error => {
-					this.setState({
-						error: true,
-						errMsg: error.response.data
-					});
 					if (error.response.length > 100) { 
 						this.setState({
 							error: true,

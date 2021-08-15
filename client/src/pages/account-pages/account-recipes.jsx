@@ -22,13 +22,15 @@ class accountRecipes extends React.Component {
 	componentDidMount() {
 		axios.get('/api/recipes/getuserrecipesprivate', {cancelToken: source.token})
 			.then(res => {
-				console.log(res.data);
+				//console.log(res.data);
 				this.setState({
 					recipes: res.data,
 					isLoaded: true
 				});
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 		    
 	}
 

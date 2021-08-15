@@ -38,7 +38,6 @@ function Loginpage(props) {
 
 	useEffect(() => {
 		if (source) {
-			console.log('cancel');
 			return () => source.cancel();
 		}
 	})

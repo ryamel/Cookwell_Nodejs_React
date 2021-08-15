@@ -12,7 +12,9 @@ const DeleteRecipe = (props) => {
 			.then(res => {
 				props.redirect();
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				//console.log(err)
+			});
 	}
 
 	if (!props.edit) {

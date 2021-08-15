@@ -29,7 +29,7 @@ class Recipes extends Component {
 		
 		axios.get("/api/recipes/page/0/" + this.state.limit, {cancelToken: source.token})
 			.then(res => {
-					console.log(res.data);
+					//console.log(res.data);
 					this.setState(prevState => ({
 						cardData: res.data,
 						isLoaded: true,
@@ -46,7 +46,7 @@ class Recipes extends Component {
 					this.setState(prevState => ({
 						cardData: prevState.cardData.concat(res.data),
 						skip: prevState.skip + prevState.limit
-					}), console.log(this.state.cardData));
+					}));
 				}
 			)
 	}
@@ -64,7 +64,7 @@ class Recipes extends Component {
         const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
         const windowBottom = windowHeight + window.pageYOffset;
         if (windowBottom >= docHeight ) {
-            console.log('bottom');
+            //console.log('bottom');
             this.loadMoreRecipes();
         }
     }
