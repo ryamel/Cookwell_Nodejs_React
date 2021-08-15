@@ -57,8 +57,8 @@ const AuthorPage = (props) => {
 				<div id='profile-container'>
 					{	renderImg(userData.profileImg)	}
 					<div id='profile-info-container'>
-						<div id='authName'>Name Here</div>
-						<div id='authAbout'>Lorem ipsum about serum norpy surnlimg tupe of</div>
+						<div id='authName'>{userData.name}</div>
+						<div id='authAbout'>{userData.about}</div>
 					</div>
 				</div>
 				<div id='divider'></div>
