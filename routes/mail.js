@@ -54,7 +54,7 @@ router.post('/pwdReset', async (req, res) => {
 				    <p>A password reset was requested for this account from Cookwell.co. Click the following link to reset your password. If you did not request an email reset, please ignore this email.</p>
 				    <p>${link}</p>
 				</body>
-			</html>`
+			</html>`;
 	
 	// send Email
 	let sent = await sendEmail(from, to, subject, html);
@@ -161,25 +161,6 @@ router.post('/contactAuthor', async (req, res) => {
 
 
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
-	// try {
-	// 	const DOMAIN = 'cookwell.co';
-	// 	const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
-	// 	const data = {
-	// 		from: fromEmail,
-	// 		to: toEmail,
-	// 		subject: subject,
-	// 		text: htmlBody
-	// 	};
-
-	// 	await mg.messages().send(data);
-
-	// 	return true;
-	// }
-	// catch (err) {
-	// 	console.log(err);
-	// 	return false;
-	// }
-
 	try {
 		const DOMAIN = 'cookwell.co';
 		var mailgun = require('mailgun-js')({ apiKey: process.env.api_key, domain: DOMAIN });
@@ -215,6 +196,26 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 		return false;
 	}
 }
+
+
+	// try {
+	// 	const DOMAIN = 'cookwell.co';
+	// 	const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
+	// 	const data = {
+	// 		from: fromEmail,
+	// 		to: toEmail,
+	// 		subject: subject,
+	// 		text: htmlBody
+	// 	};
+
+	// 	await mg.messages().send(data);
+
+	// 	return true;
+	// }
+	// catch (err) {
+	// 	console.log(err);
+	// 	return false;
+	// }
 
 
 	// // send link/token to user email
