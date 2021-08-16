@@ -16,7 +16,7 @@ const Recipe = require('../models/recipes');
 
 
 router.post('/pwdReset', async (req, res) => {
-	console.log('pwd reset', req.body);
+	console.log('pwd reset');
 	// check user exists
 	let user = await User.findOne({email: req.body.email});
 	if (!user) return res.status(200).send('No account found');
