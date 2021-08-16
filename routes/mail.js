@@ -7,7 +7,7 @@ const { Token } = require('../models/tokens');
 const { User } = require('../models/users');
 const { validatePwd, decrypt} = require('../functions');
 const Recipe = require('../models/recipes');
-
+const mailgun = require("mailgun-js");
 
 
 
@@ -186,6 +186,20 @@ router.post('/contactAuthor', async (req, res) => {
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 
 
+	
+	const DOMAIN = 'wwww.cookwell.co';
+	const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
+	const data = {
+		from: 'Excited User <me@samples.mailgun.org>',
+		to: 'rya_mel@hotmail.com',
+		subject: 'Hello',
+		text: 'Testing some Mailgun awesomness!'
+	};
+	mg.messages().send(data, function (error, body) {
+		console.log(body);
+	});
+
+	return null;
 
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
