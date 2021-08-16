@@ -7,7 +7,7 @@ const { Token } = require('../models/tokens');
 const { User } = require('../models/users');
 const { validatePwd, decrypt} = require('../functions');
 const Recipe = require('../models/recipes');
-const mailgun = require("mailgun-js");
+// const mailgun = require("mailgun-js");
 
 
 
@@ -70,7 +70,7 @@ router.post('/pwdReset', async (req, res) => {
 
 
 router.post('/pwdResetUpdate', async (req, res) => {
-	console.log(req.body);
+	console.log('pwdResetUpdate', req.body);
 	// valid pwd
 	let errMsg = validatePwd(req.body.pwd, req.body.pwdRepeat);
 	if (errMsg) return res.status(400).send(errMsg);
@@ -161,18 +161,53 @@ router.post('/contactAuthor', async (req, res) => {
 
 
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
+	// try {
+	// 	const DOMAIN = 'cookwell.co';
+	// 	const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
+	// 	const data = {
+	// 		from: fromEmail,
+	// 		to: toEmail,
+	// 		subject: subject,
+	// 		text: htmlBody
+	// 	};
+
+	// 	await mg.messages().send(data);
+
+	// 	return true;
+	// }
+	// catch (err) {
+	// 	console.log(err);
+	// 	return false;
+	// }
+
 	try {
 		const DOMAIN = 'cookwell.co';
-		const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
-		const data = {
+		var mailgun = require('mailgun-js')({ apiKey: process.env.api_key, domain: DOMAIN });
+		var MailComposer = require('nodemailer/lib/mail-composer');
+		 
+		var mailOptions = {
 			from: fromEmail,
 			to: toEmail,
 			subject: subject,
-			text: htmlBody
+			html: htmlBody
 		};
-
-		await mg.messages().send(data);
-
+		 
+		var mail = new MailComposer(mailOptions);
+		 
+		mail.compile().build((err, message) => {
+		 
+		    var dataToSend = {
+		        to: toEmail,
+		        message: message.toString('ascii')
+		    };
+		 
+		    mailgun.messages().sendMime(dataToSend, (sendError, body) => {
+		        if (sendError) {
+		            console.log(sendError);
+		            return;
+		        }
+		    });
+		});
 		return true;
 	}
 	catch (err) {
