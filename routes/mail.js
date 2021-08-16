@@ -32,7 +32,7 @@ router.post('/pwdReset', async (req, res) => {
 	const salt = await bcrypt.genSalt(10);
 	const hashToken = await bcrypt.hash(resetToken, salt);
 	// link to reset pwd
-	const link = `${clientURL}/reset-password?token=${resetToken}&uid=${user._id}`; // **************** clientUrl needs to be set
+	const link = `https://www.cookwell.co/reset-password?token=${resetToken}&uid=${user._id}`; 
 	// save token in DB
 	await new Token({
 		userId: user._id,
