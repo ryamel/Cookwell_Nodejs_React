@@ -42,8 +42,8 @@ router.post('/pwdReset', async (req, res) => {
 
 
 	const from = 'cookwell.rev@gmail.com';
-	const to = "rya_mel@hotmail.com";
-	const subject = "Password Reset";
+	const to = req.body.email;
+	const subject = "Password Reset - Cookwell";
 	const html = 
 			`<html>
 				<head>
@@ -51,6 +51,7 @@ router.post('/pwdReset', async (req, res) => {
 				    </style>
 				</head>
 				<body>
+					<p>Hello,</p></br>
 				    <p>A password reset was requested for this account from Cookwell.co. Click the following link to reset your password. If you did not request an email reset, please ignore this email.</p>
 				    <p>${link}</p>
 				</body>
