@@ -187,7 +187,7 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 
 
 	
-	const DOMAIN = 'wwww.cookwell.co';
+	const DOMAIN = process.env.domain;
 	const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
 	const data = {
 		from: 'ryamel70@gmail.com',
@@ -196,7 +196,8 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 		text: 'Testing some Mailgun awesomness!'
 	};
 	mg.messages().send(data, function (error, body) {
-		console.log(body);
+		console.log('body', body);
+		console.log('error', error);
 	});
 
 	return null;
