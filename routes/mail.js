@@ -174,17 +174,7 @@ router.post('/contactAuthor', async (req, res) => {
 
 
 
-
-
-// email function
-// const nodemailer = require("nodemailer");
-// const clientURL = "http://147.182.213.40:4000/";//const clientURL = "http://localhost:3000";
-// const smtpTransport = require('nodemailer-smtp-transport');// needed for hostgator (possible others smtp)
-
-
-//const sgMail = require('@sendgrid/mail');
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
-
 	try {
 		const DOMAIN = process.env.domain;
 		const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
@@ -194,7 +184,7 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 			subject: subject,
 			text: htmlBody
 		};
-		
+
 		await mg.messages().send(data);
 
 		return true;
@@ -203,71 +193,6 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 		console.log(err);
 		return false;
 	}
-
-// using Twilio SendGrid's v3 Node.js Library
-// https://github.com/sendgrid/sendgrid-nodejs
-// javascrip
-	// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-	// const msg = {
-	// 	to: 'rya_mel@hotmail.com', // Change to your recipient
-	// 	from: 'contact@cookwell.co', // Change to your verified sender
-	// 	subject: 'Sending with SendGrid is Fun',
-	// 	text: 'and easy to do anywhere, even with Node.js',
-	// 	html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-	// }
-
-	// sgMail.send(msg)
-	// 	.then(() => {
-	// 		console.log('Email sent')
-	// 	})
-	// 	.catch((error) => {
-	// 		console.error(error)
-	// 	})
-
-	// return true;
-
-
-
-
-
-	//let testAccount = await nodemailer.createTestAccount();
-	// let transporter = nodemailer.createTransport(smtpTransport({
-	// 	name: 'hostgator',
-	// 	host: "ns6323.hostgator.com",
-	// 	port: 465, // port allowd on ufw firewall
-	// 	secure: true, // true for 465, false for other ports
-	// 	auth: {
-	// 		//user: testAccount.user, // generated ethereal user
-	// 		user: process.env.mailAccount, // generated ethereal user
-	// 		//pass: testAccount.pass, // generated ethereal password
-	// 		pass: process.env.mailPwd, // generated ethereal password
-	// 	},
-	// }));
-
-	// // verify connection configuration
-	// transporter.verify(function (error, success) {
-	// 	if (error) {
-	// 		console.log(error);
-	// 		return false;
-	// 	} else {
-	// 		console.log("Server is ready to take our messages");
-	// 	}
-	// });
-
-	// let info = await transporter.sendMail({
-	// 	from: fromEmail, // sender address
-	// 	to: toEmail, // list of receivers
-	// 	subject: subject, // Subject line
-	// 	text: ``, // plain text body
-	// 	html:  htmlBody
-	// });
-
-	// console.log(fromEmail, 'to...', toEmail);
-
-	// return true;
-	// console.log("Message sent: %s", info.messageId);
-	//console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }
 
 
