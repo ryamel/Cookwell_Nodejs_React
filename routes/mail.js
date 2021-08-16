@@ -185,22 +185,24 @@ router.post('/contactAuthor', async (req, res) => {
 //const sgMail = require('@sendgrid/mail');
 async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 
+	try {
+		const DOMAIN = process.env.domain;
+		const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
+		const data = {
+			from: fromEmail,
+			to: toEmail,
+			subject: subject,
+			text: htmlBody
+		};
+		
+		await mg.messages().send(data);
 
-	
-	const DOMAIN = process.env.domain;
-	const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
-	const data = {
-		from: 'ryamel70@gmail.com',
-		to: 'rya_mel@hotmail.com',
-		subject: 'Hello',
-		text: 'Testing some Mailgun awesomness!'
-	};
-	mg.messages().send(data, function (error, body) {
-		console.log('body', body);
-		console.log('error', error);
-	});
-
-	return null;
+		return true;
+	}
+	catch (err) {
+		console.log(err);
+		return false;
+	}
 
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
