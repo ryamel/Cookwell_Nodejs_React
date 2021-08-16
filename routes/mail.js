@@ -190,7 +190,7 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 	const DOMAIN = 'wwww.cookwell.co';
 	const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
 	const data = {
-		from: 'Excited User <me@samples.mailgun.org>',
+		from: 'ryamel70@gmail.com',
 		to: 'rya_mel@hotmail.com',
 		subject: 'Hello',
 		text: 'Testing some Mailgun awesomness!'
