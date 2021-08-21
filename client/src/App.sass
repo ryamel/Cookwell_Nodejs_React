@@ -16,8 +16,22 @@ $searchBarWidth: 400px
 #mast	
 	display: inline-block
 	padding: 28px 30px 0 20px
-	img
+	#masthead
 		height: 25px
+		@include secondBreakHeader
+			position: absolute
+			top: 6px
+			left: 4px
+			height: 10px
+
+	// #masthead_media
+	// 	display: none
+	// 	height: 40px
+	// 	position: absolute
+	// 	top: -6px
+	// 	left: 2px
+	// 	@include secondBreakHeader
+	// 		display: inline-block
 
 #mast-media
 	display: none
@@ -49,6 +63,8 @@ $searchBarWidth: 400px
 		float: right
 		font-family: 'Exo', sans-serif
 		font-weight: 500
+	@include secondBreakHeader
+		right: 10px
 
 #headerBody
 	background-color: white
@@ -56,6 +72,7 @@ $searchBarWidth: 400px
 	height: $header-height
 	@include firstBreakHeader
 		margin-bottom: 35px
+		width: 100vw
 	
 
 #navDiv
@@ -64,6 +81,8 @@ $searchBarWidth: 400px
 	position: absolute
 	top: 40px
 	left: 230px
+	@include secondBreakHeader
+		left: 20px
 
 
 .underLine
@@ -123,6 +142,8 @@ $searchBarWidth: 400px
 			font-weight: 300
 		@include firstBreakHeader
 			width: 100vw
+		@include secondBreakHeader
+			height: 48px
 	#searchBtn		
 		border-radius: none
 		border: none

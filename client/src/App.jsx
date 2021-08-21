@@ -21,6 +21,7 @@ import Contact from './pages/contact';
 
 import './App.sass';
 import mastHead from './media/brand/cookwell.png';
+import mastHead_media from './media/brand/cw_logo.png';
 import search_icon from './media/icons/search_icon.svg';
 
 
@@ -104,7 +105,8 @@ class App extends React.Component {
 				<div id='headerBody' className={stickyHeader}>
 
 					<Link to="/" id="mast">
-						<img src={mastHead} alt='noimg' />
+						<img id='masthead' src={mastHead} alt='' />
+					{/*	<img id='masthead_media' src={mastHead_media} alt='' />*/}
 					</Link>
 
 					<div id='navDiv'>
