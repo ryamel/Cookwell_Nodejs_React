@@ -73,7 +73,8 @@ $searchBarWidth: 400px
 	@include firstBreakHeader
 		margin-bottom: 35px
 		width: 100vw
-	
+	@include secondBreakHeader
+		border: none
 
 #navDiv
 	display: inline-block
@@ -126,6 +127,10 @@ $searchBarWidth: 400px
 		right: 0px
 		border: none
 		border-bottom: 1px solid $std-container-borderColour
+	@include secondBreakHeader
+		height: 40px
+		border-top: 1px solid #A9A9A9
+		border-bottom: 1px solid #A9A9A9
 	input
 		padding: 0 0 0 12px
 		height: $searchBarHeight - 2px
@@ -142,8 +147,10 @@ $searchBarWidth: 400px
 			font-weight: 300
 		@include firstBreakHeader
 			width: 100vw
-		@include secondBreakHeader
-			height: 48px
+			height: 100%
+
+
+
 	#searchBtn		
 		border-radius: none
 		border: none
@@ -158,6 +165,8 @@ $searchBarWidth: 400px
 			top: 0px
 			right: 0px
 			float: none
+		@include secondBreakHeader
+			top: 3px
 
 
 

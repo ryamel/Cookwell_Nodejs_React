@@ -21,7 +21,7 @@ import Contact from './pages/contact';
 
 import './App.sass';
 import mastHead from './media/brand/cookwell.png';
-import mastHead_media from './media/brand/cw_logo.png';
+// import mastHead_media from './media/brand/cw_logo.png';
 import search_icon from './media/icons/search_icon.svg';
 
 
