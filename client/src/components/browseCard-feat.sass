@@ -1,0 +1,134 @@
+@import '../_App.sass'
+
+
+
+
+// Used acress the site. The browse-card class will require a container div
+.browse-card
+	height: $card-height
+	width: $card-width
+	display: inline-block
+	box-shadow: $std-card-box-shadow
+	border-radius: $browse-card-border-radius
+	position: relative
+	display: inline-block
+	margin: 0 5px 5px 0
+	@include browseCardBreak
+		height: 110vw
+		width: 85vw
+		display: block
+		margin: 0 auto 20px
+	.card-link
+		position: absolute
+		top: 0
+		right: 0
+		left: 0
+		bottom: 0
+		z-index: 1
+	.browse-imgContainer
+		position: relative
+		height: 72%
+		margin: 0
+		overflow: hidden
+		img
+			margin: 0
+			height: 100%
+			width: 100%
+			object-fit: cover
+			object-position: 50% 50%
+			border-radius: $browse-card-border-radius $browse-card-border-radius 0 0
+		.pending
+			font-size: 2em
+			color: white
+			position: absolute
+			bottom: -5px
+			text-align: center
+			width: 100%
+			letter-spacing: 0.3em
+
+.browse-textContainer
+	height: 28%
+	padding: 2px 5px 0
+	background-color: rgb(255,255,255)
+	font-family: 'Roboto', sans-serif
+	border-radius: 0 0 $browse-card-border-radius $browse-card-border-radius
+	white-space: normal
+	overflow: hidden
+	position: relative
+	.browse-recipe-title
+		text-align: left
+		font-size: 0.85em
+		font-family: 'Roboto', sans-serif
+		font-weight: 500
+		letter-spacing: 0.02em
+		margin-bottom: 2px
+		max-height: 32px
+		overflow: hidden
+		@include browseCardBreak
+			font-size: 5vw
+			max-height: 6vw
+			overflow: hidden
+			white-space: nowrap
+			text-overflow: ellipsis
+	.browse-recipe-descrip
+		font-size: 0.73em
+		letter-spacing: 0.03em
+		line-height: 1.20em
+		overflow: hidden
+		font-weight: 300
+		text-overflow: ellipsis
+		@include browseCardBreak
+			font-size: 3.9vw
+
+
+.line-clamp
+	display: -webkit-box
+	-webkit-line-clamp: 4
+	-webkit-box-orient: vertical
+
+.maxHeight
+	max-height: 84%
+	overflow: hidden
+
+.authLink
+	font-size: 0.7em
+	color: rgb(2,120,200)
+	position: absolute
+	bottom: 1px
+	right: 6px
+	z-index: 2
+	color: #00008B
+	&:hover
+		color: grey
+
+.noHover
+	pointer-events: none
+
+
+.edit-btn
+	height: fit-content
+	width: fit-content
+	padding: 5px 10px
+	background-color: white
+	position: absolute
+	top: 175px
+	right: 5px
+	z-index: 10
+	border-radius: 3px
+	color: black
+
+.reviewTag
+	position: absolute
+	top: 0
+	right: 0
+	background-color: black
+	z-index: 5
+	color: white
+	font-size: 0.7em
+	padding: 3px 6px
+	font-family: 'Roboto', sans-serif
+	letter-spacing: 0.08em
+	border-radius: 0 $browse-card-border-radius 0 0
+
+
+
