@@ -36,6 +36,10 @@ $error-font: 'Lato', sans-serif
 $moreWidth: 160px
 $left-ban-padding: 20px
 
+// recipesFirstBreak
+$browseCard-break-width: 340px
+$browseCard-break-height: 400px
+
 
 /*--------------------Media Query--------------------*/
 
@@ -69,6 +73,13 @@ $left-ban-padding: 20px
 	@media (max-width: 810px)
 		@content
 
+@mixin recipesFirstBreak
+	@media (max-width: 540px)
+		@content
+
+@mixin browseCardBreak
+	@media (max-width: 440px)
+		@content
 
 
 *
@@ -82,7 +93,6 @@ body
 
 
 input
-	// width: 400px
 	height: 30px
 	border: 1px solid lightgrey
 	padding: 0 0 0 5px
@@ -205,14 +215,6 @@ a
 	color: $std-label-color
 	display: inline-block
 	width: fit-content
-
-
-
-.browse-card
-	height: $card-height
-	width: $card-width
-	display: inline-block
-
 
 
 

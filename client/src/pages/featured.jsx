@@ -78,7 +78,10 @@ class Featured extends Component {
 				// this is because the headers must be rendered inside the first BrowseCard components in order for the headers to have the same behaviour as the grid cards. Oulined by the css grid attributes.
 				<React.Fragment>
 
+					<div className='featureTitles'>Featured</div>
+
 					<div className='index-grid'>
+						
 						{
 							featCardData.map((cardData, index) => 
 								<BrowseCard 
@@ -90,13 +93,16 @@ class Featured extends Component {
 									rtitle={cardData.title} 
 									index={index} 
 									edit={false}
-									firstCardHeader='Featured' 
+									// firstCardHeader='Featured' 
 								/>	
 							)
 						}
 					</div>
 
+					<div className='featureTitles'>Recent</div>
+
 					<div className='index-grid'>
+						
 						{
 							latestCardData.map((cardData, index) => 
 								<BrowseCard 
@@ -108,13 +114,16 @@ class Featured extends Component {
 									rtitle={cardData.title} 
 									index={index} 
 									edit={false}
-									firstCardHeader='Most Recent' 
+									// firstCardHeader='Most Recent' 
 								/>
 							)
 						}
 					</div>
 
+					<div className='featureTitles'>Mix It Up</div>
+					
 					<div className='index-grid'>
+						
 						{
 							randomCardData.map((cardData, index) => 
 								<BrowseCard 

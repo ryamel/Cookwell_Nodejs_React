@@ -152,6 +152,7 @@ class Recipepage extends Component {
 							</div>
 
 						</div>*/}
+
 					</div>
 
 

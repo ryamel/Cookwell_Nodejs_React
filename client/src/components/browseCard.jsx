@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import './browseCard.sass';
 import { Link, useParams } from 'react-router-dom';
-
+import './browseCard.sass';
+var styleMod1;
+var styleMod2;
+var styleMod3;
 
 
 class BrowseCard extends Component {
 	constructor(props) {
 		super();
 		this.state = {};
-		this.renderHeader = this.renderHeader.bind(this);
+		// this.renderHeader = this.renderHeader.bind(this);
 		this.renderEditBtn = this.renderEditBtn.bind(this);
 		this.renderLink = this.renderLink.bind(this);
 		this.checkImg = this.checkImg.bind(this);
@@ -17,17 +19,17 @@ class BrowseCard extends Component {
 	}
 
 
-	renderHeader() {
-		if (this.props.firstCardHeader === undefined || this.props.index === undefined) {
-			return null;
-		} else if (this.props.index === 0) {
-			return (
-				<React.Fragment>
-						<div className='feature-titles'>{this.props.firstCardHeader}</div>
-				</React.Fragment>
-			);
-		}
-	}
+	// renderHeader() {
+	// 	if (this.props.firstCardHeader === undefined || this.props.index === undefined) {
+	// 		return null;
+	// 	} else if (this.props.index === 0) {
+	// 		return (
+	// 			<React.Fragment>
+	// 					<div className='feature-titles'>{this.props.firstCardHeader}</div>
+	// 			</React.Fragment>
+	// 		);
+	// 	}
+	// }
 
 	renderEditBtn() {
 		if (this.props.edit && this.props.rid) {
@@ -71,12 +73,31 @@ class BrowseCard extends Component {
 		if (!this.props.edit) this.bcard.current.style.display = "none";
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if (prevState.url !== this.state.url ) {
+			this.setState({ url: window.location.pathname })
+		}
+	}
+
 
 	render() {
-		return (
-			<div className='browse-card' ref={this.bcard}>
+		if (this.state.url == '/recipes') {
+			// styleMod1 = ' browse-card-mod';
+			// styleMod2 = ' browse-recipe-title-mod';
+			// styleMod3 = ' browse-recipe-descrip-mod';
+			styleMod1 = '';
+			styleMod2 = '';
+			styleMod3 = '';
+		} else {
+			styleMod1 = '';
+			styleMod2 = '';
+			styleMod3 = '';
+		}
 
-				{ this.renderHeader() }
+		return (
+			<div className={'browse-card ' + styleMod1} ref={this.bcard}>
+
+				{/*{ this.renderHeader() }*/}
 
 				{ this.renderReviewTag() }
 
@@ -93,8 +114,8 @@ class BrowseCard extends Component {
 
 				<div className='browse-textContainer'>
 					<div className='maxHeight'>
-						<div className='browse-recipe-title'>{this.props.rtitle}</div>
-						<div className='browse-recipe-descrip'>{this.props.description}</div>
+						<div className={'browse-recipe-title ' + styleMod2}>{this.props.rtitle}</div>
+						<div className={'browse-recipe-descrip' + ' line-clamp ' + styleMod3}>{this.props.description}</div>
 						<div className='browse-author'>
 							{ this.renderLink() }
 						</div>

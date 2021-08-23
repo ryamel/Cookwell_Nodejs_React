@@ -1,12 +1,23 @@
 @import '../_App.sass'
 
+
+
+
 // Used acress the site. The browse-card class will require a container div
 .browse-card
+	height: $card-height
+	width: $card-width
+	display: inline-block
 	box-shadow: $std-card-box-shadow
 	border-radius: $browse-card-border-radius
 	position: relative
 	display: inline-block
 	margin: 0 5px 5px 0
+	// @include browseCardBreak
+	// 	height: 110vw
+	// 	width: 85vw
+	// 	display: block
+	// 	margin: 0 auto 20px
 	.card-link
 		position: absolute
 		top: 0
@@ -44,23 +55,36 @@
 	white-space: normal
 	overflow: hidden
 	position: relative
-	// background-color: red
 	.browse-recipe-title
 		text-align: left
 		font-size: 0.85em
 		font-family: 'Roboto', sans-serif
 		font-weight: 500
 		letter-spacing: 0.02em
-		// background-color: grey
-		max-height: 32px
 		margin-bottom: 2px
+		max-height: 32px
+		overflow: hidden
+		// @include browseCardBreak
+		// 	font-size: 5vw
+		// 	max-height: 6vw
+		// 	overflow: hidden
+		// 	white-space: nowrap
+		// 	text-overflow: ellipsis
 	.browse-recipe-descrip
 		font-size: 0.73em
 		letter-spacing: 0.03em
-		line-height: 122% // 1.20em
+		line-height: 1.20em
 		overflow: hidden
 		font-weight: 300
-		// background-color: blue
+		text-overflow: ellipsis
+		// @include browseCardBreak
+		// 	font-size: 3.9vw
+
+
+.line-clamp
+	display: -webkit-box
+	-webkit-line-clamp: 4
+	-webkit-box-orient: vertical
 
 .maxHeight
 	max-height: 84%
@@ -107,4 +131,23 @@
 	border-radius: 0 $browse-card-border-radius 0 0
 
 
+// .browse-card-mod	
+// 	@include browseCardBreak
+// 		height: 100vw
+// 		width: 80vw
+// 		display: block
+// 		margin: 0 auto 20px
+
+
+// .browse-recipe-title-mod
+// @include browseCardBreak
+// 	font-size: 5vw
+// 	max-height: 6vw
+// 	overflow: hidden
+// 	white-space: nowrap
+// 	text-overflow: ellipsis
+
+// .browse-recipe-descrip-mod
+// 	@include browseCardBreak
+// 		font-size: 3.6vw
 

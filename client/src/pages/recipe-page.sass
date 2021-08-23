@@ -43,18 +43,13 @@ $rightBanner-width: 170px
 #recipe-page-container
 	position: relative
 	width: $rec-container-width
-	margin: $rec-container-spacing auto
+	margin: $rec-container-spacing auto 0
 	font-size: 0.85em
 	line-height: 1.2em
-	@include firstBreakHeader
-		top: 15px
-		margin 0
 	@include recipePageSecondBreak
-		top: 0px
 		margin 0
-	@include secondBreakHeader
-		top: 5px
-		margin 0
+		width: 100vw
+		margin: 0
 
 
 #editRecipeBtn
@@ -207,9 +202,6 @@ $rightBanner-width: 170px
 	line-height: 0.9em
 
 
-#recipe-content-banner
-	width: 100%
-
 #recipePage-sym-container
 	position: absolute
 	display: none
@@ -349,15 +341,15 @@ $rightBanner-width: 170px
 				margin-bottom: $rec-li-spacing
 
 
-#rec-container-5
-	display: none
-	width: $rec-container-width
-	.more-recomended
-		display: inline-block
-		font-size: $std-moreCard-fontSize
-		&:nth-child(3n+2)
-			margin-left: 1px
-			margin-right: 1px
+// #rec-container-5
+// 	display: none
+// 	width: $rec-container-width
+// 	.more-recomended
+// 		display: inline-block
+// 		font-size: $std-moreCard-fontSize
+// 		&:nth-child(3n+2)
+// 			margin-left: 1px
+// 			margin-right: 1px
 
 
 #rec-container-1, #rec-container-2, #rec-container-3, #rec-container-4, #rec-container-5
@@ -367,10 +359,10 @@ $rightBanner-width: 170px
 	margin-bottom: $rec-container-spacing
 	border-radius: 6px
 	@include recipePageSecondBreak
-		border-radius: none
+		border-radius: 0
 		border: none
-		width: 100vw
 		margin-bottom: 0px
+		margin: 0
 
 
 

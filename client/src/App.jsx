@@ -18,11 +18,9 @@ import ResetPassword from './pages/reset-password';
 import ReviewPage from './pages/review-page';
 import FAQ from './pages/faq';
 import Contact from './pages/contact';
+import Header from './components/header';
 
 import './App.sass';
-import mastHead from './media/brand/cookwell.png';
-// import mastHead_media from './media/brand/cw_logo.png';
-import search_icon from './media/icons/search_icon.svg';
 
 
 
@@ -33,15 +31,14 @@ class App extends React.Component {
 			logged_in: false,
 			searchText: '',
 			redirect: false,
-			search: false,
-			style: null
+			search: false
 		}
 
 		this.textInput = React.createRef();
 		this.login = this.login.bind(this);
-		this.logBtn = this.logBtn.bind(this);
 		this.logout = this.logout.bind(this);
 		this.searchClick = this.searchClick.bind(this);
+		this.setSearchText = this.setSearchText.bind(this);
 	}
 
 	static propTypes = {
@@ -63,82 +60,32 @@ class App extends React.Component {
 		this.setState({logged_in: false}); 
 	}
 
-	searchClick(){
+	searchClick() {
 		this.setState({search: !this.state.search}); // let search-page component know search button was clicked
 		this.props.history.push('/search-page');
 	}
 
-
-	logBtn() {
-		if (this.state.logged_in) {
-			return (
-				<Link to='/my-account'>
-					<div id='loginBtn' >
-						<span>my account</span>
-					</div>
-				</Link>
-			);
-		} else {
-			return (
-				<Link to='/login-page'>
-					<div id='loginBtn'>
-						<span>sign in</span>
-					</div>
-				</Link>
-			);
-		}
+	setSearchText(text) {
+		this.setState({searchText: text});
 	}
 
 
 
+
 	render() {
-		let { featHeader, recipeHeader, stickyHeader } = '';
-		let currentURL = window.location.pathname;
-		if (currentURL == '/') featHeader = 'underLine';
-		if (currentURL == '/recipes') {
-			recipeHeader = 'underLine';
-			stickyHeader = 'stickyHeader';
-		}
-		
 		return (
 			<div id='main'>
-				<div id='headerBody' className={stickyHeader}>
 
-					<Link to="/" id="mast">
-						<img id='masthead' src={mastHead} alt='' />
-					{/*	<img id='masthead_media' src={mastHead_media} alt='' />*/}
-					</Link>
+				<Header
+					searchText={this.state.searchText} 
+					searchClick={this.searchClick} 
+					logged_in={this.state.logged_in}
+					setSearchText={this.setSearchText}
+					login={this.login}
+					logout={this.logout}
+					url={window.location.pathname}
+					/>
 
-					<div id='navDiv'>
-						<NavLink className='feat' to="/">
-							FEATURED
-							<div className={featHeader}></div>
-						</NavLink>
-					  	<NavLink className='rec' to="/recipes">
-					  		RECIPES
-					  		<div className={recipeHeader}></div>
-					  	</NavLink>
-					</div>
-					
-					{	this.logBtn()	} 
-
-					<div className="headerSearchBar" >
-						<input 
-							placeholder="Search" 
-							type="text" 
-							name="search" 
-							value={this.state.searchText}
-							onKeyUp={(e) => e.keyCode === 13 ? this.searchClick() : null }
-							onChange={(e) => this.setState({searchText: e.target.value})}
-							/>
-						<Link to='/search-page'>
-							<button id='searchBtn' type="submit" onClick={(e) => this.searchClick()} >
-								<img id="searchIcon" src={search_icon} alt='no-img' />
-							</button>
-						</Link>
-				 	</div>
-
-				</div>
 
 				<Switch>
 					<Route exact path="/"> 				<Featured /> 											</Route>
