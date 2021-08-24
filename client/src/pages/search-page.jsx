@@ -146,81 +146,79 @@ class Searchpage extends React.Component {
 		return (
 			<React.Fragment>
 				<div id="filter-container"> 
-					<div id="restrictions-body">
 
-						<div className="filterDivs">
-							<span className='restriction-label'>Dietary</span>
-							<MultiSelectMenu 
-								name='diet'
-								options={dietOptions}
-								state={this.state.diet}
-								handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
-							/>
-						</div>
-
-
-
-						<div className="filterDivs">
-				 			<span className='restriction-label'>Time</span>
-							<label className="check-container"> 
-								<span className='lt-sym'>&lt;</span> 30 min
-								<input 
-									name="time" 
-									value='30' 
-									type="checkbox"
-									checked={this.state.time === "30"} 
-									onChange={(e) => this.handleInput(e.target.name, e.target.value)}
-								/>
-								<span className="checkmark"></span>
-							</label>
-							<label className="check-container"> 
-								<span className='lt-sym'>&lt;</span> 45 min
-								<input 
-									name="time" 
-									value="45" 
-									type="checkbox"
-									checked={this.state.time === "45"}
-									onChange={(e) => this.handleInput(e.target.name, e.target.value)} 
-								/>
-								<span className="checkmark"></span>
-							</label>
-							<label className="check-container"> 
-								<span className='lt-sym'>&lt;</span> 60 min
-								<input 
-									name="time" 
-									value="60" 
-									type="checkbox"
-									checked={this.state.time === "60"} 
-									onChange={(e) => this.handleInput(e.target.name, e.target.value)}
-								/>
-								<span className="checkmark"></span>
-							</label> 
-						</div>
-
-
-
-						<div className="filterDivs">
-							<span className='restriction-label dropMenu-label'>Culinary</span>
-							<DropMenu 
-								name='cuisine'
-								options={cuisine} 
-								handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
-								state={this.state.cuisine}
-							/>
-						</div>
-
-
-						<div className="filterDivs">
-							<span className='restriction-label dropMenu-label'>Meal Type</span>
-							<DropMenu 
-								name='mealType'
-								options={mealTypes} 
-								handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
-								state={this.state.mealType}
-							/>
-						</div>
-
+					<div className="filterDivs">
+						<span className='restriction-label'>Dietary</span>
+						<MultiSelectMenu 
+							name='diet'
+							options={dietOptions}
+							state={this.state.diet}
+							handleInput={(e) => this.handleInput(e.target.name, e.target.value)}
+						/>
 					</div>
+
+
+
+					<div className="filterDivs">
+			 			<span className='restriction-label'>Time</span>
+						<label className="check-container"> 
+							<span className='lt-sym'>&lt;</span> 30 min
+							<input 
+								name="time" 
+								value='30' 
+								type="checkbox"
+								checked={this.state.time === "30"} 
+								onChange={(e) => this.handleInput(e.target.name, e.target.value)}
+							/>
+							<span className="checkmark"></span>
+						</label>
+						<label className="check-container"> 
+							<span className='lt-sym'>&lt;</span> 45 min
+							<input 
+								name="time" 
+								value="45" 
+								type="checkbox"
+								checked={this.state.time === "45"}
+								onChange={(e) => this.handleInput(e.target.name, e.target.value)} 
+							/>
+							<span className="checkmark"></span>
+						</label>
+						<label className="check-container"> 
+							<span className='lt-sym'>&lt;</span> 60 min
+							<input 
+								name="time" 
+								value="60" 
+								type="checkbox"
+								checked={this.state.time === "60"} 
+								onChange={(e) => this.handleInput(e.target.name, e.target.value)}
+							/>
+							<span className="checkmark"></span>
+						</label> 
+					</div>
+
+
+
+					{/*<div className="filterDivs">
+						<span className='restriction-label dropMenu-label'>Culinary</span>
+						<DropMenu 
+							name='cuisine'
+							options={cuisine} 
+							handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
+							state={this.state.cuisine}
+						/>
+					</div>*/}
+
+
+					<div className="filterDivs">
+						<span className='restriction-label dropMenu-label'>Meal Type</span>
+						<DropMenu 
+							name='mealType'
+							options={mealTypes} 
+							handleInput = {(e) => this.handleInput(e.target.name, e.target.value)}
+							state={this.state.mealType}
+						/>
+					</div>
+
 				</div>
 
 

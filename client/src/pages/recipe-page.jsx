@@ -20,6 +20,7 @@ class Recipepage extends Component {
 		source = axios.CancelToken.source();
 		this.getParameterByName = this.getParameterByName.bind(this);
 		this.loadRecipe = this.loadRecipe.bind(this);
+		this.renderLink = this.renderLink.bind(this);
 	}
 
 
@@ -31,6 +32,21 @@ class Recipepage extends Component {
 	    if (!results[2]) return '';
 	    return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
+
+	renderLink() {
+		if (this.state.result.authid.name == "") {
+			return <span id='authName'>Anonymous</span>;
+		} 
+		if (this.state.result.authid.name.length > 0 && this.state.result.authid._id) {
+			return (
+				<Link to={{pathname: '/author', state: {authid: this.state.result.authid._id} }}>
+					<span id='authName' className='hyperLink'>
+						{this.state.result.authid.name}
+					</span>
+				</Link>
+			);
+		}
+	}	
 	
 
 	loadRecipe(rtitle) {
@@ -80,7 +96,8 @@ class Recipepage extends Component {
 
 							<div id="rec-container-1-title">{this.state.result.title}</div>
 							<div id='about-container'>{this.state.result.description}</div>
-							<div className='stat-name' id="recipePage-sym-container">display det symb</div>
+							{/*<div className='stat-name' id="recipePage-sym-container">display det symb</div>*/}
+							{ this.renderLink() }
 
 							<div id='stat-container'>
 								<div id="float-container">

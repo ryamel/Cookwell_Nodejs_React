@@ -81,6 +81,9 @@ $browseCard-break-height: 400px
 	@media (max-width: 440px)
 		@content
 
+@mixin searchPageBreak
+	@media (max-width: 500px)
+		@content
 
 *
 	box-sizing: border-box //avoids resizing issues with padding 
@@ -189,6 +192,12 @@ a
 .minBodyHeight
 	min-height: 740px
 
+.hyperLink
+	color: rgb(2,120,200)
+	color: #00008B
+	cursor: pointer
+	&:hover
+		color: grey
 
 .AtagBtn
 	color: black

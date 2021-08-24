@@ -15,16 +15,6 @@ $searchBarWidth: 500px
 	width: 655px
 	margin: 10px auto 500px
 
-.symContainer-resultsPage
-	height: 25px
-	width: fit-content
-	position: absolute
-	bottom: 15px
-	left: 20px
-	img
-		height: 25px
-		width: 25px
-		margin-right: 3px
 
 .lt-sym
 	font-size: 10px
@@ -33,50 +23,48 @@ $searchBarWidth: 500px
 
 #filter-container
 	background-color: white
-	padding: 20px
-	margin: 10px auto 0
+	padding: 15px
+	margin: 10px auto
 	border: 1px solid $std-container-borderColour
 	border-radius: 5px
-	width: 655px
-	@include firstBreakHeader
-		margin-top: 45px
-	#searchBar-filterContainer
-		margin: 0 0 15px 0
-		width: 100%
-		height: $searchBarHeight
-		border: 1px solid lightgrey
-		border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius
-		// @include firstBreakHeader
-		// 	display: none
-		input
-			padding: 0 0 0 12px
-			height: $searchBarHeight - 2px
-			width: 90%
-			margin: 0
-			border: none
-			border-radius: 0
-			&::placeholder
-				color: grey
-				font-size: 1.1em
-				letter-spacing: 0.03em
-				padding-left: 3px
-				font-family: 'Lato', sans-serif
-				font-weight: 300
-		button
-			border-radius: none
-			border: none
-			height: $searchBarHeight - 2px
-			width: 35px
-			background-color: white
-			float: right
-	#restrictions-body
-		.filterDivs
-			display: inline-block
-			height: 135px
-			width: fit-content
-			vertical-align: top
-			margin: 0 0 10px 15px
-			position: relative
+	width: 640px
+	.filterDivs
+		display: inline-block
+		height: 135px
+		width: fit-content
+		vertical-align: top
+		margin: 0 15px 0 0
+		position: relative
+		// @include searchPageBreak
+		// 	display: block
+	// #searchBar-filterContainer
+	// 	margin: 0 0 15px 0
+	// 	width: 100%
+	// 	height: $searchBarHeight
+	// 	border: 1px solid lightgrey
+	// 	border-radius: $searchbar-border-radius 0 0 $searchbar-border-radius
+	// 	input
+	// 		padding: 0 0 0 12px
+	// 		height: $searchBarHeight - 2px
+	// 		width: 90%
+	// 		margin: 0
+	// 		border: none
+	// 		border-radius: 0
+	// 		&::placeholder
+	// 			color: grey
+	// 			font-size: 1.1em
+	// 			letter-spacing: 0.03em
+	// 			padding-left: 3px
+	// 			font-family: 'Lato', sans-serif
+	// 			font-weight: 300
+	// 	button
+	// 		border-radius: none
+	// 		border: none
+	// 		height: $searchBarHeight - 2px
+	// 		width: 35px
+	// 		background-color: white
+	// 		float: right
+
 	#filterSearchContainer
 		margin: 0 0 15px 0
 		width: 100%
@@ -108,6 +96,7 @@ $searchBarWidth: 500px
 			font-weight: 400
 			background-color: #3B3B3B
 			color: white
+
 
 
 // change width here for label size

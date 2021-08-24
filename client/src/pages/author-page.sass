@@ -11,13 +11,14 @@ $profile-height: 120px
 
 #profile-container
 	margin: 0 auto
-	width: fit-content
+	display: flex
+	max-width: 500px
+	padding: 0 10px
 	#img-wrapper
 		height: $profile-height
-		width: $profile-height
-		display: inline-block
-		@include authPageFirstBreak
-			display: none
+		flex: 0 0 $profile-height
+		// @include authPageFirstBreak
+		// 	display: none
 		img
 			display: inline-block
 			height: 100%
@@ -25,10 +26,7 @@ $profile-height: 120px
 			object-fit: cover
 			border-radius: 3px
 	#profile-info-container
-		display: inline-block
-		vertical-align: top
 		position: relative
-		width: 400px
 		#authName
 			padding-top: 20px
 			padding-left: 20px

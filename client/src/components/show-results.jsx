@@ -34,12 +34,12 @@ function ShowResults(props) {
 							</div>
 							<div className='resultInfo-container'>					
 								<h4>{result.title}</h4>
-								<div className='description'>
-									{	result.description	}
+								<div className='description line-clamp'>
+									{result.description}
 								</div>
 								{	displayDietSym(result.diet)	}
 								<div className='cooktime'>
-								{	result.cookTime + ' min'	}
+								{result.cookTime + ' min'}
 								</div>
 							</div>
 						</div>

@@ -55,7 +55,7 @@ class BrowseCard extends Component {
 
 	renderLink() {
 		if (this.props.author == "") {
-			return <span className='authLink noHover'>Anonymous</span>;
+			return <span className='authLink noHover hyperLink'>Anonymous</span>;
 		} 
 		if (this.props.author.length > 0) {
 			return (
