@@ -28,15 +28,17 @@ $searchBarWidth: 500px
 	border: 1px solid $std-container-borderColour
 	border-radius: 5px
 	width: 640px
+	@include searchPageBreak
+		width: 100vw
+		border-radius: 0
+		margin: 0
 	.filterDivs
 		display: inline-block
-		height: 135px
+		min-height: 50px
 		width: fit-content
 		vertical-align: top
-		margin: 0 15px 0 0
+		margin: 10px 15px 10px 0
 		position: relative
-		// @include searchPageBreak
-		// 	display: block
 	// #searchBar-filterContainer
 	// 	margin: 0 0 15px 0
 	// 	width: 100%
