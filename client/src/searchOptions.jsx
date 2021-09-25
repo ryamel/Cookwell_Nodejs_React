@@ -76,7 +76,36 @@ const units = [
 
 
 
+const unitDisplay = {
+	'none': '',
+	'teaspoon (tsp)': 'tsp',
+	'tablespoon (Tbsp)': 'Tbsp',
+	'cup(s)': 'cup(s)',
+	'fluid ounce (floz)': 'floz',
+	'ounce (oz)': 'oz',
+	'pound (lb)': 'lb',
+	'small': 'small',
+	'medium': 'medium',
+	'large': 'large',
+	'millilitre (ml)': 'ml',
+	'litre (L)': 'L',
+	'milligram (mg)': 'mg',
+	'gram (g)': 'grams',
+	'killogram (kg)': 'kg',
+	'centimeter (cm)': 'cm',
+	'inch (in)': 'in',
+	'dash': 'dash',
+	'pinch': 'pinch',
+	'gal': 'gal',
+	'fluid pint (fl pt)': 'fl pt',
+	'fluid quart (fl qt)': 'fl qt',
+	'gill': 'gill'
+};
 
 
-export { mealTypes, dietOptions, cuisine, units };
+
+
+
+
+export { mealTypes, dietOptions, cuisine, units, unitDisplay };
 

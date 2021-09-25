@@ -142,10 +142,9 @@ class MyProfile extends Component {
 							Profile
 						</div>
 
-
-			        	<label className='std-field-label ph-label'>
-	            			Profile photo
-	         			</label>
+	        	<label className='std-field-label ph-label'>
+          			Profile photo
+       			</label>
 			        		
 							
 						<div className='fieldContainer clearfix'>
@@ -156,12 +155,9 @@ class MyProfile extends Component {
 									onChange={this.fileHandler}
 									file={this.state.file}
 									fileName={this.state.fileName}
-									fileObjURL={this.state.fileObjURL}
-									/>
+									fileObjURL={this.state.fileObjURL} />
 							</div>
 						</div>
-
-
 
 						<div className='fieldContainer clearfix'>
 							<label className='std-field-label'>
@@ -173,23 +169,19 @@ class MyProfile extends Component {
 								minLength="3" 
 								maxLength='45'
 								defaultValue={this.state.defaultName}
-								ref={this.name}
-								/>
+								ref={this.name} />
 						</div>
-
 
 						<div className='fieldContainer clearfix'>
 							<div className='std-field-label'>
-					        	Email
-					        </div>
-				            <input 
-				            	type='text' 
-				            	name='email' 
-				            	defaultValue={this.state.defaultEmail}
-								ref={this.email}
-				            	/>
-			            </div>
-
+			        	Email
+			        </div>
+	            <input 
+	            	type='text' 
+	            	name='email' 
+	            	defaultValue={this.state.defaultEmail}
+								ref={this.email} />
+	          </div>
 
 						<div className='fieldContainer clearfix'>
 							<label className='std-field-label'>
@@ -200,26 +192,24 @@ class MyProfile extends Component {
 								maxLength='500' 
 								name='about' 
 								rows='7' 
-								cols='50'
+								cols='58'
 								defaultValue={this.state.defaultAbout}
-								ref={this.about}
-								>
+								ref={this.about} >
 							</textarea>	
 						</div>
 
-
-						<div id='pwdNotice'>
-							Confirm your account password to update your profile information
-						</div>
 						<div className='fieldContainer clearfix'>
-						
+							<label className='std-field-label'>
+								Confirm Password
+							</label>
+							<div id='pwdNotice'>
+								Required to update account
+							</div>
 							<input 
-								placeholder='Password'
-				            	type='password' 
-				            	name='pwd' 
+				        type='password' 
+				       	name='pwd' 
 								value={this.state.password}
-								onChange={(e) => this.setState({password: e.target.value})}
-				            	/>
+								onChange={(e) => this.setState({password: e.target.value})} />
 						</div>
 					
 

@@ -95,7 +95,7 @@ class changePassword extends Component {
 				<div className="accountContent minBodyHeight">
 					<div id="editLogin">
 						<div className='my-account-titles'>Change Password</div>
-						<div id="pwdNotice">
+						<div id="changePwdNotice">
 							Password must be at least 8 characters, and can contain letters, numbers, or the symbols (!@#$%.?)
 						</div>
 							

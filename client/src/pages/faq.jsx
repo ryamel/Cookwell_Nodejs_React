@@ -18,7 +18,7 @@ const FAQ = () => {
 
 
 				<h4 className="faqTitle">Can anyone post recipes?</h4>
-				<p className="faqExplain">Yes! Anyone can <a href='https://cookwell.co/signup'>sign up</a> for an account. Only recipes go through a review process.</p>
+				<p className="faqExplain">Yes! Anyone can sign up for an account (see top right) and post recipes.</p>
 
 
 				<h4 className="faqTitle">What are your recipe submission guidelines?</h4>

@@ -1,5 +1,7 @@
 @import '../../_App.sass'
 
+$inputWidth: 376px
+
 // bug fix float right
 .clearfix::after 
 	content: ""
@@ -17,11 +19,11 @@
 #pwdNotice
 	font-size: 0.7em
 	color: grey
-	display: block
-	text-align: right
+	margin: 0
+	padding: 0
 	margin-bottom: 4px
-	padding-top: 15px
-	padding-right: 52px
+	width: $inputWidth
+	position: absolute
 
 #uploadInput-container
 	cursor: pointer
@@ -46,8 +48,6 @@
 	border: 1px solid $std-container-borderColour
 	border-radius: 5px
 	position: relative
-	// @include accountSecondBreak
-	// 	width: 100vw
 	button
 		margin: 15px 0 20px 0
 	.fa-user-circle
@@ -66,11 +66,9 @@
 	min-height: 40px
 	color: grey
 	margin-bottom: 10px
-	// @include accountSecondBreak
-	// 	width: 100%
 	input
 		font-size: 12px
-		width: 377px
+		width: $inputWidth
 		margin-bottom: 10px
 		border: 1px solid lightgrey
 		float: right
@@ -79,6 +77,7 @@
 		resize: none
 		border: 1px solid lightgrey
 		float: right
+		margin-bottom: 10px
 		&:focus
 			outline: none
 
@@ -106,7 +105,7 @@
 .std-form-heading
 	margin: 0 0 25px 0
 	font-size: 1.5em
-	font-family: 'Lato', sans-serif
+	// font-family: 'Lato', sans-serif
 
 
 

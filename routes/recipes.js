@@ -24,6 +24,8 @@ const { featList } = require('../featuredRecipeList');
 router.get('/page/:skip/:limit', async (req, res) => {
     console.log('recipePage');
 
+    console.log(req.params);
+
     let skip = parseInt(req.params.skip);
     let limit = parseInt(req.params.limit);
 
@@ -38,6 +40,7 @@ router.get('/page/:skip/:limit', async (req, res) => {
             .populate('authid', '_id name');
 
         if (!recipes) return res.status(400).send();
+        if (recipes.length == 0) return res.status(200).json(recipes);
 
         // convert recipe to proper "object"
         var recipes = JSON.parse(JSON.stringify(recipes));
@@ -45,6 +48,8 @@ router.get('/page/:skip/:limit', async (req, res) => {
         recipes.forEach((recipe, index, recipes) => {
             recipes[index].authid._id = encrypt(recipe.authid._id.toString());
         })
+
+        //console.log(recipes);
 
         return res.status(200).json(recipes);
     }
@@ -70,7 +75,6 @@ router.get('/getbytitle/:title', async (req, res) => {
         // encypt id
         var authIdEncrypt = encrypt(recipe.authid._id.toString());
         //var encrypted = CryptoJS.AES.encrypt(recipe.authid._id.toString(), "Secret Passphrase");
-
 
         // append encrypt id
         recipe.authid._id = authIdEncrypt;

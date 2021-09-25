@@ -32,6 +32,7 @@ $overlayBackground: rgba(190,190,190, 0.4)
 
 // error message font font-family:
 $error-font: 'Lato', sans-serif
+$default-font: 'Roboto', sans-serif
 
 $moreWidth: 160px
 $left-ban-padding: 20px
@@ -91,7 +92,7 @@ $browseCard-break-height: 400px
 body
 	margin: 0
 	padding: 0
-	font-family: 'Roboto', sans-serif
+	font-family: $default-font
 	background-color: $defaultcolor
 
 
@@ -101,6 +102,7 @@ input
 	padding: 0 0 0 5px
 	font-size: 13px
 	border-radius: $std-input-field-border-radius
+	font-family: $default-font
 	&:focus
 		outline: none
 	&[type="text"]
@@ -122,6 +124,7 @@ button
 	border: 1px solid lightgrey
 	border-radius: $std-btn-border-radius
 	font-size: 0.9em
+	font-family: $default-font
 	&:focus
 		outline: none
 
@@ -132,6 +135,7 @@ textarea
 	padding: 7px 5px
 	font-size: 13px
 	line-height: 1.2em
+	font-family: $default-font
 	&:hover
 		cursor: pointer
 	&:focus
@@ -151,13 +155,14 @@ label
 	font-weight: normal
 	margin: 0
 	padding: 0
-	font-family: 'Roboto', sans-serif
+	font-family: $default-font
 	
 
 select
 	height: 30px
 	border: 1px solid $recipe-form-color
 	border-radius: $std-input-field-border-radius
+	font-family: $default-font
 	&:focus
 		outline: none
 	&::-ms-input-placeholder
@@ -173,11 +178,14 @@ select
 
 ul
 	list-style: none
+	font-family: $default-font
 
 li
 	margin-bottom: 5px
+	font-family: $default-font
 
 a
+	font-family: $default-font
 	text-decoration: none!important
 	&:link
 		text-decoration: none!important
