@@ -56,7 +56,6 @@ const saveRecipeImage = async function(giveName, filePath) {
             var savePath_disp = "client/public/user_recipes_img/display/" + fileName;
         }
 
-
         // save original
         await fsProm.copyFile(filePath, savePath_orig);
 

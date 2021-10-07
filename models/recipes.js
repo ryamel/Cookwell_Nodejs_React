@@ -1,6 +1,4 @@
-
 const mongoose = require('mongoose');
-
 
 
 const ingrSchema = new mongoose.Schema({
@@ -55,7 +53,7 @@ const recipesSchema = new mongoose.Schema({
 		type: 'string',
 		maxLength: 500
 	},
-	mealType: { // check for duplicates
+	mealType: { 
 		required: true,
 		type: 'string',
 		enum: [
@@ -71,7 +69,7 @@ const recipesSchema = new mongoose.Schema({
 			'Baking'
 		],
 	},
-	diet: { // check for duplicates
+	diet: { 
 		required: true,
 		type: ['string'],
 		enum: [
@@ -84,7 +82,7 @@ const recipesSchema = new mongoose.Schema({
 			'None'
 		]
 	},
-	cuisine: { // check for duplicates
+	cuisine: {
 		type: ['string'],
 		enum: [
 			'American',
@@ -153,7 +151,6 @@ const recipesSchema = new mongoose.Schema({
 	}
 });
 
-// recipesSchema.index( { title: "text", description: "text" } );
 
 module.exports = mongoose.model('Recipes', recipesSchema);
 

@@ -2,14 +2,6 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
-// const socialSchema = new mongoose.Schema({ 
-// 	insta: 'string',
-// 	yt: 'string',
-// 	fb: 'string',
-// 	web: 'string',
-// 	tw: 'string'
-// });
-
 const userSchema = new mongoose.Schema({ 
 	name: {
 		type: 'string', 
@@ -39,26 +31,17 @@ const userSchema = new mongoose.Schema({
 		type: 'string',
 		default: ''
 	}
-	// socialLinks: {
-	// 	type: {socialSchema}
-	// }
 });
 
 
-// document instance method... see mongoose docs
-// this gives a method to the resulting object from calling the constructor. I.e 'new User'
 userSchema.methods.generateAuthToken = function() {
-	// sign argument is what is in the payload of the jwt. Second argument is the private key
-	const token = jwt.sign({ _id: this._id, email: this.email, admin: this.admin }, process.env.private_key);
+	const token = jwt.sign({ _id: this._id, email: this.email, admin: this.admin }, process.env.private_key);	// sign() contains payload of jwt. Second argument is private key
 	return token;
 }
 
 const User = mongoose.model('User', userSchema);
 
-
-
 exports.User = User;
-//exports.validateUser = validateUser;
 
 
 

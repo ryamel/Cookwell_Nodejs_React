@@ -7,7 +7,6 @@ const { Token } = require('../models/tokens');
 const { User } = require('../models/users');
 const { validatePwd, decrypt} = require('../functions');
 const Recipe = require('../models/recipes');
-// const mailgun = require("mailgun-js");
 
 
 
@@ -20,11 +19,9 @@ router.post('/pwdReset', async (req, res) => {
 	// check user exists
 	let user = await User.findOne({email: req.body.email});
 	if (!user) return res.status(200).send('No account found');
-
 	// check is token already exisits, if so delete the token
 	let token = await Token.findOne({ userId: user._id });
 	if (token) await token.deleteOne();
-
 
 	// generate token
 	let resetToken = crypto.randomBytes(32).toString("hex");
@@ -39,7 +36,6 @@ router.post('/pwdReset', async (req, res) => {
 			token: hashToken,
 			createdAt: Date.now(),
 		}).save();
-
 
 	const from = 'cookwell.rev@gmail.com';
 	const to = req.body.email;
@@ -110,14 +106,11 @@ router.post('/contactAuthor', async (req, res) => {
 	try {
 		// check bddy length
 		if (req.body.emailBody.length < 5) return res.status(400).send('Email body too short, message not sent');
-
 		// decrypt authid
 		var authid = decrypt(req.body.authid);
 	    if (!authid) return res.status(500).send();
-
 		// get auth email
 		let user = await User.findOne({_id: authid}).select('email name');
-
 		// email details
 		const subject = 'Cookwell - Edit Recipe';
 		const from = 'cookwell.rev@gmail.com';
@@ -137,11 +130,9 @@ router.post('/contactAuthor', async (req, res) => {
 				    <p>${req.body.emailBody}</p>
 				</body>
 			</html>`;
-
 		// send Email
 		let sent = await sendEmail(from, to, subject, html);
 		if (!sent) return res.status(500).send('Error: Email not sent!');
-
 		// set status of Sent Email
 		await Recipe.findOneAndUpdate(
 			{_id: req.body.rid},
@@ -173,22 +164,20 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 			subject: subject,
 			html: htmlBody
 		};
-		 
 		var mail = new MailComposer(mailOptions);
 		 
 		mail.compile().build((err, message) => {
+			var dataToSend = {
+					to: toEmail,
+					message: message.toString('ascii')
+			};
 		 
-		    var dataToSend = {
-		        to: toEmail,
-		        message: message.toString('ascii')
-		    };
-		 
-		    mailgun.messages().sendMime(dataToSend, (sendError, body) => {
-		        if (sendError) {
-		            console.log(sendError);
-		            return;
-		        }
-		    });
+			mailgun.messages().sendMime(dataToSend, (sendError, body) => {
+					if (sendError) {
+							console.log(sendError);
+							return;
+					}
+			});
 		});
 		return true;
 	}
@@ -197,64 +186,6 @@ async function sendEmail(fromEmail, toEmail, subject, htmlBody) {
 		return false;
 	}
 }
-
-
-	// try {
-	// 	const DOMAIN = 'cookwell.co';
-	// 	const mg = mailgun({apiKey: process.env.api_key, domain: DOMAIN});
-	// 	const data = {
-	// 		from: fromEmail,
-	// 		to: toEmail,
-	// 		subject: subject,
-	// 		text: htmlBody
-	// 	};
-
-	// 	await mg.messages().send(data);
-
-	// 	return true;
-	// }
-	// catch (err) {
-	// 	console.log(err);
-	// 	return false;
-	// }
-
-
-	// // send link/token to user email
-	// async function sendEmail() {
-	// 	let testAccount = await nodemailer.createTestAccount();
-	// 	let transporter = nodemailer.createTransport({
-	// 		host: "smtp.ethereal.email",
-	// 		port: 587,
-	// 		secure: false, // true for 465, false for other ports
-	// 		auth: {
-	// 		  user: testAccount.user, // generated ethereal user
-	// 		  pass: testAccount.pass, // generated ethereal password
-	// 		},
-	// 	});
-	// 	let info = await transporter.sendMail({
-	// 		from: 'ff',
-	// 		to: "rya_mel@hotmail.com", // list of receivers
-	// 		subject: "Hello ✔", // Subject line
-	// 		text: `A password reset was requested for Cookwell.co. Click the following to reset your password. If you did not request an email reset, please ignore this email. ${link}`, // plain text body
-	// 		html:  `<html>
-	// 					<head>
-	// 					    <style>
-	// 					    </style>
-	// 					</head>
-	// 					<body>
-	// 					    <p>Hello,</p>
-	// 					    <p>You requested to reset your password.</p>
-	// 					    <p> Please, click the link below to reset your password</p>
-	// 					    <a href="https://{{link}}">Reset Password</a>
-	// 					</body>
-	// 				</html>`
-	// 	});
-	// 	console.log("Message sent: %s", info.messageId);
-	// 	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-	// }
-	// sendEmail().catch(console.error);
-
-
 
 
 

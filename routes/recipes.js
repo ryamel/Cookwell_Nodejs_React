@@ -19,15 +19,13 @@ const { featList } = require('../featuredRecipeList');
 
 
 // *** dont use - within route names. Causes incorret/partial route name matching
-
+// note that pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
 
 router.get('/page/:skip/:limit', async (req, res) => {
   //console.log('recipePage');
-
   let skip = parseInt(req.params.skip);
   let limit = parseInt(req.params.limit);
-
-  // once num of recipes exceeds limit pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
+ 
   try {
     var recipes = await Recipe
       .find({ 'reviewed': true })
@@ -79,8 +77,6 @@ router.get('/getbytitle/:title', async (req, res) => {
 
 
 
-
-// addiotnal feature to add... when empty search takse place, shuffle results so they're not always the same
 router.post('/search', async (req, res) => {
   console.log('search')
   
@@ -471,48 +467,6 @@ router.post('/getcookbanner', async (req,res) => {
   }
   // const data = await Recipe.find({title: {$ne: req.body.currentRecipe}}).select('title img -_id').limit(5);
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// router.post('/addnew', async (req, res) => {
-//     const rec = new Recipe({
-//         title:  req.body.title,
-//         authid:  req.body.authid,
-//         description:  req.body.description,
-//         mealType: req.body.mealType,
-//         diet: req.body.diet,
-//         cusine: req.body.cuisine,
-//         servings: req.body.servings,
-//         img:  req.body.img,
-//         cookTime: req.body.cookTime,
-//         ingredients: req.body.ingredients,
-//         method: req.body.method,
-//         notes: req.body.notes
-//     });
-
-//     try {
-//         const saveRec = await rec.save();
-//         return res.status(201).json(saveRec);
-//     }
-//     catch (err) {
-//         console.log(err);
-//         return res.status(400).json({message: err.message}); 
-//     }
-
-// });
-
 
 
 

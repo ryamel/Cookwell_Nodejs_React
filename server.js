@@ -1,23 +1,16 @@
-// app.use installs a middleware function
-
 const express = require('express');
 const app = express();
 const mongo = require('mongodb');
 const assert = require('assert');
 const cors = require('cors'); 
 const path = require('path');
-
-const mongoose = require('mongoose');// mongoose, plus depreciated settings to remove error msg's
+const mongoose = require('mongoose'); 
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true)
-
-require('dotenv').config();// allows use of .env files
-
-const cookieParser = require('cookie-parser'); // allows reading of cookies on front end (verifyToken middleware)
+require('dotenv').config(); // allows .env files
+const cookieParser = require('cookie-parser'); // allows reading of cookies on client (verifyToken middleware)
 app.use(cookieParser()); 
-
-app.use(express.json()); // * required to parse any http json data --> places json data into req.body
-//app.use(express.urlencoded({limit: '50mb'}));
+app.use(express.json()); // * required to parse http json data -> req.body
 
 if (!process.env.private_key) {
     console.log('FATAL ERROR: jwtPrivateKey is not defined');
@@ -40,34 +33,17 @@ app.use('/api/recipes', recipes);
 app.use('/api/mail', mail);
 
 
-// load production middleware
- // require('./middleware/prod')(app); 
-
- // app.use(express.urlencoded({extended: true}));
-
-// body parser
-// const bodyParser = require("body-parser");
-// app.use(bodyParser.urlencoded({extended: true}));
-// app.use(bodyParser.json());
-
 
 // allow use of assests available by url... https://dominaName.com/images.jpg
-//Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
+// Set static folder...Have Nodejs serve the static files from the React app (needed for production build)
 console.log('env.production:', process.env.production);
 if (process.env.production == 'true') {
 	console.log('PRODUCTION BUILD');
-
-	// get access to mounted volume from Digital Oceans for serving static images. Directory is relative to server.js file location
-	app.use(express.static('../../mnt/volume1'));
-
-	// needed to server production build static assests
-	app.use(express.static(path.join(__dirname,'client','build')));
-
-	// A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
-	app.get('/*', (req, res) => {
+	app.use(express.static('../../mnt/volume1')); // access to mounted volume from Digital Oceans for serving static images. Directory is relative to server.js file location
+	app.use(express.static(path.join(__dirname,'client','build'))); // needed for server production build static assests
+	app.get('/*', (req, res) => {	// A result of using react Router. The server trys to serve up static html pages for each page. But all pages are handles in index.html....
 	    res.sendFile(path.resolve(__dirname,'client','build','index.html'));
 	});
-
 } else {
 	console.log('DEV BUILD');
 }

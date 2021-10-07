@@ -21,6 +21,5 @@ var upload = multer({
 
 
 module.exports.upload = upload;
-// module.exports = { upload_valid } also valid
 
 

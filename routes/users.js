@@ -16,44 +16,25 @@ const { encrypt, decrypt, saveUserImage, validFileProperties, validatePwd, valid
 
 
 
-// TASK
-// set jwt to expire after 24 hours. then redirect user to re login on authentication
-// send email to new user address when updated email
-
-
-
 router.post('/register', async (req, res) => {
     try {
-
-
-        // encypt pwd using bcrypt library
-        // const saltu = await bcrypt.genSalt(10);
-        // const hashPwdu = await bcrypt.hash('Europe2010', saltu);
-        // console.log(hashPwdu);
-
-
-        // check if email is already taken (i.e unique email)
+        // check if email is already taken
         let check = await User.findOne({email: req.body.email});
         if (check) return res.status(400).send('That email is alredy being used');
-
         // check email is valid
         const valid = validateEmail(req.body.email);
         if (!valid) return res.status(400).send('Invalid email');
-
         // check valid password
         let errMsg = validatePwd(req.body.pwd, req.body.pwdRepeat);
         if (errMsg) return res.status(400).send(errMsg);
-
         // encypt pwd using bcrypt library
         const salt = await bcrypt.genSalt(10);
         const hashPwd = await bcrypt.hash(req.body.pwd, salt);
-
         // save user
         const user = new User({
             email: req.body.email,
             pwd: hashPwd
         });
-
         // register
     	await user.save();
         // login user by setting jwt
@@ -85,9 +66,6 @@ router.post('/login', async (req, res) => {
         if (!pwdCheck) return res.status(400).send('Invalid email / password');
         // gen web token
         const token = user.generateAuthToken();
-
-        // only use this method to set cookies (cookie-parser)
-        // cookies res.setHeader('Set-cookie', <one string contains all attriubtes seperated by ; > )
         // *** cookies will not show up in chrome dev tools using this method ***
         return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send();
     }
@@ -149,14 +127,11 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
                 catch (err) { console.log(err) }
                 return res.status(400).send('Image file must be a .png or .jpg under 8MB');
             }
-
             // save file
             let fileName = await saveUserImage(req.body.name, req.file.path);
             if (fileName === false) return res.status(500).send('Server Error');
-
             // append new img filename for doc
             req.body.profileImg = fileName;
-
             // query user data for old profileImg
             var oldUser = await User.findOne({_id: req.tokenData._id}).select('profileImg -_id');
         }
@@ -164,15 +139,11 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
         req.body.email = req.body.email.trim();
         req.body.about = req.body.about.trim();
         req.body.name = req.body.name.trim();
-
         // validate
         if (req.body.name.length < 3) return res.status(400).send('Username must be at least 3 characters');
         if (req.body.about.length >= 500) return res.status(400).send('About section must be less than 500 characters');
-
-
         // update document 
         await User.findOneAndUpdate({ _id: req.tokenData._id }, req.body, { runValidators: true });
-
         // delete old img files (if req.files was uploaded)
         if (typeof req.file !== "undefined") {
             try {
@@ -201,7 +172,6 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
             }
         } catch (e) { console.log(e) }
     }
-
     // return updated user data
     var updatedUser = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin -__v');
     return res.status(200).json(updatedUser);
@@ -248,14 +218,6 @@ router.post('/getuserdata', async (req, res) => {
         return res.status(500).send('Server Error');
     }
 })
-
-
-
-
-
-
-
-
 
 
 
