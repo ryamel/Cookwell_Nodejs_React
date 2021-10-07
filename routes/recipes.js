@@ -18,73 +18,63 @@ const { encrypt, decrypt, validFileProperties, saveRecipeImage, getRandomRecipes
 const { featList } = require('../featuredRecipeList');
 
 
-// dont use - within route names. Causes incorret/partial route name matching.
+// *** dont use - within route names. Causes incorret/partial route name matching
 
 
 router.get('/page/:skip/:limit', async (req, res) => {
-    console.log('recipePage');
+  //console.log('recipePage');
 
-    console.log(req.params);
+  let skip = parseInt(req.params.skip);
+  let limit = parseInt(req.params.limit);
 
-    let skip = parseInt(req.params.skip);
-    let limit = parseInt(req.params.limit);
+  // once num of recipes exceeds limit pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
+  try {
+    var recipes = await Recipe
+      .find({ 'reviewed': true })
+      .limit(limit)
+      .skip(skip)
+      .sort({uploadDate: -1})
+      .select('authid description img title -_id')
+      .populate('authid', '_id name');
 
-    // once num of recipes exceeds limit pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
-    try {
-        var recipes = await Recipe
-            .find({ 'reviewed': true })
-            .limit(limit)
-            .skip(skip)
-            .sort({uploadDate: -1})
-            .select('authid description img title -_id')
-            .populate('authid', '_id name');
+    console.log('recipePage results: ', recipes.length);
 
-        if (!recipes) return res.status(400).send();
-        if (recipes.length == 0) return res.status(200).json(recipes);
+    if (!recipes) return res.status(400).send();
+    if (recipes.length == 0) return res.status(200).json(recipes);
+    var recipes = JSON.parse(JSON.stringify(recipes)); // convert recipe to proper "object"
+   
+    recipes.forEach((recipe, index, recipes) => { // encrypt authid
+        recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+    })
 
-        // convert recipe to proper "object"
-        var recipes = JSON.parse(JSON.stringify(recipes));
-        // encrypt authid
-        recipes.forEach((recipe, index, recipes) => {
-            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
-        })
-
-        //console.log(recipes);
-
-        return res.status(200).json(recipes);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).send('Server Error');
-    }
+    return res.status(200).json(recipes);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Server Error');
+  }
 });
 
 
 
 router.get('/getbytitle/:title', async (req, res) => {
-    console.log('getbytitle');
-    try {
-        var recipe = await Recipe
-            .findOne({title: req.params.title})
-            .select('-_id -__v -uploadDate -contactedAuthor')
-            .populate('authid', 'name profileImg');
-        if (!recipe) return res.status(400).send('Server Error');
+  console.log('getbytitle');
+  try {
+    var recipe = await Recipe
+      .findOne({title: req.params.title})
+      .select('-_id -__v -uploadDate -contactedAuthor')
+      .populate('authid', 'name profileImg');
+    if (!recipe) return res.status(400).send('Server Error');
 
-        var recipe = recipe.toJSON(); // turns mongoose "object" it into proper JSON YAY!
+    var recipe = recipe.toJSON(); // turns mongoose "object" it into proper JSON YAY
+    var authIdEncrypt = encrypt(recipe.authid._id.toString()); // encypt id
+    //var encrypted = CryptoJS.AES.encrypt(recipe.authid._id.toString(), "Secret Passphrase");
+    recipe.authid._id = authIdEncrypt; // append encrypt id
 
-        // encypt id
-        var authIdEncrypt = encrypt(recipe.authid._id.toString());
-        //var encrypted = CryptoJS.AES.encrypt(recipe.authid._id.toString(), "Secret Passphrase");
-
-        // append encrypt id
-        recipe.authid._id = authIdEncrypt;
-
-        return res.status(200).json(recipe);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).send('Server Error');
-    }  
+    return res.status(200).json(recipe);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Server Error');
+  }  
 })
 
 
@@ -92,39 +82,36 @@ router.get('/getbytitle/:title', async (req, res) => {
 
 // addiotnal feature to add... when empty search takse place, shuffle results so they're not always the same
 router.post('/search', async (req, res) => {
-    console.log('search')
-    // build query
-    var query = {};
+  console.log('search')
+  
+  var query = {}; // build query
+  query['reviewed'] = {$eq: true};
 
-    query['reviewed'] = {$eq: true};
+  if (req.body.diet.length > 0) {
+    query['diet'] = {$all: req.body.diet};
+  }
+  if (req.body.time) {
+    query['cookTime'] = {$lt: parseInt(req.body.time)};
+  }
+  if (req.body.cuisine.length > 0) {
+    query['cuisine'] = {$in: req.body.cuisine};
+  }
+  if (req.body.mealType.length > 0) {
+    query['mealType'] = {$in: req.body.mealType};
+  }
+  if (req.body.searchText !== "") {
+    query['$text'] = {$search: req.body.searchText}; // searchs all fields specfied under Text Index on MongoDB
+  }
 
-    if (req.body.diet.length > 0) {
-        query['diet'] = {$all: req.body.diet};
-    }
-    if (req.body.time) {
-        query['cookTime'] = {$lt: parseInt(req.body.time)};
-    }
-    if (req.body.cuisine.length > 0) {
-        query['cuisine'] = {$in: req.body.cuisine};
-    }
-    if (req.body.mealType.length > 0) {
-        query['mealType'] = {$in: req.body.mealType};
-    }
-    if (req.body.searchText !== "") {
-        query['$text'] = {$search: req.body.searchText}; // searchs all fields specfied under Text Index on MongoDB
-    }
-
-    try {
-        var recipes = await Recipe
-            .find(query)
-            .select('cookTime description diet img title -_id');
-        return res.status(200).json(recipes);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(400).send('Server Error'); 
-    }
-
+  try {
+    var recipes = await Recipe
+      .find(query)
+      .select('cookTime description diet img title -_id');
+    return res.status(200).json(recipes);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send('Server Error'); 
+  }
 });
 
 
@@ -134,15 +121,14 @@ router.post('/search', async (req, res) => {
 
 
 router.get('/search/auto', async (req, res) => {
-    try {
-        var recipes = await Recipe
-            .find({ 'reviewed': true });
-        return res.json(recipes);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(400).json({message: err.message});
-    }
+  try {
+    var recipes = await Recipe
+      .find({ 'reviewed': true });
+    return res.json(recipes);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({message: err.message});
+  }
 });
 
 
@@ -152,31 +138,28 @@ router.get('/search/auto', async (req, res) => {
 
 
 router.get('/getrecent/', async (req, res) => {
-    console.log('getrecent');
-    try { 
-        //.sort({uploadDate: -1});
-        var recipes = await Recipe
-            .find({ 'reviewed': true })
-            .limit(8)
-            .sort({uploadDate: -1})
-            .select('authid description img title -_id')
-            .populate('authid', 'name profileImg');
-        if (!recipes) return res.status(400).send();
-
-        // convert recipe to proper "object"
-        var recipes = JSON.parse(JSON.stringify(recipes));
-        // encrypt authid
-        recipes.forEach((recipe, index, recipes) => {
-            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
-        })
-
-        return res.status(200).json(recipes);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).json( {message: err.message} );
-    }
+  console.log('getrecent');
+  try { 
+    //.sort({uploadDate: -1});
+    var recipes = await Recipe
+      .find({ 'reviewed': true })
+      .limit(8)
+      .sort({uploadDate: -1})
+      .select('authid description img title -_id')
+      .populate('authid', 'name profileImg');
+    if (!recipes) return res.status(400).send();
     
+    var recipes = JSON.parse(JSON.stringify(recipes));// convert recipe to proper "object"
+    // encrypt authid
+    recipes.forEach((recipe, index, recipes) => {
+      recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+    })
+
+    return res.status(200).json(recipes);
+  } catch (err) {
+      console.log(err);
+      return res.status(500).json( {message: err.message} );
+  }  
 });
 
 
@@ -185,46 +168,320 @@ router.get('/getrecent/', async (req, res) => {
 
 
 router.get('/getfeatured', async (req, res) => {
-    console.log('getfeatured');
-    try {
-        var recipes = await Recipe
-            .find({'_id': {$in: featList}})
-            .select('authid description img title -_id')
-            .populate('authid', '_id name');
+  console.log('getfeatured');
+  try {
+    var recipes = await Recipe
+      .find({'_id': {$in: featList}})
+      .select('authid description img title -_id')
+      .populate('authid', '_id name');
 
-
-        if (!recipes) return res.status(400).send();
-
-        // convert recipe to proper "object"
-        recipes = JSON.parse(JSON.stringify(recipes));
-        // encrypt authid
-        recipes.forEach((recipe, index, recipes) => {
-            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
-        })
-
-        return res.status(200).json(recipes);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).send('Server Error');
-    }
+    if (!recipes) return res.status(400).send();
+    recipes = JSON.parse(JSON.stringify(recipes));// convert recipe to proper "object"
     
+    recipes.forEach((recipe, index, recipes) => {// encrypt authid
+        recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+    })
+
+    return res.status(200).json(recipes);
+  }
+  catch (err) {
+    console.log(err);
+    return res.status(500).send('Server Error');
+  }
 });
 
 
 
 router.get('/getrandom/', async (req, res) => {
-    console.log('getrandom');
+  console.log('getrandom');
+  try {
+    let recipes = await getRandomRecipes(8);
+    return res.status(200).json(recipes);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Server Error');
+  }
+});
+
+
+
+
+
+router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
+  console.log('upload');
+ 
+  if (typeof req.file == "undefined") return res.status(400).send('No recipe image'); // check for file
+  
+  if (!validFileProperties(req.file.originalname, req.file.size)) {// check image file
+    fs.unlinkSync(req.file.path);
+    return res.status(400).send('Image file must be a .png or .jpg under 8MB');
+  }
+
+  let fileName = await saveRecipeImage(req.body.title, req.file.path); // save file to directory folder
+  if (fileName === false) return res.status(500).send('Server Error');
+
+  // prep body
+  req.body.title = req.body.title.trim();
+  req.body.servings = req.body.servings.trim();
+  req.body.description = req.body.description.trim();
+  req.body.authid = req.tokenData._id; // append authId
+  req.body.img = fileName;
+ 
+  // save doc data
+  try {
+    const rec = new Recipe(req.body);
+    await rec.save();
+  } catch (err) {
+    console.log(err);
     try {
-        let recipes = await getRandomRecipes(8);
-        return res.status(200).json(recipes);
+      if (process.env.production == 'true') {
+        fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + fileName);
+        fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + fileName);
+        fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + fileName);
+        fs.unlinkSync("../../mnt/volume1/tmp_upload/" + fileName);
+      } else {
+        fs.unlinkSync("../client/public/user_recipes_img/card/" + fileName);
+        fs.unlinkSync("../client/public/user_recipes_img/display/" + fileName);
+        fs.unlinkSync("../client/public/user_recipes_img/original/" + fileName);
+        fs.unlinkSync("../client/tmp_upload/" + fileName);
+      }
+    } catch (err) { 
+      console.log(err) 
     }
-    catch (err) {
-        console.log(err);
-        return res.status(500).send('Server Error');
+    return res.status(400).send('Server Error');
+  }
+
+  // check that file tmp_upload was removed
+  try { 
+    fs.unlinkSync(req.file.path); 
+  } catch (err) { 
+    console.log(err); 
+  }
+  return res.status(200).send();
+});
+
+
+
+
+
+
+
+
+router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
+  console.log('saveEdit');
+
+  try {
+    if (typeof req.file !== "undefined") {  // if image file save to folders
+      // valid file
+      if (!validFileProperties(req.file.originalname, req.file.size)) { 
+          try { fs.unlinkSync(req.file.path) }
+          catch (err) { console.log(err) }
+          return res.status(400).send('Image file must be a .png or .jpg under 8MB');
+      }
+
+      let fileName = await saveRecipeImage(req.body.title, req.file.path); // save new img file to folder
+      if (fileName == false) return res.status(501).send('Server error');
+      req.body.img = fileName; // append new img filename for doc
+      req.body.reviewed = false; // require review on img change
+      var oldRecipe = await Recipe.findOne({ _id: req.body.rid }).select('img'); // grab old img file name for deletion
     }
+
+    req.body.title = req.body.title.trim();
+    req.body.servings = req.body.servings.trim();
+    req.body.description = req.body.description.trim();
+    
+    await Recipe.findOneAndUpdate({ _id: req.body.rid }, req.body, { runValidators: true });// update document 
+
+    // delete old img files (if req.files was uploaded)
+    if (typeof req.file !== "undefined") {
+      try {
+        if (process.env.production == 'true') {
+          fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + oldRecipe.img);
+          fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + oldRecipe.img);
+          fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + oldRecipe.img);
+        } else {
+          fs.unlinkSync("../client/public/user_recipes_img/card/" + oldRecipe.img);
+          fs.unlinkSync("../client/public/user_recipes_img/display/" + oldRecipe.img);
+          fs.unlinkSync("../client/public/user_recipes_img/original/" + oldRecipe.img);
+        }
+      } catch (e) { 
+        console.log(e);
+      }
+    }
+    return res.status(200).send(''); 
+  } catch (err) {
+    console.log(err);
+    try {
+      if (process.env.production == 'true') {
+        fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + filename);
+        fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + filename);
+        fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + filename);
+      } else {
+        fs.unlinkSync("../client/public/user_recipes_img/card/" + filename);
+        fs.unlinkSync("../client/public/user_recipes_img/display/" + filename);
+        fs.unlinkSync("../client/public/user_recipes_img/original/" + filename);
+      }
+    } catch (e) { 
+      console.log(e);
+    }
+    return res.status(500).send('Server Error');
+  }
+});
+
+
+
+
+
+router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
+  console.log('getuserrecipesprivate');
+  try {
+    let recipes = await Recipe.find({authid: req.tokenData._id})
+      .select('authid description img reviewed title')
+      .populate('authid','name _id');
+
+    if (!recipes) return res.status(400).send();
+
+    recipes = JSON.parse(JSON.stringify(recipes));// convert recipe to proper "object"
+    
+    recipes.forEach((recipe, index, recipes) => {// encrypt authid
+        recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+    })
+
+    return res.status(200).json(recipes);
+  }
+  catch (err) { 
+      console.log(err);
+      return res.status(500).send();
+  }
+});
+
+
+router.post('/getuserrecipespublic', async (req, res) => {
+  console.log('getuserrecipespublic');
+  try {
+    var authId = decrypt(req.body.authid);
+    if (!authId) return res.status(500).send();
+
+    let recipes = await Recipe.find({ authid: authId })
+        .select('authid description img title -_id')
+        .populate('authid','name profileImg _id');
+    if (!recipes) return res.status(500).send();
+
+    // convert recipe to proper "object"
+    recipes = JSON.parse(JSON.stringify(recipes));
+    // encrypt authid
+    recipes.forEach((recipe, index, recipes) => {
+        recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+    })
+
+    return res.status(200).json(recipes);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send();
+  }
+});
+
+
+
+router.post('/deleterecipe', [verifyToken], async (req, res) => {
+  console.log('deleterecipe');
+  try {
+    //get ID
+    let recipe = await Recipe.findOne({_id: req.body.rid}).select('img');
+    // remove from mongoDB
+    await Recipe.deleteOne({_id: req.body.rid})
+    // remove file image (using ID)
+    if (process.env.production == 'true') {
+      fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + recipe.img);
+      fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + recipe.img);
+      fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + recipe.img);
+    } else {
+      fs.unlinkSync("../client/public/user_recipes_img/card/" + recipe.img);
+      fs.unlinkSync("../client/public/user_recipes_img/display/" + recipe.img);
+      fs.unlinkSync("../client/public/user_recipes_img/original/" + recipe.img);
+    }
+
+    return res.status(200).send();
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Server Error');
+  }
+})
+
+
+
+router.get('/getedit/:editId', verifyToken, async (req, res) => {
+  console.log('getedit');
+  const recipe = await Recipe.findOne({ _id: req.params.editId }).select('-authid -uploadDate -__v -contactedAuthor');
+  if (!recipe) res.status(500).send('Server Error');
+  return res.status(200).json(recipe);
+});
+
+
+
+
+router.get('/getreview', verifyToken, async (req, res) => {
+  console.log('getreview');
+  if (!req.tokenData.admin) return res.status(401).send();
+
+  try {
+    let recipes = await Recipe.find({reviewed: false})
+      .select('authid title _id uploadDate contactedAuthor');
+
+    recipes = JSON.parse(JSON.stringify(recipes));  // convert recipe to proper "object"
+
+    recipes.forEach((recipe, index, recipes) => {    // encrypt authid
+        recipes[index].authid = encrypt(recipe.authid.toString());
+    })
+
+    return res.status(200).json(recipes);
+  } catch(err) {
+    console.log(err);
+    return res.status(500);
+  }
     
 });
+
+
+
+
+router.post('/approve', verifyToken, async (req, res) => {
+  console.log('approve');
+  try {
+    await Recipe.findOneAndUpdate({_id: req.body.rid}, {reviewed: true});
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Server Error');
+  }
+  return res.status(200).send();
+})
+
+
+
+
+
+router.post('/getcookbanner', async (req,res) => {
+  console.log('getcookbanner');
+  try {
+    let recipes = await getRandomRecipes(5, req.body.currentRecipe);
+    return res.status(200).json(recipes);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Server Error');
+  }
+  // const data = await Recipe.find({title: {$ne: req.body.currentRecipe}}).select('title img -_id').limit(5);
+})
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -255,306 +512,6 @@ router.get('/getrandom/', async (req, res) => {
 //     }
 
 // });
-
-
-
-
-
-
-
-
-
-router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
-    console.log('upload');
-    // check for file
-    if (typeof req.file == "undefined") return res.status(400).send('No recipe image');
-
-    // check image file
-    if (!validFileProperties(req.file.originalname, req.file.size)) {
-        fs.unlinkSync(req.file.path);
-        return res.status(400).send('Image file must be a .png or .jpg under 8MB');
-    }
-
-    // save file to directory folder
-    let fileName = await saveRecipeImage(req.body.title, req.file.path);
-    if (fileName === false) return res.status(500).send('Server Error');
-
-    // prep body
-    req.body.title = req.body.title.trim();
-    req.body.servings = req.body.servings.trim();
-    req.body.description = req.body.description.trim();
-    req.body.authid = req.tokenData._id; // append authId
-    req.body.img = fileName;
-   
-    // save doc data
-    try {
-        const rec = new Recipe(req.body);
-        await rec.save();
-    }
-    catch (err) {
-        console.log(err);
-        try {
-            if (process.env.production == 'true') {
-                fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + fileName);
-                fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + fileName);
-                fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + fileName);
-                fs.unlinkSync("../../mnt/volume1/tmp_upload/" + fileName);
-            } else {
-                fs.unlinkSync("../client/public/user_recipes_img/card/" + fileName);
-                fs.unlinkSync("../client/public/user_recipes_img/display/" + fileName);
-                fs.unlinkSync("../client/public/user_recipes_img/original/" + fileName);
-                fs.unlinkSync("../client/tmp_upload/" + fileName);
-            }
-        } catch (err) { console.log(err) }
-        return res.status(400).send('Server Error');
-    }
-
-    // check that file tmp_upload was removed
-    try { fs.unlinkSync(req.file.path); }
-    catch (err) { console.log(err); }
-
-    return res.status(200).send();
-});
-
-
-
-
-
-
-
-
-router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
-    console.log('saveEdit');
-
-    try {
-
-        // if image file save to folders
-        if (typeof req.file !== "undefined") {
-
-            // valid file
-            if (!validFileProperties(req.file.originalname, req.file.size)) { 
-                try { fs.unlinkSync(req.file.path) }
-                catch (err) { console.log(err) }
-                return res.status(400).send('Image file must be a .png or .jpg under 8MB');
-            }
-
-            // save new img file to folder
-            let fileName = await saveRecipeImage(req.body.title, req.file.path);
-            if (fileName == false) return res.status(501).send('Server error');
-
-            // append new img filename for doc
-            req.body.img = fileName;
-            req.body.reviewed = false; // require review on img change
-
-            // grab old img file name for deletion
-            var oldRecipe = await Recipe.findOne({ _id: req.body.rid }).select('img');
-        }
-
-        req.body.title = req.body.title.trim();
-        req.body.servings = req.body.servings.trim();
-        req.body.description = req.body.description.trim();
-
-        // update document 
-        await Recipe.findOneAndUpdate({ _id: req.body.rid }, req.body, { runValidators: true });
-
-        // delete old img files (if req.files was uploaded)
-        if (typeof req.file !== "undefined") {
-            try {
-                if (process.env.production == 'true') {
-                    fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + oldRecipe.img);
-                    fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + oldRecipe.img);
-                    fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + oldRecipe.img);
-                } else {
-                    fs.unlinkSync("../client/public/user_recipes_img/card/" + oldRecipe.img);
-                    fs.unlinkSync("../client/public/user_recipes_img/display/" + oldRecipe.img);
-                    fs.unlinkSync("../client/public/user_recipes_img/original/" + oldRecipe.img);
-                }
-            } catch (e) { console.log(e)}
-        }
-
-        return res.status(200).send(''); 
-    }
-    catch (err) {
-        console.log(err);
-        try {
-            if (process.env.production == 'true') {
-                fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + filename);
-                fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + filename);
-                fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + filename);
-            } else {
-                fs.unlinkSync("../client/public/user_recipes_img/card/" + filename);
-                fs.unlinkSync("../client/public/user_recipes_img/display/" + filename);
-                fs.unlinkSync("../client/public/user_recipes_img/original/" + filename);
-            }
-        } catch (e) { console.log(e) }
-
-        return res.status(500).send('Server Error');
-    }
-});
-
-
-
-
-
-router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
-    console.log('getuserrecipesprivate');
-    try {
-        let recipes = await Recipe.find({authid: req.tokenData._id})
-            .select('authid description img reviewed title')
-            .populate('authid','name _id');
-        if (!recipes) return res.status(400).send();
-
-        // convert recipe to proper "object"
-        recipes = JSON.parse(JSON.stringify(recipes));
-        // encrypt authid
-        recipes.forEach((recipe, index, recipes) => {
-            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
-        })
-
-        return res.status(200).json(recipes);
-    }
-    catch (err) { 
-        console.log(err);
-        return res.status(500).send();
-    }
-});
-
-
-router.post('/getuserrecipespublic', async (req, res) => {
-    console.log('getuserrecipespublic');
-    try {
-        var authId = decrypt(req.body.authid);
-        if (!authId) return res.status(500).send();
-
-        let recipes = await Recipe.find({ authid: authId })
-            .select('authid description img title -_id')
-            .populate('authid','name profileImg _id');
-        if (!recipes) return res.status(500).send();
-
-        // convert recipe to proper "object"
-        recipes = JSON.parse(JSON.stringify(recipes));
-        // encrypt authid
-        recipes.forEach((recipe, index, recipes) => {
-            recipes[index].authid._id = encrypt(recipe.authid._id.toString());
-        })
-
-        return res.status(200).json(recipes);
-    } 
-    catch (err) {
-        console.log(err);
-        return res.status(500).send();
-    }
-});
-
-
-
-router.post('/deleterecipe', [verifyToken], async (req, res) => {
-    console.log('deleterecipe');
-    try {
-        //get ID
-        let recipe = await Recipe.findOne({_id: req.body.rid}).select('img');
-        // remove from mongoDB
-        await Recipe.deleteOne({_id: req.body.rid})
-        // remove file image (using ID)
-        if (process.env.production == 'true') {
-            fs.unlinkSync("../../mnt/volume1/user_recipes_img/card/" + recipe.img);
-            fs.unlinkSync("../../mnt/volume1/user_recipes_img/display/" + recipe.img);
-            fs.unlinkSync("../../mnt/volume1/user_recipes_img/original/" + recipe.img);
-        } else {
-            fs.unlinkSync("../client/public/user_recipes_img/card/" + recipe.img);
-            fs.unlinkSync("../client/public/user_recipes_img/display/" + recipe.img);
-            fs.unlinkSync("../client/public/user_recipes_img/original/" + recipe.img);
-        }
-
-        return res.status(200).send();
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).send('Server Error');
-    }
-})
-
-
-
-router.get('/getedit/:editId', verifyToken, async (req, res) => {
-    console.log('getedit');
-    const recipe = await Recipe.findOne({ _id: req.params.editId }).select('-authid -uploadDate -__v -contactedAuthor');
-    if (!recipe) res.status(500).send('Server Error');
-    return res.status(200).json(recipe);
-});
-
-
-
-
-router.get('/getreview', verifyToken, async (req, res) => {
-     console.log('getreview');
-    if (!req.tokenData.admin) return res.status(401).send();
-
-    try {
-        let recipes = await Recipe.find({reviewed: false})
-            .select('authid title _id uploadDate contactedAuthor');
-
-        // convert recipe to proper "object"
-        recipes = JSON.parse(JSON.stringify(recipes));
-        // encrypt authid
-        recipes.forEach((recipe, index, recipes) => {
-            recipes[index].authid = encrypt(recipe.authid.toString());
-        })
-
-        return res.status(200).json(recipes);
-    }
-    catch(err) {
-        console.log(err);
-        return res.status(500);
-    }
-    
-});
-
-
-
-
-router.post('/approve', verifyToken, async (req, res) => {
-    console.log('approve');
-    try {
-        await Recipe.findOneAndUpdate({_id: req.body.rid}, {reviewed: true});
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).send('Server Error');
-    }
-
-   return res.status(200).send();
-})
-
-
-
-
-
-router.post('/getcookbanner', async (req,res) => {
-     console.log('getcookbanner');
-    try {
-        let recipes = await getRandomRecipes(5, req.body.currentRecipe);
-        return res.status(200).json(recipes);
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).send('Server Error');
-    }
-    // const data = await Recipe.find({title: {$ne: req.body.currentRecipe}}).select('title img -_id').limit(5);
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -64,7 +64,6 @@ class Recipes extends Component {
         const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
         const windowBottom = windowHeight + window.pageYOffset;
         if (windowBottom >= docHeight ) {
-            //console.log('bottom');
             this.loadMoreRecipes();
         }
     }
@@ -93,7 +92,6 @@ class Recipes extends Component {
 								/>	
 						)}
 					</div>
-					{/*<Footer isLoaded={this.state.loadFooter} />*/}
 				</div>
 			);
 		}
