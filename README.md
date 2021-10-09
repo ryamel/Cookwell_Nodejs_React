@@ -12,3 +12,7 @@ Search by filter or keyword
 ![alt text](https://github.com/ryamel/Cookwell_Nodejs_React/blob/e31e3d86014513f0e2a849b6a9a2bd853b608438/upload.png)
 
 ![alt text](https://github.com/ryamel/Cookwell_Nodejs_React/blob/f76c652714ed72bf5e5a7891cc64a80031423b5c/filter.png)
+
+<p align="center">
+  <img src="https://github.com/ryamel/Cookwell_Nodejs_React/blob/f76c652714ed72bf5e5a7891cc64a80031423b5c/filter.png" />
+</p>
