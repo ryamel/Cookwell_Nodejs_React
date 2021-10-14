@@ -18,11 +18,9 @@ const { encrypt, decrypt, validFileProperties, saveRecipeImage, getRandomRecipes
 const { featList } = require('../featuredRecipeList');
 
 
-// *** dont use - within route names. Causes incorret/partial route name matching
-// note that pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
+// note when pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
 
 router.get('/page/:skip/:limit', async (req, res) => {
-  //console.log('recipePage');
   let skip = parseInt(req.params.skip);
   let limit = parseInt(req.params.limit);
  
@@ -39,7 +37,7 @@ router.get('/page/:skip/:limit', async (req, res) => {
 
     if (!recipes) return res.status(400).send();
     if (recipes.length == 0) return res.status(200).json(recipes);
-    var recipes = JSON.parse(JSON.stringify(recipes)); // convert recipe to proper "object"
+    var recipes = JSON.parse(JSON.stringify(recipes)); // get object properties
    
     recipes.forEach((recipe, index, recipes) => { // encrypt authid
         recipes[index].authid._id = encrypt(recipe.authid._id.toString());
@@ -55,7 +53,6 @@ router.get('/page/:skip/:limit', async (req, res) => {
 
 
 router.get('/getbytitle/:title', async (req, res) => {
-  console.log('getbytitle');
   try {
     var recipe = await Recipe
       .findOne({title: req.params.title})
@@ -63,9 +60,8 @@ router.get('/getbytitle/:title', async (req, res) => {
       .populate('authid', 'name profileImg');
     if (!recipe) return res.status(400).send('Server Error');
 
-    var recipe = recipe.toJSON(); // turns mongoose "object" it into proper JSON YAY
+    var recipe = recipe.toJSON();
     var authIdEncrypt = encrypt(recipe.authid._id.toString()); // encypt id
-    //var encrypted = CryptoJS.AES.encrypt(recipe.authid._id.toString(), "Secret Passphrase");
     recipe.authid._id = authIdEncrypt; // append encrypt id
 
     return res.status(200).json(recipe);
@@ -78,8 +74,6 @@ router.get('/getbytitle/:title', async (req, res) => {
 
 
 router.post('/search', async (req, res) => {
-  console.log('search')
-  
   var query = {}; // build query
   query['reviewed'] = {$eq: true};
 
@@ -96,7 +90,7 @@ router.post('/search', async (req, res) => {
     query['mealType'] = {$in: req.body.mealType};
   }
   if (req.body.searchText !== "") {
-    query['$text'] = {$search: req.body.searchText}; // searchs all fields specfied under Text Index on MongoDB
+    query['$text'] = {$search: req.body.searchText}; // searchs fields specfied under Text Index on Mongo
   }
 
   try {
@@ -109,9 +103,6 @@ router.post('/search', async (req, res) => {
     return res.status(400).send('Server Error'); 
   }
 });
-
-
-
 
 
 
@@ -130,13 +121,8 @@ router.get('/search/auto', async (req, res) => {
 
 
 
-
-
-
 router.get('/getrecent/', async (req, res) => {
-  console.log('getrecent');
   try { 
-    //.sort({uploadDate: -1});
     var recipes = await Recipe
       .find({ 'reviewed': true })
       .limit(8)
@@ -145,10 +131,10 @@ router.get('/getrecent/', async (req, res) => {
       .populate('authid', 'name profileImg');
     if (!recipes) return res.status(400).send();
     
-    var recipes = JSON.parse(JSON.stringify(recipes));// convert recipe to proper "object"
-    // encrypt authid
+    var recipes = JSON.parse(JSON.stringify(recipes)); // get object properties
+
     recipes.forEach((recipe, index, recipes) => {
-      recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+      recipes[index].authid._id = encrypt(recipe.authid._id.toString()); // encrypt authid
     })
 
     return res.status(200).json(recipes);
@@ -164,7 +150,6 @@ router.get('/getrecent/', async (req, res) => {
 
 
 router.get('/getfeatured', async (req, res) => {
-  console.log('getfeatured');
   try {
     var recipes = await Recipe
       .find({'_id': {$in: featList}})
@@ -172,10 +157,10 @@ router.get('/getfeatured', async (req, res) => {
       .populate('authid', '_id name');
 
     if (!recipes) return res.status(400).send();
-    recipes = JSON.parse(JSON.stringify(recipes));// convert recipe to proper "object"
+    recipes = JSON.parse(JSON.stringify(recipes)); // get object properties
     
-    recipes.forEach((recipe, index, recipes) => {// encrypt authid
-        recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+    recipes.forEach((recipe, index, recipes) => { 
+        recipes[index].authid._id = encrypt(recipe.authid._id.toString()); // encrypt authid
     })
 
     return res.status(200).json(recipes);
@@ -189,7 +174,6 @@ router.get('/getfeatured', async (req, res) => {
 
 
 router.get('/getrandom/', async (req, res) => {
-  console.log('getrandom');
   try {
     let recipes = await getRandomRecipes(8);
     return res.status(200).json(recipes);
@@ -204,11 +188,9 @@ router.get('/getrandom/', async (req, res) => {
 
 
 router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
-  console.log('upload');
- 
   if (typeof req.file == "undefined") return res.status(400).send('No recipe image'); // check for file
   
-  if (!validFileProperties(req.file.originalname, req.file.size)) {// check image file
+  if (!validFileProperties(req.file.originalname, req.file.size)) { // check image file
     fs.unlinkSync(req.file.path);
     return res.status(400).send('Image file must be a .png or .jpg under 8MB');
   }
@@ -264,8 +246,6 @@ router.post('/upload', [verifyToken, upload.single('file'), validate_RecipeData]
 
 
 router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeData], async (req, res) => {
-  console.log('saveEdit');
-
   try {
     if (typeof req.file !== "undefined") {  // if image file save to folders
       // valid file
@@ -286,7 +266,7 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
     req.body.servings = req.body.servings.trim();
     req.body.description = req.body.description.trim();
     
-    await Recipe.findOneAndUpdate({ _id: req.body.rid }, req.body, { runValidators: true });// update document 
+    await Recipe.findOneAndUpdate({ _id: req.body.rid }, req.body, { runValidators: true }); // update document 
 
     // delete old img files (if req.files was uploaded)
     if (typeof req.file !== "undefined") {
@@ -329,7 +309,6 @@ router.post('/saveEdit', [verifyToken, upload.single('file'), validate_RecipeDat
 
 
 router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
-  console.log('getuserrecipesprivate');
   try {
     let recipes = await Recipe.find({authid: req.tokenData._id})
       .select('authid description img reviewed title')
@@ -337,10 +316,10 @@ router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
 
     if (!recipes) return res.status(400).send();
 
-    recipes = JSON.parse(JSON.stringify(recipes));// convert recipe to proper "object"
+    recipes = JSON.parse(JSON.stringify(recipes)); // get object properties
     
-    recipes.forEach((recipe, index, recipes) => {// encrypt authid
-        recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+    recipes.forEach((recipe, index, recipes) => { 
+        recipes[index].authid._id = encrypt(recipe.authid._id.toString()); // encrypt authid
     })
 
     return res.status(200).json(recipes);
@@ -353,7 +332,6 @@ router.get('/getuserrecipesprivate', verifyToken, async (req, res) => {
 
 
 router.post('/getuserrecipespublic', async (req, res) => {
-  console.log('getuserrecipespublic');
   try {
     var authId = decrypt(req.body.authid);
     if (!authId) return res.status(500).send();
@@ -363,11 +341,10 @@ router.post('/getuserrecipespublic', async (req, res) => {
         .populate('authid','name profileImg _id');
     if (!recipes) return res.status(500).send();
 
-    // convert recipe to proper "object"
-    recipes = JSON.parse(JSON.stringify(recipes));
-    // encrypt authid
+    recipes = JSON.parse(JSON.stringify(recipes)); // get object properties
+    
     recipes.forEach((recipe, index, recipes) => {
-        recipes[index].authid._id = encrypt(recipe.authid._id.toString());
+        recipes[index].authid._id = encrypt(recipe.authid._id.toString());// encrypt authid
     })
 
     return res.status(200).json(recipes);
@@ -380,7 +357,6 @@ router.post('/getuserrecipespublic', async (req, res) => {
 
 
 router.post('/deleterecipe', [verifyToken], async (req, res) => {
-  console.log('deleterecipe');
   try {
     //get ID
     let recipe = await Recipe.findOne({_id: req.body.rid}).select('img');
@@ -407,7 +383,6 @@ router.post('/deleterecipe', [verifyToken], async (req, res) => {
 
 
 router.get('/getedit/:editId', verifyToken, async (req, res) => {
-  console.log('getedit');
   const recipe = await Recipe.findOne({ _id: req.params.editId }).select('-authid -uploadDate -__v -contactedAuthor');
   if (!recipe) res.status(500).send('Server Error');
   return res.status(200).json(recipe);
@@ -417,17 +392,16 @@ router.get('/getedit/:editId', verifyToken, async (req, res) => {
 
 
 router.get('/getreview', verifyToken, async (req, res) => {
-  console.log('getreview');
   if (!req.tokenData.admin) return res.status(401).send();
 
   try {
     let recipes = await Recipe.find({reviewed: false})
       .select('authid title _id uploadDate contactedAuthor');
 
-    recipes = JSON.parse(JSON.stringify(recipes));  // convert recipe to proper "object"
+    recipes = JSON.parse(JSON.stringify(recipes));  // get object properties
 
-    recipes.forEach((recipe, index, recipes) => {    // encrypt authid
-        recipes[index].authid = encrypt(recipe.authid.toString());
+    recipes.forEach((recipe, index, recipes) => {   
+        recipes[index].authid = encrypt(recipe.authid.toString()); // encrypt authid
     })
 
     return res.status(200).json(recipes);
@@ -442,7 +416,6 @@ router.get('/getreview', verifyToken, async (req, res) => {
 
 
 router.post('/approve', verifyToken, async (req, res) => {
-  console.log('approve');
   try {
     await Recipe.findOneAndUpdate({_id: req.body.rid}, {reviewed: true});
   } catch (err) {
@@ -457,7 +430,6 @@ router.post('/approve', verifyToken, async (req, res) => {
 
 
 router.post('/getcookbanner', async (req,res) => {
-  console.log('getcookbanner');
   try {
     let recipes = await getRandomRecipes(5, req.body.currentRecipe);
     return res.status(200).json(recipes);

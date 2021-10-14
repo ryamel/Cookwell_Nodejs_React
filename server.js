@@ -10,7 +10,7 @@ mongoose.set('useCreateIndex', true)
 require('dotenv').config(); // allows .env files
 const cookieParser = require('cookie-parser'); // allows reading of cookies on client (verifyToken middleware)
 app.use(cookieParser()); 
-app.use(express.json()); // * required to parse http json data -> req.body
+app.use(express.json()); // required to parse http json data -> req.body
 
 if (!process.env.private_key) {
     console.log('FATAL ERROR: jwtPrivateKey is not defined');

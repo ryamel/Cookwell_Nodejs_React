@@ -40,7 +40,6 @@ const validFileProperties = function(fileName, fileSize) {
 
 
 const saveRecipeImage = async function(giveName, filePath) {
-    // returns image name
     // save original and compressed images. Note: sharp is a good library for resizing and compressing
     try {
         let extension = path.extname(filePath).toLowerCase();
@@ -87,9 +86,7 @@ const saveRecipeImage = async function(giveName, filePath) {
 }
 
 const saveUserImage = async function(giveName, filePath) {
-    // returns image name
     // save original and compressed images. Note: sharp is a good library for resizing and compressing
-
     try {
         let extension = path.extname(filePath).toLowerCase();
         var fileName = giveName.replace(/\s/g,"_").replace(/[\\\.\+\*\?\^\$\,\[\]\{\}\|<>#%!`&'"=:@~;()]/g, '') + '_' + Date.now() + extension;

@@ -39,7 +39,8 @@ router.post('/register', async (req, res) => {
     	await user.save();
         // login user by setting jwt
         const token = user.generateAuthToken();
-        return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send();  // only use this method to set cookies (cookie-parser)
+        // cookies not showing up in chrome dev tools using this method 
+        return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send(); 
     }
     catch(error) { 
     	console.log(error);
@@ -56,7 +57,6 @@ router.post('/register', async (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-    console.log('login');
     try {
         // find user by email
         const user = await User.findOne({email: req.body.email});
@@ -66,7 +66,7 @@ router.post('/login', async (req, res) => {
         if (!pwdCheck) return res.status(400).send('Invalid email / password');
         // gen web token
         const token = user.generateAuthToken();
-        // *** cookies will not show up in chrome dev tools using this method ***
+        // cookies not showing up in chrome dev tools using this method 
         return res.status(200).setHeader('Set-Cookie', 'jwt=' + token + '; Path=/api').send();
     }
     catch (err) {
@@ -84,7 +84,6 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/changepassword', verifyToken, async (req, res) => {
-    console.log('change-password');
     try {
         if (req.body.newPwd !== req.body.newPwdRepeat) return res.status(400).send('Passwords do not match');
         // find user
@@ -112,7 +111,6 @@ router.post('/changepassword', verifyToken, async (req, res) => {
 
 
 router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, res) => {
-    console.log('updateprofile');
     try {
         // pwd check
         const user = await User.findOne({_id: req.tokenData._id}).select('pwd');
@@ -186,7 +184,6 @@ router.post('/updateprofile', [verifyToken, upload.single('file')], async (req, 
 
 
 router.get('/getmyuserdata', verifyToken, async (req, res) => {
-    console.log('getmyuserdata');
     try {
         const user = await User.findOne({_id: req.tokenData._id}, '-pwd -_id -admin -__v');
         if (!user) return res.status(500).send('Server Error');
@@ -203,7 +200,6 @@ router.get('/getmyuserdata', verifyToken, async (req, res) => {
 
 
 router.post('/getuserdata', async (req, res) => {
-    console.log('getuserdata');
     try {
         // decrytp authid
         var authid = decrypt(req.body.authid);

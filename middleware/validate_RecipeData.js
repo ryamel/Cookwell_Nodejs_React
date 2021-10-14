@@ -4,7 +4,6 @@ const express = require('express');
 
 
 function validate_RecipeData(req, res, next) {
-
     // parse json objects (arrays and objects)
     req.body.diet = JSON.parse(req.body.diet);
     req.body.cuisine = JSON.parse(req.body.cuisine);
@@ -13,14 +12,9 @@ function validate_RecipeData(req, res, next) {
     req.body.notes = JSON.parse(req.body.notes);
     req.body.cookTime = parseInt(req.body.cookTime);
 
-
-
     // check title 
     if (req.body.title.length < 3 ) return res.status(400).send('Title must be at least 3 characters')
     if (req.body.title.length > 80 ) return res.status(400).send('Title must be less than 80 characters')
-    
-    // check if user has title of same recipe already
-
 
     // check description
     if (req.body.description.length > 500 ) return res.status(400).send('Description must be less than 500 characters')

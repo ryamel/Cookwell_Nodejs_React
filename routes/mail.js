@@ -15,7 +15,6 @@ const Recipe = require('../models/recipes');
 
 
 router.post('/pwdReset', async (req, res) => {
-	console.log('pwd reset');
 	// check user exists
 	let user = await User.findOne({email: req.body.email});
 	if (!user) return res.status(200).send('No account found');
@@ -67,7 +66,6 @@ router.post('/pwdReset', async (req, res) => {
 
 
 router.post('/pwdResetUpdate', async (req, res) => {
-	console.log('pwdResetUpdate', req.body);
 	// valid pwd
 	let errMsg = validatePwd(req.body.pwd, req.body.pwdRepeat);
 	if (errMsg) return res.status(400).send(errMsg);
@@ -102,7 +100,6 @@ router.post('/pwdResetUpdate', async (req, res) => {
 
 
 router.post('/contactAuthor', async (req, res) => {
-	console.log('contactAuthor');
 	try {
 		// check bddy length
 		if (req.body.emailBody.length < 5) return res.status(400).send('Email body too short, message not sent');
