@@ -18,9 +18,9 @@ const { encrypt, decrypt, validFileProperties, saveRecipeImage, getRandomRecipes
 const { featList } = require('../featuredRecipeList');
 
 
-// note when pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
 
 router.get('/page/:skip/:limit', async (req, res) => {
+  // note when pagination can become slow https://arpitbhayani.me/blogs/benchmark-and-compare-pagination-approach-in-mongodb
   let skip = parseInt(req.params.skip);
   let limit = parseInt(req.params.limit);
  
